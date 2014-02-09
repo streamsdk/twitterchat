@@ -25,7 +25,7 @@
                           }
                           
     }];
-    
+    //chat
     [NSThread sleepForTimeInterval:5];
     return YES;
 }
