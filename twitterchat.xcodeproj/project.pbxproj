@@ -132,7 +132,6 @@
 		0382495818A78E80006AE205 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 0382494318A78E80006AE205 /* DDXMLElement.m */; };
 		0382495918A78E80006AE205 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 0382494518A78E80006AE205 /* DDXMLNode.m */; };
 		0382495A18A78E80006AE205 /* build-libidn.sh in Resources */ = {isa = PBXBuildFile; fileRef = 0382494918A78E80006AE205 /* build-libidn.sh */; };
-		0382495B18A78E80006AE205 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382494B18A78E80006AE205 /* libidn.a */; };
 		0382495D18A78EC1006AE205 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382495C18A78EC1006AE205 /* libresolv.dylib */; };
 		0382495F18A78EE4006AE205 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382495E18A78EE4006AE205 /* libxml2.dylib */; };
 		0382496118A78EFB006AE205 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382496018A78EFB006AE205 /* libsqlite3.dylib */; };
@@ -140,7 +139,6 @@
 		0382496518A78F1F006AE205 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382496418A78F1F006AE205 /* QuartzCore.framework */; };
 		0382496918A79201006AE205 /* ACKMessageDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0382496818A79201006AE205 /* ACKMessageDB.m */; };
 		0382496E18A79233006AE205 /* STreamXMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = 0382496C18A79233006AE205 /* STreamXMPP.m */; };
-		0388745618A78AF3002A37C5 /* arcstreamsdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0388745518A78AF3002A37C5 /* arcstreamsdk.framework */; };
 		039FA4531879D9C400E9F255 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4521879D9C400E9F255 /* Foundation.framework */; };
 		039FA4551879D9C400E9F255 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4541879D9C400E9F255 /* CoreGraphics.framework */; };
 		039FA4571879D9C400E9F255 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4561879D9C400E9F255 /* UIKit.framework */; };
@@ -156,6 +154,45 @@
 		039FA47C1879D9C400E9F255 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 039FA47A1879D9C400E9F255 /* InfoPlist.strings */; };
 		039FA47E1879D9C400E9F255 /* twitterchatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 039FA47D1879D9C400E9F255 /* twitterchatTests.m */; };
 		039FA4881879DAB900E9F255 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4871879DAB900E9F255 /* Social.framework */; };
+		0EB18D2F18B717EA008D76B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB18D2E18B717EA008D76B6 /* LoginViewController.m */; };
+		0EE10E7418B9BF28006E3BE1 /* settings2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E7318B9BF28006E3BE1 /* settings2.png */; };
+		0EF5983C18B86D3500F2DFC2 /* TwitterChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5983B18B86D3500F2DFC2 /* TwitterChatViewController.m */; };
+		0EF5984518B8714D00F2DFC2 /* TwitterFollower.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984418B8714D00F2DFC2 /* TwitterFollower.m */; };
+		0EF5984818B8716400F2DFC2 /* TwitterFollowing.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984718B8716400F2DFC2 /* TwitterFollowing.m */; };
+		0EF5984B18B8737D00F2DFC2 /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984A18B8737D00F2DFC2 /* ImageCache.m */; };
+		0EF5984E18B873B700F2DFC2 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984D18B873B700F2DFC2 /* MBProgressHUD.m */; };
+		0EF5986D18B878AF00F2DFC2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985118B878AF00F2DFC2 /* bubbleMine.png */; };
+		0EF5986E18B878AF00F2DFC2 /* bubbleMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985218B878AF00F2DFC2 /* bubbleMine@2x.png */; };
+		0EF5986F18B878AF00F2DFC2 /* bubbleSomeone.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985318B878AF00F2DFC2 /* bubbleSomeone.png */; };
+		0EF5987018B878AF00F2DFC2 /* bubbleSomeone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985418B878AF00F2DFC2 /* bubbleSomeone@2x.png */; };
+		0EF5987118B878AF00F2DFC2 /* camera_button_take.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985518B878AF00F2DFC2 /* camera_button_take.png */; };
+		0EF5987218B878AF00F2DFC2 /* camera_button_take@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985618B878AF00F2DFC2 /* camera_button_take@2x.png */; };
+		0EF5987318B878AF00F2DFC2 /* face.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985718B878AF00F2DFC2 /* face.png */; };
+		0EF5987418B878AF00F2DFC2 /* face@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985818B878AF00F2DFC2 /* face@2x.png */; };
+		0EF5987518B878AF00F2DFC2 /* faceDelete.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985918B878AF00F2DFC2 /* faceDelete.png */; };
+		0EF5987618B878AF00F2DFC2 /* faceDelete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985A18B878AF00F2DFC2 /* faceDelete@2x.png */; };
+		0EF5987718B878AF00F2DFC2 /* facesBack.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985B18B878AF00F2DFC2 /* facesBack.png */; };
+		0EF5987818B878AF00F2DFC2 /* facesBack@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985C18B878AF00F2DFC2 /* facesBack@2x.png */; };
+		0EF5987918B878AF00F2DFC2 /* keyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985D18B878AF00F2DFC2 /* keyboard.png */; };
+		0EF5987A18B878AF00F2DFC2 /* missingAvatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985E18B878AF00F2DFC2 /* missingAvatar.png */; };
+		0EF5987B18B878AF00F2DFC2 /* missingAvatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5985F18B878AF00F2DFC2 /* missingAvatar@2x.png */; };
+		0EF5987C18B878AF00F2DFC2 /* Speak.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986018B878AF00F2DFC2 /* Speak.png */; };
+		0EF5987D18B878AF00F2DFC2 /* Speak@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986118B878AF00F2DFC2 /* Speak@2x.png */; };
+		0EF5987E18B878AF00F2DFC2 /* Text.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986218B878AF00F2DFC2 /* Text.png */; };
+		0EF5987F18B878AF00F2DFC2 /* Text@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986318B878AF00F2DFC2 /* Text@2x.png */; };
+		0EF5988018B878AF00F2DFC2 /* typingMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986418B878AF00F2DFC2 /* typingMine.png */; };
+		0EF5988118B878AF00F2DFC2 /* typingMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986518B878AF00F2DFC2 /* typingMine@2x.png */; };
+		0EF5988218B878AF00F2DFC2 /* typingSomeone.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986618B878AF00F2DFC2 /* typingSomeone.png */; };
+		0EF5988318B878AF00F2DFC2 /* typingSomeone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986718B878AF00F2DFC2 /* typingSomeone@2x.png */; };
+		0EF5988418B878AF00F2DFC2 /* video.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986818B878AF00F2DFC2 /* video.png */; };
+		0EF5988518B878AF00F2DFC2 /* video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986918B878AF00F2DFC2 /* video@2x.png */; };
+		0EF5988618B878AF00F2DFC2 /* Voice.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986A18B878AF00F2DFC2 /* Voice.png */; };
+		0EF5988718B878AF00F2DFC2 /* Voice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986B18B878AF00F2DFC2 /* Voice@2x.png */; };
+		0EF5988818B878AF00F2DFC2 /* noavatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EF5986C18B878AF00F2DFC2 /* noavatar.png */; };
+		0EF5988A18B87BED00F2DFC2 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0382494B18A78E80006AE205 /* libidn.a */; };
+		0EF5988B18B87BF900F2DFC2 /* arcstreamsdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0388745518A78AF3002A37C5 /* arcstreamsdk.framework */; };
+		0EF5989118B884E200F2DFC2 /* ChineseString.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5988E18B884E200F2DFC2 /* ChineseString.m */; };
+		0EF5989218B884E200F2DFC2 /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5988F18B884E200F2DFC2 /* pinyin.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -457,6 +494,51 @@
 		039FA47B1879D9C400E9F255 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		039FA47D1879D9C400E9F255 /* twitterchatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = twitterchatTests.m; sourceTree = "<group>"; };
 		039FA4871879DAB900E9F255 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		0EB18D2D18B717EA008D76B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = classes/LoginViewController.h; sourceTree = "<group>"; };
+		0EB18D2E18B717EA008D76B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = classes/LoginViewController.m; sourceTree = "<group>"; };
+		0EE10E7318B9BF28006E3BE1 /* settings2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings2.png; sourceTree = "<group>"; };
+		0EF5983A18B86D3500F2DFC2 /* TwitterChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterChatViewController.h; path = classes/TwitterChatViewController.h; sourceTree = "<group>"; };
+		0EF5983B18B86D3500F2DFC2 /* TwitterChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterChatViewController.m; path = classes/TwitterChatViewController.m; sourceTree = "<group>"; };
+		0EF5984318B8714D00F2DFC2 /* TwitterFollower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterFollower.h; path = classes/TwitterFollower.h; sourceTree = "<group>"; };
+		0EF5984418B8714D00F2DFC2 /* TwitterFollower.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterFollower.m; path = classes/TwitterFollower.m; sourceTree = "<group>"; };
+		0EF5984618B8716400F2DFC2 /* TwitterFollowing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterFollowing.h; path = classes/TwitterFollowing.h; sourceTree = "<group>"; };
+		0EF5984718B8716400F2DFC2 /* TwitterFollowing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterFollowing.m; path = classes/TwitterFollowing.m; sourceTree = "<group>"; };
+		0EF5984918B8737D00F2DFC2 /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCache.h; sourceTree = "<group>"; };
+		0EF5984A18B8737D00F2DFC2 /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCache.m; sourceTree = "<group>"; };
+		0EF5984C18B873B700F2DFC2 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		0EF5984D18B873B700F2DFC2 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		0EF5985118B878AF00F2DFC2 /* bubbleMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleMine.png; sourceTree = "<group>"; };
+		0EF5985218B878AF00F2DFC2 /* bubbleMine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubbleMine@2x.png"; sourceTree = "<group>"; };
+		0EF5985318B878AF00F2DFC2 /* bubbleSomeone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleSomeone.png; sourceTree = "<group>"; };
+		0EF5985418B878AF00F2DFC2 /* bubbleSomeone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bubbleSomeone@2x.png"; sourceTree = "<group>"; };
+		0EF5985518B878AF00F2DFC2 /* camera_button_take.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera_button_take.png; sourceTree = "<group>"; };
+		0EF5985618B878AF00F2DFC2 /* camera_button_take@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera_button_take@2x.png"; sourceTree = "<group>"; };
+		0EF5985718B878AF00F2DFC2 /* face.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = face.png; sourceTree = "<group>"; };
+		0EF5985818B878AF00F2DFC2 /* face@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "face@2x.png"; sourceTree = "<group>"; };
+		0EF5985918B878AF00F2DFC2 /* faceDelete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = faceDelete.png; sourceTree = "<group>"; };
+		0EF5985A18B878AF00F2DFC2 /* faceDelete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "faceDelete@2x.png"; sourceTree = "<group>"; };
+		0EF5985B18B878AF00F2DFC2 /* facesBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facesBack.png; sourceTree = "<group>"; };
+		0EF5985C18B878AF00F2DFC2 /* facesBack@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facesBack@2x.png"; sourceTree = "<group>"; };
+		0EF5985D18B878AF00F2DFC2 /* keyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = keyboard.png; sourceTree = "<group>"; };
+		0EF5985E18B878AF00F2DFC2 /* missingAvatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = missingAvatar.png; sourceTree = "<group>"; };
+		0EF5985F18B878AF00F2DFC2 /* missingAvatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "missingAvatar@2x.png"; sourceTree = "<group>"; };
+		0EF5986018B878AF00F2DFC2 /* Speak.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Speak.png; sourceTree = "<group>"; };
+		0EF5986118B878AF00F2DFC2 /* Speak@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Speak@2x.png"; sourceTree = "<group>"; };
+		0EF5986218B878AF00F2DFC2 /* Text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Text.png; sourceTree = "<group>"; };
+		0EF5986318B878AF00F2DFC2 /* Text@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Text@2x.png"; sourceTree = "<group>"; };
+		0EF5986418B878AF00F2DFC2 /* typingMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = typingMine.png; sourceTree = "<group>"; };
+		0EF5986518B878AF00F2DFC2 /* typingMine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typingMine@2x.png"; sourceTree = "<group>"; };
+		0EF5986618B878AF00F2DFC2 /* typingSomeone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = typingSomeone.png; sourceTree = "<group>"; };
+		0EF5986718B878AF00F2DFC2 /* typingSomeone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typingSomeone@2x.png"; sourceTree = "<group>"; };
+		0EF5986818B878AF00F2DFC2 /* video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video.png; sourceTree = "<group>"; };
+		0EF5986918B878AF00F2DFC2 /* video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video@2x.png"; sourceTree = "<group>"; };
+		0EF5986A18B878AF00F2DFC2 /* Voice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Voice.png; sourceTree = "<group>"; };
+		0EF5986B18B878AF00F2DFC2 /* Voice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Voice@2x.png"; sourceTree = "<group>"; };
+		0EF5986C18B878AF00F2DFC2 /* noavatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noavatar.png; sourceTree = "<group>"; };
+		0EF5988D18B884E200F2DFC2 /* ChineseString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChineseString.h; sourceTree = "<group>"; };
+		0EF5988E18B884E200F2DFC2 /* ChineseString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChineseString.m; sourceTree = "<group>"; };
+		0EF5988F18B884E200F2DFC2 /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pinyin.c; sourceTree = "<group>"; };
+		0EF5989018B884E200F2DFC2 /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pinyin.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -464,17 +546,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EF5988B18B87BF900F2DFC2 /* arcstreamsdk.framework in Frameworks */,
+				0EF5988A18B87BED00F2DFC2 /* libidn.a in Frameworks */,
 				0382496518A78F1F006AE205 /* QuartzCore.framework in Frameworks */,
 				0382496318A78F12006AE205 /* MessageUI.framework in Frameworks */,
 				0382496118A78EFB006AE205 /* libsqlite3.dylib in Frameworks */,
 				0382495F18A78EE4006AE205 /* libxml2.dylib in Frameworks */,
 				0382495D18A78EC1006AE205 /* libresolv.dylib in Frameworks */,
 				038247A518A78D26006AE205 /* libz.dylib in Frameworks */,
-				0382495B18A78E80006AE205 /* libidn.a in Frameworks */,
 				038247A318A78CB6006AE205 /* MobileCoreServices.framework in Frameworks */,
 				038247A118A78C75006AE205 /* SystemConfiguration.framework in Frameworks */,
 				0382479F18A78C64006AE205 /* CFNetwork.framework in Frameworks */,
-				0388745618A78AF3002A37C5 /* arcstreamsdk.framework in Frameworks */,
 				039FA4881879DAB900E9F255 /* Social.framework in Frameworks */,
 				039FA4551879D9C400E9F255 /* CoreGraphics.framework in Frameworks */,
 				039FA4571879D9C400E9F255 /* UIKit.framework in Frameworks */,
@@ -1236,6 +1318,7 @@
 		039FA4461879D9C400E9F255 = {
 			isa = PBXGroup;
 			children = (
+				0EF5984F18B878AF00F2DFC2 /* images */,
 				0382496A18A79223006AE205 /* XMPP */,
 				0382496618A791F0006AE205 /* DB */,
 				0382492518A78E80006AE205 /* Vendor */,
@@ -1285,6 +1368,10 @@
 		039FA4581879D9C400E9F255 /* twitterchat */ = {
 			isa = PBXGroup;
 			children = (
+				0EF5988C18B884D500F2DFC2 /* sort */,
+				0EF5984218B870EE00F2DFC2 /* cache */,
+				0EF5983D18B86DC600F2DFC2 /* MBPHUD */,
+				0EF5984118B86DEC00F2DFC2 /* viewcontroller */,
 				039FA4611879D9C400E9F255 /* AppDelegate.h */,
 				039FA4621879D9C400E9F255 /* AppDelegate.m */,
 				039FA4641879D9C400E9F255 /* Main.storyboard */,
@@ -1323,6 +1410,94 @@
 				039FA47A1879D9C400E9F255 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0EF5983D18B86DC600F2DFC2 /* MBPHUD */ = {
+			isa = PBXGroup;
+			children = (
+				0EF5984C18B873B700F2DFC2 /* MBProgressHUD.h */,
+				0EF5984D18B873B700F2DFC2 /* MBProgressHUD.m */,
+			);
+			name = MBPHUD;
+			sourceTree = "<group>";
+		};
+		0EF5984118B86DEC00F2DFC2 /* viewcontroller */ = {
+			isa = PBXGroup;
+			children = (
+				0EB18D2D18B717EA008D76B6 /* LoginViewController.h */,
+				0EB18D2E18B717EA008D76B6 /* LoginViewController.m */,
+				0EF5983A18B86D3500F2DFC2 /* TwitterChatViewController.h */,
+				0EF5983B18B86D3500F2DFC2 /* TwitterChatViewController.m */,
+				0EF5984318B8714D00F2DFC2 /* TwitterFollower.h */,
+				0EF5984418B8714D00F2DFC2 /* TwitterFollower.m */,
+				0EF5984618B8716400F2DFC2 /* TwitterFollowing.h */,
+				0EF5984718B8716400F2DFC2 /* TwitterFollowing.m */,
+			);
+			name = viewcontroller;
+			sourceTree = "<group>";
+		};
+		0EF5984218B870EE00F2DFC2 /* cache */ = {
+			isa = PBXGroup;
+			children = (
+				0EF5984918B8737D00F2DFC2 /* ImageCache.h */,
+				0EF5984A18B8737D00F2DFC2 /* ImageCache.m */,
+			);
+			name = cache;
+			sourceTree = "<group>";
+		};
+		0EF5984F18B878AF00F2DFC2 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				0EF5985018B878AF00F2DFC2 /* images */,
+				0EE10E7318B9BF28006E3BE1 /* settings2.png */,
+				0EF5986C18B878AF00F2DFC2 /* noavatar.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		0EF5985018B878AF00F2DFC2 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				0EF5985118B878AF00F2DFC2 /* bubbleMine.png */,
+				0EF5985218B878AF00F2DFC2 /* bubbleMine@2x.png */,
+				0EF5985318B878AF00F2DFC2 /* bubbleSomeone.png */,
+				0EF5985418B878AF00F2DFC2 /* bubbleSomeone@2x.png */,
+				0EF5985518B878AF00F2DFC2 /* camera_button_take.png */,
+				0EF5985618B878AF00F2DFC2 /* camera_button_take@2x.png */,
+				0EF5985718B878AF00F2DFC2 /* face.png */,
+				0EF5985818B878AF00F2DFC2 /* face@2x.png */,
+				0EF5985918B878AF00F2DFC2 /* faceDelete.png */,
+				0EF5985A18B878AF00F2DFC2 /* faceDelete@2x.png */,
+				0EF5985B18B878AF00F2DFC2 /* facesBack.png */,
+				0EF5985C18B878AF00F2DFC2 /* facesBack@2x.png */,
+				0EF5985D18B878AF00F2DFC2 /* keyboard.png */,
+				0EF5985E18B878AF00F2DFC2 /* missingAvatar.png */,
+				0EF5985F18B878AF00F2DFC2 /* missingAvatar@2x.png */,
+				0EF5986018B878AF00F2DFC2 /* Speak.png */,
+				0EF5986118B878AF00F2DFC2 /* Speak@2x.png */,
+				0EF5986218B878AF00F2DFC2 /* Text.png */,
+				0EF5986318B878AF00F2DFC2 /* Text@2x.png */,
+				0EF5986418B878AF00F2DFC2 /* typingMine.png */,
+				0EF5986518B878AF00F2DFC2 /* typingMine@2x.png */,
+				0EF5986618B878AF00F2DFC2 /* typingSomeone.png */,
+				0EF5986718B878AF00F2DFC2 /* typingSomeone@2x.png */,
+				0EF5986818B878AF00F2DFC2 /* video.png */,
+				0EF5986918B878AF00F2DFC2 /* video@2x.png */,
+				0EF5986A18B878AF00F2DFC2 /* Voice.png */,
+				0EF5986B18B878AF00F2DFC2 /* Voice@2x.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		0EF5988C18B884D500F2DFC2 /* sort */ = {
+			isa = PBXGroup;
+			children = (
+				0EF5988D18B884E200F2DFC2 /* ChineseString.h */,
+				0EF5988E18B884E200F2DFC2 /* ChineseString.m */,
+				0EF5988F18B884E200F2DFC2 /* pinyin.c */,
+				0EF5989018B884E200F2DFC2 /* pinyin.h */,
+			);
+			name = sort;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1401,11 +1576,40 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EF5987A18B878AF00F2DFC2 /* missingAvatar.png in Resources */,
 				0382495A18A78E80006AE205 /* build-libidn.sh in Resources */,
+				0EF5987C18B878AF00F2DFC2 /* Speak.png in Resources */,
+				0EF5987418B878AF00F2DFC2 /* face@2x.png in Resources */,
 				039FA46B1879D9C400E9F255 /* Images.xcassets in Resources */,
+				0EF5987718B878AF00F2DFC2 /* facesBack.png in Resources */,
+				0EF5987318B878AF00F2DFC2 /* face.png in Resources */,
+				0EE10E7418B9BF28006E3BE1 /* settings2.png in Resources */,
+				0EF5986E18B878AF00F2DFC2 /* bubbleMine@2x.png in Resources */,
+				0EF5988518B878AF00F2DFC2 /* video@2x.png in Resources */,
+				0EF5987218B878AF00F2DFC2 /* camera_button_take@2x.png in Resources */,
+				0EF5988818B878AF00F2DFC2 /* noavatar.png in Resources */,
+				0EF5987018B878AF00F2DFC2 /* bubbleSomeone@2x.png in Resources */,
+				0EF5988118B878AF00F2DFC2 /* typingMine@2x.png in Resources */,
+				0EF5987918B878AF00F2DFC2 /* keyboard.png in Resources */,
+				0EF5987D18B878AF00F2DFC2 /* Speak@2x.png in Resources */,
+				0EF5987518B878AF00F2DFC2 /* faceDelete.png in Resources */,
+				0EF5988318B878AF00F2DFC2 /* typingSomeone@2x.png in Resources */,
+				0EF5987F18B878AF00F2DFC2 /* Text@2x.png in Resources */,
+				0EF5988418B878AF00F2DFC2 /* video.png in Resources */,
+				0EF5987618B878AF00F2DFC2 /* faceDelete@2x.png in Resources */,
+				0EF5986D18B878AF00F2DFC2 /* bubbleMine.png in Resources */,
+				0EF5987E18B878AF00F2DFC2 /* Text.png in Resources */,
+				0EF5987118B878AF00F2DFC2 /* camera_button_take.png in Resources */,
+				0EF5988218B878AF00F2DFC2 /* typingSomeone.png in Resources */,
 				039FA45D1879D9C400E9F255 /* InfoPlist.strings in Resources */,
 				0382495518A78E80006AE205 /* README.txt in Resources */,
+				0EF5988018B878AF00F2DFC2 /* typingMine.png in Resources */,
+				0EF5988618B878AF00F2DFC2 /* Voice.png in Resources */,
+				0EF5987818B878AF00F2DFC2 /* facesBack@2x.png in Resources */,
+				0EF5986F18B878AF00F2DFC2 /* bubbleSomeone.png in Resources */,
+				0EF5987B18B878AF00F2DFC2 /* missingAvatar@2x.png in Resources */,
 				039FA4661879D9C400E9F255 /* Main.storyboard in Resources */,
+				0EF5988718B878AF00F2DFC2 /* Voice@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1436,6 +1640,7 @@
 				038248C718A78E5C006AE205 /* XMPPvCardTempLabel.m in Sources */,
 				038247C018A78E52006AE205 /* XMPPParser.m in Sources */,
 				038248B018A78E5C006AE205 /* XMPPRoomCoreDataStorage.m in Sources */,
+				0EF5989218B884E200F2DFC2 /* pinyin.c in Sources */,
 				038248D918A78E5C006AE205 /* XMPPCapabilities.m in Sources */,
 				038248A718A78E5C006AE205 /* XMPPRoster.m in Sources */,
 				0382495818A78E80006AE205 /* DDXMLElement.m in Sources */,
@@ -1462,6 +1667,7 @@
 				038248E818A78E5C006AE205 /* NSXMLElement+XEP_0203.m in Sources */,
 				0382496E18A79233006AE205 /* STreamXMPP.m in Sources */,
 				0382495318A78E80006AE205 /* ContextFilterLogFormatter.m in Sources */,
+				0EF5983C18B86D3500F2DFC2 /* TwitterChatViewController.m in Sources */,
 				038248B818A78E5C006AE205 /* XMPPRoomMessageMemoryStorageObject.m in Sources */,
 				039FA4631879D9C400E9F255 /* AppDelegate.m in Sources */,
 				038248AC18A78E5C006AE205 /* XMPPIQ+LastActivity.m in Sources */,
@@ -1503,12 +1709,14 @@
 				038248B118A78E5C006AE205 /* XMPPRoomMessageCoreDataStorageObject.m in Sources */,
 				038248A818A78E5C006AE205 /* XMPPSystemInputActivityMonitor.m in Sources */,
 				039FA45F1879D9C400E9F255 /* main.m in Sources */,
+				0EB18D2F18B717EA008D76B6 /* LoginViewController.m in Sources */,
 				038248DD18A78E5C006AE205 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
 				038248A218A78E5C006AE205 /* XMPPRosterCoreDataStorage.m in Sources */,
 				038247BD18A78E52006AE205 /* XMPPJID.m in Sources */,
 				0382495418A78E80006AE205 /* DispatchQueueLogFormatter.m in Sources */,
 				038248C018A78E5C006AE205 /* XMPPvCardCoreDataStorageObject.m in Sources */,
 				038248BA18A78E5C006AE205 /* XMPPMessage+XEP0045.m in Sources */,
+				0EF5984E18B873B700F2DFC2 /* MBProgressHUD.m in Sources */,
 				038248DA18A78E5C006AE205 /* XMPPMessageArchiving.xcdatamodeld in Sources */,
 				038248EA18A78E5C006AE205 /* XMPPAttentionModule.m in Sources */,
 				038248BD18A78E5C006AE205 /* XMPPvCard.xcdatamodeld in Sources */,
@@ -1522,15 +1730,19 @@
 				038248B318A78E5C006AE205 /* XMPPRoomHybrid.xcdatamodeld in Sources */,
 				038247BB18A78E52006AE205 /* XMPPElement.m in Sources */,
 				038248E618A78E5C006AE205 /* XMPPAutoTime.m in Sources */,
+				0EF5989118B884E200F2DFC2 /* ChineseString.m in Sources */,
 				038248D718A78E5C006AE205 /* XMPPCapsCoreDataStorageObject.m in Sources */,
+				0EF5984818B8716400F2DFC2 /* TwitterFollowing.m in Sources */,
 				0382495218A78E80006AE205 /* DDTTYLogger.m in Sources */,
 				038247C218A78E52006AE205 /* XMPPStream.m in Sources */,
 				038248A518A78E5C006AE205 /* XMPPRosterMemoryStorage.m in Sources */,
+				0EF5984518B8714D00F2DFC2 /* TwitterFollower.m in Sources */,
 				038248B518A78E5C006AE205 /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */,
 				038248E018A78E5C006AE205 /* XMPPMessage+XEP_0172.m in Sources */,
 				0382492118A78E78006AE205 /* LibIDN.m in Sources */,
 				038248AA18A78E5C006AE205 /* XMPPIQ+JabberRPCResonse.m in Sources */,
 				038248DE18A78E5C006AE205 /* XMPPMessageArchiving.m in Sources */,
+				0EF5984B18B8737D00F2DFC2 /* ImageCache.m in Sources */,
 				038248AD18A78E5C006AE205 /* XMPPLastActivity.m in Sources */,
 				038248E718A78E5C006AE205 /* XMPPTime.m in Sources */,
 				0382495718A78E80006AE205 /* DDXMLDocument.m in Sources */,
@@ -1678,6 +1890,7 @@
 					"$(inherited)",
 					/Users/wangshuai/Desktop/projects/twitterchat,
 					/usr/lib/libxml2.dylib,
+					/Users/wangsh/Desktop/github/twitterchat,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "twitterchat/twitterchat-Prefix.pch";
@@ -1690,6 +1903,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/wangshuai/Desktop/projects/twitterchat/Vendor/libidn,
+					/Users/wangsh/Desktop/github/twitterchat/Vendor/libidn,
 				);
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1706,6 +1920,7 @@
 					"$(inherited)",
 					/Users/wangshuai/Desktop/projects/twitterchat,
 					/usr/lib/libxml2.dylib,
+					/Users/wangsh/Desktop/github/twitterchat,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "twitterchat/twitterchat-Prefix.pch";
@@ -1718,6 +1933,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/wangshuai/Desktop/projects/twitterchat/Vendor/libidn,
+					/Users/wangsh/Desktop/github/twitterchat/Vendor/libidn,
 				);
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <arcstreamsdk/STreamSession.h>
 #import <arcstreamsdk/STreamObject.h>
+#import "LoginViewController.h"
 
 @implementation AppDelegate
 
@@ -27,6 +28,13 @@
     }];
     //chat
     [NSThread sleepForTimeInterval:5];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    LoginViewController * login = [[LoginViewController alloc]init];
+    UINavigationController * nav = [[UINavigationController alloc]initWithRootViewController:login];
+    [self.window setRootViewController:nav];
     return YES;
 }
 							
