@@ -287,6 +287,12 @@
     }
     return arrayForArrays;
 }
-
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    ImageCache *imageCache = [ImageCache sharedObject];
+//    NSMutableArray * keys = [sortedArrForArrays objectAtIndex:indexPath.section];
+//    ChineseString * userStr = [keys objectAtIndex:indexPath.row];
+//    NSString *userName = [userStr string];
+//    [imageCache setFriendID:userName];
+}
 
 @end

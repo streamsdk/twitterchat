@@ -49,14 +49,16 @@
     [self.view addSubview:loginButton];
 }
 -(void)loginUser{
-    STreamUser * user = [[STreamUser alloc]init];
+//    STreamUser * user = [[STreamUser alloc]init];
     
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
     HUD.labelText = @"loading friends...";
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
-       [user logIn:@"timslogn@gmail.com" withPassword:@"streamsdk1"];
-        NSLog(@"%@",[user errorMessage]);
+//       [user logIn:@"timslogn@gmail.com" withPassword:@"streamsdk1"];
+//        NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
+//        userDefaults setObject:<#(id)#> forKey:<#(NSString *)#>
+//        NSLog(@"%@",[user errorMessage]);
        /*  error = [user errorMessage];
         if ([[user errorMessage] length] == 0) {
             STreamUser *user = [[STreamUser alloc] init];

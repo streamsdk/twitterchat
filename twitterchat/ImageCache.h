@@ -21,4 +21,9 @@
 -(NSMutableArray *)getTwittersFollowing;
 
 -(NSString *)getPath;
+
+-(void) setFriendID:(NSString *)friendID;
+
+-(NSString *) getFriendID;
+
 @end

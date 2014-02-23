@@ -12,6 +12,7 @@ static NSMutableDictionary *_userMetaData;
 
 static NSMutableArray * _followerArray;
 static NSMutableArray * _followingArray;
+static NSString *_friendID;
 
 @implementation ImageCache
 
@@ -48,6 +49,13 @@ static NSMutableArray * _followingArray;
 -(NSMutableArray *)getTwittersFollowing{
     
     return _followingArray;
+}
+-(void) setFriendID:(NSString *)friendID{
+    _friendID = friendID;
+}
+
+-(NSString *) getFriendID{
+    return _friendID;
 }
 -(NSString *)getPath {
     NSDateFormatter* formater = [[NSDateFormatter alloc] init];
