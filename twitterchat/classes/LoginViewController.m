@@ -117,8 +117,8 @@
         [HUD removeFromSuperview];
         HUD = nil;
     }];
-
-   
+    
+    //[self fetchAccounts];
    
 }
 - (void)didReceiveMemoryWarning
@@ -126,7 +126,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (void)fetchAccounts:(NSString *)userName{
+- (void)fetchAccounts{
     
     if ([self userHasAccessToTwitter]) {
         
@@ -136,7 +136,8 @@
         
         for (ACAccount *acc in twitterAccounts){
             
-            
+            NSLog(@"account name: %@", [acc username]);
+            [self fetchFellowerAndFollowing:[acc username]];
             
         }
     }
