@@ -243,6 +243,7 @@
 		0EFE582E18BC505E0083D94E /* undo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EFE582418BC505E0083D94E /* undo.png */; };
 		0EFE583318BC51A00083D94E /* VideoHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EFE57F518BC3C570083D94E /* VideoHandler.m */; };
 		0EFE583418BC53F10083D94E /* XMPPRoomOccupantCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 0382480718A78E5B006AE205 /* XMPPRoomOccupantCoreDataStorageObject.m */; };
+		0EFE583718BC6BF20083D94E /* TalkDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EFE583618BC6BF20083D94E /* TalkDB.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -671,6 +672,8 @@
 		0EFE582218BC505E0083D94E /* redo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redo.png; sourceTree = "<group>"; };
 		0EFE582318BC505E0083D94E /* tick512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tick512.png; sourceTree = "<group>"; };
 		0EFE582418BC505E0083D94E /* undo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = undo.png; sourceTree = "<group>"; };
+		0EFE583518BC6BF20083D94E /* TalkDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalkDB.h; sourceTree = "<group>"; };
+		0EFE583618BC6BF20083D94E /* TalkDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalkDB.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1431,6 +1434,8 @@
 		0382496618A791F0006AE205 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				0EFE583518BC6BF20083D94E /* TalkDB.h */,
+				0EFE583618BC6BF20083D94E /* TalkDB.m */,
 				0382496718A79201006AE205 /* ACKMessageDB.h */,
 				0382496818A79201006AE205 /* ACKMessageDB.m */,
 			);
@@ -1986,6 +1991,7 @@
 				038248B418A78E5C006AE205 /* XMPPRoomHybridStorage.m in Sources */,
 				0EFE57D518BC3AB60083D94E /* MBProgressHUD.m in Sources */,
 				0EFE581718BC4F730083D94E /* ImageViewController.m in Sources */,
+				0EFE583718BC6BF20083D94E /* TalkDB.m in Sources */,
 				0EFE581818BC4F730083D94E /* MyToolbar.m in Sources */,
 				038248D518A78E5C006AE205 /* XMPPCapabilities.xcdatamodel in Sources */,
 				038248A118A78E5C006AE205 /* XMPPRoster.xcdatamodel in Sources */,

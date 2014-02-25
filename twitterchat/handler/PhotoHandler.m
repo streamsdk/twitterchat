@@ -9,7 +9,7 @@
 #import "PhotoHandler.h"
 #import "NSBubbleData.h"
 //#import "UIImageViewController.h"
-//#import "TalkDB.h"
+#import "TalkDB.h"
 #import "STreamXMPP.h"
 #import <arcstreamsdk/JSONKit.h>
 #import <arcstreamsdk/STreamFile.h>
@@ -25,7 +25,7 @@
 @end
 @implementation PhotoHandler
 
-
+@synthesize delegate;
 @synthesize controller;
 @synthesize type;
 @synthesize photopath;
@@ -107,18 +107,18 @@
         [bubbleData addObject:bubble];
         
         [data writeToFile:photoPath atomically:YES];
-//        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
-//        NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
-//        if (time)
-//            [friendDict setObject:time forKey:@"time"];
-//        [friendDict setObject:photoPath forKey:@"photo"];
-//        [jsonDic setObject:friendDict forKey:sendID];
-//        NSString  *str = [jsonDic JSONString];
-//        
-//        TalkDB * db = [[TalkDB alloc]init];
-//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-//        [db insertDBUserID:[handler getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+        if (time)
+            [friendDict setObject:time forKey:@"time"];
+        [friendDict setObject:photoPath forKey:@"photo"];
+        [jsonDic setObject:friendDict forKey:sendID];
+        NSString  *str = [jsonDic JSONString];
+        
+        TalkDB * db = [[TalkDB alloc]init];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
 //
 //        UploadDB * uploadDb = [[UploadDB alloc]init];
 //        [uploadDb insertUploadDB:[handler getUserID] filePath:photoPath withTime:time withFrom:sendID withType:@"photo"];
@@ -134,6 +134,8 @@
         [cache addFileUpload:file];
         
         [super doFileUpload:fileArray];
+    
+    [delegate reloadTable];
 //    }
 //    
 }

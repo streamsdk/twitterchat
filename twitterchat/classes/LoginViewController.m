@@ -19,6 +19,7 @@
 @end
 
 @implementation LoginViewController
+@synthesize accountStore = _accountStore;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,6 +36,8 @@
     self.navigationController.navigationBarHidden = YES;
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
+//    [self fetchFellowerAndFollowing:@"15Slogn"];
+    
     ImageCache * imagechache= [ImageCache sharedObject];
     TwitterChatViewController * vc = [TwitterChatViewController alloc];
     [vc setLoading:YES];
@@ -88,7 +91,7 @@
 
     [imagechache addTwittersFollowing:followingArray];
     
-//    [self fetchFellowerAndFollowing:@"15Slogn"];
+
 	// Do any additional setup after loading the view.
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [loginButton setFrame:CGRectMake(20, self.view.frame.size.height-100, self.view.frame.size.width-40, 60)];
@@ -100,29 +103,14 @@
     [self.view addSubview:loginButton];
 }
 -(void)loginUser{
-//    STreamUser * user = [[STreamUser alloc]init];
     
+    STreamUser * user = [[STreamUser alloc]init];
+     __block NSString * error;
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
     HUD.labelText = @"loading friends...";
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
-//       [user logIn:@"timslogn@gmail.com" withPassword:@"streamsdk1"];
-//        NSUserDefaults * userDefaults =[NSUserDefaults standardUserDefaults];
-//        userDefaults setObject:<#(id)#> forKey:<#(NSString *)#>
-//        NSLog(@"%@",[user errorMessage]);
-       /*  error = [user errorMessage];
-        if ([[user errorMessage] length] == 0) {
-            STreamUser *user = [[STreamUser alloc] init];
-            [user loadUserMetadata:userName response:^(BOOL succeed, NSString *error){
-                if ([error isEqualToString:userName]){
-                
-                }
-            }];
-            
-        }*/
-        
-       
-
+        [user signUp:@"" withPassword:@"" withMetadata:nil];
     }completionBlock:^{
         TwitterChatViewController * vc = [TwitterChatViewController alloc];
         [self.navigationController pushViewController:vc animated:YES];

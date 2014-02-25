@@ -175,17 +175,17 @@
      ChineseString *str = (ChineseString *) [arr objectAtIndex:indexPath.row];
     if (segmentedControl.selectedSegmentIndex == 0) {
         for (TwitterFollower *f in followerArray) {
-            if ([f.name isEqualToString:str.string]) {
+            if ([f.screenName isEqualToString:str.string]) {
                 cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
-                [self loadProfileId:f withCell:cell];
+                [self loadFollowerProfileId:f withCell:cell];
             }
         }
 
     }else{
         for (TwitterFollowing *f in followerArray) {
-            if ([f.name isEqualToString:str.string]) {
+            if ([f.screenName isEqualToString:str.string]) {
                 cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
-                [self loadProfileId:f withCell:cell];
+                [self loadFollowingProfileId:f withCell:cell];
             }
         }
 
@@ -197,7 +197,7 @@
     return cell;
 }
 
--(void)loadProfileId:(TwitterFollower *)follower withCell:(UITableViewCell *)cell{
+-(void)loadFollowerProfileId:(TwitterFollower *)follower withCell:(UITableViewCell *)cell{
     ImageCache *imagechache = [ImageCache sharedObject];
     NSURL *url = [NSURL URLWithString:follower.profileUrl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -206,13 +206,31 @@
                            completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                                if (!error ){
                                    NSString *profilePath = [[imagechache getPath] stringByAppendingString:@".png"];
-                                   [data writeToFile:profilePath atomically:YES];
+                                   [follower setProfilePath:profilePath];
                                    UIImage *_image = [UIImage imageWithData:data];
                                    [self setImage:_image withCell:cell];
      
                                }
                            }];
 
+    
+}
+-(void)loadFollowingProfileId:(TwitterFollowing *)following withCell:(UITableViewCell *)cell{
+    ImageCache *imagechache = [ImageCache sharedObject];
+    NSURL *url = [NSURL URLWithString:following.profileUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (!error ){
+                                   NSString *profilePath = [[imagechache getPath] stringByAppendingString:@".png"];
+                                   [following setProfilePath:profilePath];
+                                   UIImage *_image = [UIImage imageWithData:data];
+                                   [self setImage:_image withCell:cell];
+                                   
+                               }
+                           }];
+    
     
 }
 
@@ -234,7 +252,7 @@
     for(int i = 0; i < [arrToSort count]; i++) {
         ChineseString *chineseString=[[ChineseString alloc]init];
         TwitterFollower * f = [arrToSort objectAtIndex:i];
-        chineseString.string=[NSString stringWithString:f.name];
+        chineseString.string=[NSString stringWithString:f.screenName];
         
         if(chineseString.string==nil){
             chineseString.string=@"";
@@ -293,7 +311,22 @@
     NSMutableArray * keys = [sortedArrForArrays objectAtIndex:indexPath.section];
     ChineseString * userStr = [keys objectAtIndex:indexPath.row];
     NSString *userName = [userStr string];
-    [imageCache setFriendID:userName];
+    
+    if (segmentedControl.selectedSegmentIndex == 0) {
+        for (TwitterFollower *f in followerArray) {
+            if ([f.screenName isEqualToString:userName]) {
+                [imageCache setFriendID:f.userid];
+            }
+        }
+        
+    }else{
+        for (TwitterFollowing *f in followerArray) {
+            if ([f.screenName isEqualToString:userName]) {
+                 [imageCache setFriendID:f.userid];
+            }
+        }
+        
+    }
     MainController * mainVC= [[MainController alloc]init];
     [self.navigationController pushViewController:mainVC animated:NO];
 }

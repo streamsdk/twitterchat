@@ -27,6 +27,8 @@
 #import "MessageHandler.h"
 #import "AudioHandler.h"
 #import "ImageViewController.h"
+#import "TalkDB.h"
+#import "UIImageViewController.h"
 #define BUTTON_TAG 20000
 #define TOOLBARTAG		200
 #define TABLEVIEWTAG	300
@@ -86,26 +88,26 @@
     keyboardIsShow=NO;
     isFace = NO;
     isVideoFromGallery = NO;
-    recordOrKeyboardButton = [createUI setButtonFrame:CGRectMake(0, 5, 30, 30) withTitle:(@"nil")];
+    recordOrKeyboardButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:(@"nil")];
     [recordOrKeyboardButton setImage:[UIImage imageNamed:@"microphonefat.png"] forState:UIControlStateNormal];
     [recordOrKeyboardButton addTarget:self action:@selector(KeyboardTorecordClicked) forControlEvents:UIControlEventTouchUpInside];
    
-    iconButton = [createUI setButtonFrame:CGRectMake(30, 8, 24, 24) withTitle:@"nil"];
+    iconButton = [createUI setButtonFrame:CGRectMake(0, 5, 30, 30) withTitle:@"nil"];
     [iconButton setImage:[UIImage imageNamed:@"plus256.png"] forState:UIControlStateNormal];
     [iconButton addTarget:self action:@selector(photoClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    messageText = [createUI setTextFrame:CGRectMake(60, 3, toolBar.frame.size.width-95, 34)];
+    messageText = [createUI setTextFrame:CGRectMake(33, 3, toolBar.frame.size.width-65, 34)];
     messageText.delegate = self;
     messageText.returnKeyType = UIReturnKeySend;
     messageText.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    faceButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:@"nil"];
-    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
-    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
+//    faceButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:@"nil"];
+//    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
+//    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
 
     [toolBar addSubview:recordOrKeyboardButton];
     [toolBar addSubview:iconButton];
     [toolBar addSubview:messageText];
-    [toolBar addSubview:faceButton];
+//    [toolBar addSubview:faceButton];
     
 }
 
@@ -121,12 +123,12 @@
 //    NSString * userID = [handler getUserID];
 //    
     bubbleData = [[NSMutableArray alloc]init];
-//    TalkDB * talk =[[TalkDB alloc]init];
-//    bubbleData = [talk readInitDB:userID withOtherID:sendToID];
-//    for (NSBubbleData * data in bubbleData) {
-//        data.delegate = self;
-//    }
-//    
+    TalkDB * talk =[[TalkDB alloc]init];
+    bubbleData = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    for (NSBubbleData * data in bubbleData) {
+        data.delegate = self;
+    }
+//
 //    NSMutableDictionary *userMetaData = [imageCache getUserMetadata:userID];
 //    NSString *pImageId = [userMetaData objectForKey:@"profileImageId"];
 //    myData = [imageCache getImage:pImageId];
@@ -258,14 +260,7 @@
 - (NSBubbleData *)bubbleTableView:(UIBubbleTableView *)tableView dataForRow:(NSInteger)row
 {
     ImageCache *imageCache = [ImageCache sharedObject];
-//    HandlerUserIdAndDateFormater *handler = [HandlerUserIdAndDateFormater sharedObject];
-//    NSMutableDictionary *userMetaData = [imageCache getUserMetadata:[handler getUserID]];
-//    NSString *pImageId = [userMetaData objectForKey:@"profileImageId"];
-//    myData = [imageCache getImage:pImageId];
-//    NSString *sendToID =[imageCache getFriendID];
-//    NSMutableDictionary *metaData = [imageCache getUserMetadata:sendToID];
-//    NSString *pImageId2 = [metaData objectForKey:@"profileImageId"];
-//    otherData = [imageCache getImage:pImageId2];
+    
     return [bubbleData objectAtIndex:row];
 }
 
@@ -374,16 +369,15 @@
 //    NSMutableDictionary *userMetaData = [imageCache getUserMetadata:[handler getUserID]];
 //    NSString *pImageId = [userMetaData objectForKey:@"profileImageId"];
 //    myData = [imageCache getImage:pImageId];
-//    NSString *sendToID =[imageCache getFriendID];
-//    NSMutableArray * dataArray = [[NSMutableArray alloc]init];
-//    TalkDB * talk =[[TalkDB alloc]init];
-//    dataArray = [talk readInitDB:[handler getUserID] withOtherID:sendToID];
-//    bubbleData = dataArray;
-//    for (NSBubbleData * data in bubbleData) {
-//        data.delegate = self;
-//    }
-    bubbleData = [[NSMutableArray alloc]init];
     NSString *sendToID =[imageCache getFriendID];
+    NSMutableArray * dataArray = [[NSMutableArray alloc]init];
+    TalkDB * talk =[[TalkDB alloc]init];
+    dataArray = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    bubbleData = dataArray;
+    for (NSBubbleData * data in bubbleData) {
+        data.delegate = self;
+    }
+    bubbleData = [[NSMutableArray alloc]init];
     if (sendToID) {
         [photoHandler setController:self];
         [photoHandler sendPhoto:data forBubbleDataArray:bubbleData forBubbleMyData:myData withSendId:sendToID withTime:time];
@@ -760,7 +754,7 @@
         UIImagePickerController * imagePickerController = [[UIImagePickerController alloc]init];
         imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
         imagePickerController.delegate = self;
-        imagePickerController.allowsEditing = NO;
+//        imagePickerController.allowsEditing = NO;
         imagePickerController.mediaTypes =  [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
         [self presentViewController:imagePickerController animated:YES completion:NULL];
     }
@@ -894,14 +888,13 @@
         isVideo = NO;
     }
     if(isClearData){
-//        HandlerUserIdAndDateFormater *handler = [HandlerUserIdAndDateFormater sharedObject];
-//        ImageCache * imagecache = [ImageCache sharedObject];
-//        TalkDB * talk = [[TalkDB alloc]init];
-//        if (buttonIndex == 1) {
-//            [talk deleteDB:[handler getUserID] withOtherID:[imagecache getFriendID]];
-////        }
-//        bubbleData = [[NSMutableArray alloc]init];
-//        bubbleData = [talk readInitDB:[handler getUserID] withOtherID:[imagecache getFriendID]];
+        ImageCache * imagecache = [ImageCache sharedObject];
+        TalkDB * talk = [[TalkDB alloc]init];
+        if (buttonIndex == 1) {
+            [talk deleteDB:@"15slogn" withOtherID:[imagecache getFriendID]];
+        }
+        bubbleData = [[NSMutableArray alloc]init];
+        bubbleData = [talk readInitDB:@"15slogn" withOtherID:[imagecache getFriendID]];
         [bubbleTableView reloadData];
         isClearData = NO;
     }
@@ -964,21 +957,22 @@
         [self scrollBubbleViewToBottomAnimated:YES];
     }
     if (buttonTag == 1) {
-        [self takeVideo];
+        [self takePhoto];
         [self scrollBubbleViewToBottomAnimated:YES];
     }
     if (buttonTag == 2) {
-        [self addVideo];
+        keyboardIsShow = YES;
+        [self faceClicked];
         [self scrollBubbleViewToBottomAnimated:YES];
     }
         
 }
 
 -(void)bigImage:(UIImage *)image{
-//    UIImageViewController * iView = [[UIImageViewController alloc]init];
-//    iView.image = image;
-//    iView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-//    [self presentViewController:iView animated:YES completion:nil];
+    UIImageViewController * iView = [[UIImageViewController alloc]init];
+    iView.image = image;
+    iView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self presentViewController:iView animated:YES completion:nil];
 }
 
 -(void) playerVideo:(NSString *)path  withTime:(NSString *)time withDate:(NSDate *)date{

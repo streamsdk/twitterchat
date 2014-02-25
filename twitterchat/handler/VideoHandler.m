@@ -17,7 +17,7 @@
 #import <arcstreamsdk/STreamFile.h>
 #import "AppDelegate.h"
 #import "Progress.h"
-
+#import "TalkDB.h"
 
 @implementation VideoHandler
 
@@ -129,7 +129,6 @@
         date = [NSDate dateWithTimeIntervalSinceNow:0];
         MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:videoPath];
         player.shouldAutoplay = NO;
-//        NSData *videoData = [NSData dataWithContentsOfFile:_mp4Path];
         UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
         img = fileImage;
         NSBubbleData * bdata = [NSBubbleData dataWithImage:fileImage withTime:_time withType:@"video" date:date type:BubbleTypeMine withVidePath:_mp4Path withJsonBody:@""];
@@ -249,12 +248,12 @@
         [jsonDic setObject:friendDict forKey:_sendID];
         NSString  *str = [jsonDic JSONString];
         
-//        TalkDB * db = [[TalkDB alloc]init];
-//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-//        
-//        
-//        [db insertDBUserID:[handler getUserID] fromID:_sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+        TalkDB * db = [[TalkDB alloc]init];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        
+        
+        [db insertDBUserID:@"15slogn" fromID:_sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
 //        UploadDB * uploadDb = [[UploadDB alloc]init];
 //        [uploadDb insertUploadDB:[handler getUserID] filePath:_mp4Path withTime:time withFrom:_sendID withType:@"video"];
         

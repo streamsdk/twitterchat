@@ -10,12 +10,17 @@
 #import <arcstreamsdk/STreamSession.h>
 #import <arcstreamsdk/STreamObject.h>
 #import "LoginViewController.h"
+#import "TalkDB.h"
+#import "ACKMessageDB.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-   
+    ACKMessageDB *ack = [[ACKMessageDB alloc]init];
+    [ack initDB];
+    TalkDB * talk = [[TalkDB alloc]init];
+    [talk initDB];
     
     [STreamSession setUpServerUrl:@"http://streamsdk.cn/api/"];
     [STreamSession authenticate:@"D0F265CCCA4B5CD697C95BD5048A7A88" secretKey:@"64163935A44EDEDFD1D19BD12929431A"

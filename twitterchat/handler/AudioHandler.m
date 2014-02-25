@@ -8,7 +8,7 @@
 
 #import "AudioHandler.h"
 #import "NSBubbleData.h"
-//#import "TalkDB.h"
+#import "TalkDB.h"
 #import "STreamXMPP.h"
 #import <arcstreamsdk/JSONKit.h> 
 #import "ACKMessageDB.h"
@@ -75,7 +75,7 @@
 //        [super doFileUpload:fileArray];
 //        
 //    }else{
-//        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
+        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
         NSURL* url = [NSURL fileURLWithPath:voice.recordPath];
         NSError * err = nil;
         NSData * audioData = [NSData dataWithContentsOfFile:[url path] options: 0 error:&err];
@@ -86,17 +86,17 @@
             bubble.avatar = [UIImage imageWithData:myData];
         [bubbleData addObject:bubble];
 //
-//        NSMutableDictionary * friendsDict = [NSMutableDictionary dictionary];
-//        [friendsDict setObject:bodyData forKey:@"time"];
-//        [friendsDict setObject:[url path] forKey:@"audiodata"];
-//        [jsonDic setObject:friendsDict forKey:sendID];
-//        NSString * str = [jsonDic JSONString];
-//        TalkDB * db = [[TalkDB alloc]init];
-//        
-//        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-//        [db insertDBUserID:[handler getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
-//        
+        NSMutableDictionary * friendsDict = [NSMutableDictionary dictionary];
+        [friendsDict setObject:bodyData forKey:@"time"];
+        [friendsDict setObject:[url path] forKey:@"audiodata"];
+        [jsonDic setObject:friendsDict forKey:sendID];
+        NSString * str = [jsonDic JSONString];
+        TalkDB * db = [[TalkDB alloc]init];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+//
 //        UploadDB * uploadDb = [[UploadDB alloc]init];
 //        [uploadDb insertUploadDB:[handler getUserID] filePath:voice.recordPath withTime:bodyData withFrom:sendID withType:@"voice"];
 //        

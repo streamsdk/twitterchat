@@ -8,7 +8,7 @@
 
 #import "MessageHandler.h"
 #import <arcstreamsdk/JSONKit.h>
-//#import "TalkDB.h"
+#import "TalkDB.h"
 #import "NSBubbleData.h"
 #import "STreamXMPP.h"
 #import "ACKMessageDB.h"
@@ -53,24 +53,24 @@
 //        
 //        
     NSString *messageSent = [messagesDic JSONString];
-//
-//    NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
-//    [friendDict setObject:messages forKey:@"messages"];
-//    [jsonDic setObject:friendDict forKey:sendID];
-//    NSString  *str = [jsonDic JSONString];
-//    
-//    TalkDB * db = [[TalkDB alloc]init];
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-//    
+
+    NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+    [friendDict setObject:messages forKey:@"messages"];
+    [jsonDic setObject:friendDict forKey:sendID];
+    NSString  *str = [jsonDic JSONString];
+
+    TalkDB * db = [[TalkDB alloc]init];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+
 //    ACKMessageDB *ack = [[ACKMessageDB alloc]init];
-//    [ack insertDB:[NSString stringWithFormat:@"%lld", milliseconds] withUserID:[handler getUserID] fromID:sendID withContent:messageSent withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
-//
+//    [ack insertDB:[NSString stringWithFormat:@"%lld", milliseconds] withUserID:@"15slog" fromID:sendID withContent:messageSent withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
+
     STreamXMPP *con = [STreamXMPP sharedObject];
      [con sendMessage:sendID withMessage:messageSent];
+
+    [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
 //
-//    [db insertDBUserID:[handler getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
-//    
    
 }
 @end
