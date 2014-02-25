@@ -35,9 +35,60 @@
     self.navigationController.navigationBarHidden = YES;
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
+    ImageCache * imagechache= [ImageCache sharedObject];
+    TwitterChatViewController * vc = [TwitterChatViewController alloc];
+    [vc setLoading:YES];
+     NSMutableArray *followerArray = [[NSMutableArray alloc]init];
+    TwitterFollower * follower = [[TwitterFollower alloc]init];
+    [follower setName:@"Stream SDK"];
+    [follower setScreenName:@"StreamSDK1"];
+    [follower setUserid:@"1344682561"];
+    [follower setProfileUrl:@"http://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png"];
     
+    TwitterFollower * follower1 = [[TwitterFollower alloc]init];
+    [follower1 setName:@"rob guy"];
+    [follower1 setScreenName:@"robguy16"];
+    [follower1 setUserid:@"1344650912"];
+    [follower1 setProfileUrl:@"http://abs.twimg.com/sticky/default_profile_images/default_profile_3_normal.png"];
     
-    [self fetchFellowerAndFollowing:@"15Slogn"];
+    TwitterFollower * follower2 = [[TwitterFollower alloc]init];
+    [follower2 setName:@"wang shuai"];
+    [follower2 setScreenName:@"wangshuaichen"];
+    [follower2 setUserid:@"97532178"];
+    [follower2 setProfileUrl:@"http://pbs.twimg.com/profile_images/579697246/Desert_Landscape_normal.jpg"];
+    
+    [followerArray addObject:follower];
+    [followerArray addObject:follower1];
+    [followerArray addObject:follower2];
+    [imagechache addTwittersFollower:followerArray];
+
+    NSMutableArray *followingArray = [[NSMutableArray alloc]init];
+    
+    TwitterFollower * following = [[TwitterFollower alloc]init];
+    [following setName:@"edward yang"];
+    [following setScreenName:@"edwardyangey"];
+    [following setUserid:@"111616635"];
+    [following setProfileUrl:@"http://pbs.twimg.com/profile_images/417354254995951616/jj_ay5lq_normal.jpeg"];
+    
+    TwitterFollower * following1 = [[TwitterFollower alloc]init];
+    [following1 setName:@"Stream SDK"];
+    [following1 setScreenName:@"StreamSDK1"];
+    [following1 setUserid:@"1344682561"];
+    [following1 setProfileUrl:@"http://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png"];
+    
+    TwitterFollower * following2 = [[TwitterFollower alloc]init];
+    [following2 setName:@"wang shuai"];
+    [following2 setScreenName:@"wangshuaichen"];
+    [following2 setUserid:@"97532178"];
+    [following2 setProfileUrl:@"http://pbs.twimg.com/profile_images/579697246/Desert_Landscape_normal.jpg"];
+    
+    [followingArray addObject:following];
+    [followingArray addObject:following1];
+    [followingArray addObject:following2];
+
+    [imagechache addTwittersFollowing:followingArray];
+    
+//    [self fetchFellowerAndFollowing:@"15Slogn"];
 	// Do any additional setup after loading the view.
     UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [loginButton setFrame:CGRectMake(20, self.view.frame.size.height-100, self.view.frame.size.width-40, 60)];

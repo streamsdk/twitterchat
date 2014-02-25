@@ -9,8 +9,8 @@
 #import "NSBubbleData.h"
 #import "UIBubbleHeaderTableViewCell.h"
 #import "UIBubbleTypingTableViewCell.h"
-//#import "AppDelegate.h"
-//#import "Progress.h"
+#import "AppDelegate.h"
+#import "Progress.h"
 #import <arcstreamsdk/JSONKit.h>
 #import <arcstreamsdk/STreamSession.h>
 //#import "TalkDB.h"
@@ -236,7 +236,7 @@
     cell.data = data;
     cell.showAvatar = self.showAvatars;
     cell.tag =indexPath.row+1000*indexPath.section;;
-    /*if (cell.data.type == BubbleTypeMine) {
+    if (cell.data.type == BubbleTypeMine) {
          Progress * p = [[Progress alloc]init];
         if ( cell.data.fileType == FileVideo) {
             UIProgressView*progressView = [[UIProgressView alloc]init];
@@ -291,13 +291,13 @@
             UILabel *label2 = [[UILabel alloc]init];
             label2.frame = CGRectMake(0, 5, 60, 30);
             [label2 setFont:[UIFont systemFontOfSize:12.0f]];
-            label.text=@"enfkewnfwf";
+            label.text=@"";
             NSString * path =data.photopath;
             [APPDELEGATE.progressDict setValue:p forKey:path];
            
         }
     }else{
-        if (cell.data.fileType == FileVideo) {
+       /* if (cell.data.fileType == FileVideo) {
             NSData *jsonData = [cell.data.jsonBody dataUsingEncoding:NSUTF8StringEncoding];
             JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
             NSDictionary *json = [decoder objectWithData:jsonData];
@@ -354,8 +354,8 @@
                 }
                 
             }
-        }
-    }*/
+        }*/
+    }
     
     return cell;
 }

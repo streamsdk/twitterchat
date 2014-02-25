@@ -13,7 +13,8 @@ static NSMutableDictionary *_userMetaData;
 static NSMutableArray * _followerArray;
 static NSMutableArray * _followingArray;
 static NSString *_friendID;
-
+static NSMutableArray *_fileUpload;
+static NSMutableArray *_colors;
 @implementation ImageCache
 
 
@@ -26,7 +27,8 @@ static NSString *_friendID;
        
         _followerArray =[[NSMutableArray alloc]init];
         _followingArray = [[NSMutableArray alloc]init];
-        
+        _fileUpload = [[NSMutableArray alloc]init];
+        _colors = [[NSMutableArray alloc]init];
     });
     
     return sharedInstance;
@@ -63,4 +65,30 @@ static NSString *_friendID;
     NSString *path = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/out-%@", [formater stringFromDate:[NSDate date]]];
     return path;
 }
+
+-(void) addFileUpload:(FilesUpload *)file{
+    
+    [_fileUpload addObject:file];
+}
+
+-(NSMutableArray *)getFileUpload{
+    return _fileUpload;
+}
+
+-(void)removeFileUpload:(FilesUpload *)file{
+    
+    [_fileUpload removeObject:file];
+}
+-(void)removeAllFileUpload {
+    [_fileUpload removeAllObjects];
+}
+
+-(void) addBrushColor:(UIColor *)color{
+    [_colors addObject:color];
+}
+
+-(NSMutableArray *)getBrushColor{
+    return _colors;
+}
+
 @end

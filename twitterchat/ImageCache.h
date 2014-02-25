@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FilesUpload.h"
 @interface ImageCache : NSObject
 
 +(ImageCache *)sharedObject;
@@ -26,4 +26,15 @@
 
 -(NSString *) getFriendID;
 
+-(void) addFileUpload:(FilesUpload *)file;
+
+-(NSMutableArray *)getFileUpload;
+
+-(void)removeFileUpload:(FilesUpload *)file;
+
+-(void)removeAllFileUpload;
+
+-(void)addBrushColor:(UIColor *)color;
+
+-(NSMutableArray *)getBrushColor;
 @end

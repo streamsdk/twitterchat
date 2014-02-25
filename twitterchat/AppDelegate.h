@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#define APPDELEGATE ((AppDelegate *)[[UIApplication sharedApplication] delegate])
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (nonatomic,strong) UIProgressView * progressView;
+@property (nonatomic,retain) NSMutableDictionary *progressDict;
 @end

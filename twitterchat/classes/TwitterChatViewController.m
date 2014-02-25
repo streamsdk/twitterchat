@@ -13,6 +13,7 @@
 #import "MBProgressHUD.h"
 #import "ChineseString.h"
 #import "pinyin.h"
+#import "MainController.h"
 
 @interface TwitterChatViewController ()
 {
@@ -150,7 +151,7 @@
     label.frame = CGRectMake(10, 0, 320, 24);
     label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor whiteColor];
-    label.font=[UIFont fontWithName:@"Arial" size:22.0f];
+    label.font=[UIFont fontWithName:@"Arial" size:19.0f];
     label.text = sectionTitle;
     
     UIView * sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 24)] ;
@@ -288,11 +289,13 @@
     return arrayForArrays;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    ImageCache *imageCache = [ImageCache sharedObject];
-//    NSMutableArray * keys = [sortedArrForArrays objectAtIndex:indexPath.section];
-//    ChineseString * userStr = [keys objectAtIndex:indexPath.row];
-//    NSString *userName = [userStr string];
-//    [imageCache setFriendID:userName];
+    ImageCache *imageCache = [ImageCache sharedObject];
+    NSMutableArray * keys = [sortedArrForArrays objectAtIndex:indexPath.section];
+    ChineseString * userStr = [keys objectAtIndex:indexPath.row];
+    NSString *userName = [userStr string];
+    [imageCache setFriendID:userName];
+    MainController * mainVC= [[MainController alloc]init];
+    [self.navigationController pushViewController:mainVC animated:NO];
 }
 
 @end
