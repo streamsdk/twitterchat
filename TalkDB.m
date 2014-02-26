@@ -101,12 +101,14 @@
             NSDictionary *ret = [jsonstring objectFromJSONString];
             NSDictionary * chatDic = [ret objectForKey:friendID];
         
-             NSString *nameFilePath = [self getCacheDirectory];
-            NSArray *array = [[NSArray alloc]initWithContentsOfFile:nameFilePath];
+//             NSString *nameFilePath = [self getCacheDirectory];
+//            NSArray *array = [[NSArray alloc]initWithContentsOfFile:nameFilePath];
+//            NSString * _uesrID = nil;
+//            if (array && [array count]!= 0) {
+//                _uesrID = [array objectAtIndex:0];
+//            }
             NSString * _uesrID = nil;
-            if (array && [array count]!= 0) {
-                _uesrID = [array objectAtIndex:0];
-            }
+            _uesrID = [imageCache getUserID];
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
             NSDate *date = [dateFormatter dateFromString:time2];

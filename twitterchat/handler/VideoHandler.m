@@ -191,14 +191,14 @@
    
     NSMutableDictionary *bodyDic = [[NSMutableDictionary alloc] init];
     long long milliseconds = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
-    
+    ImageCache *cache = [ImageCache sharedObject];
     if (time)
         [bodyDic setObject:time forKey:@"duration"];
     [bodyDic setObject:@"video" forKey:@"type"];
-    [bodyDic setObject:@"15slogn" forKey:@"from"];
+    [bodyDic setObject:[cache getUserID] forKey:@"from"];
     [bodyDic setObject:[NSString stringWithFormat:@"%lld", milliseconds] forKey:@"id"];
     
-    ImageCache *cache = [ImageCache sharedObject];
+    
 //    NSMutableDictionary *userMetadata = [cache getUserMetadata:_sendID];
 //    if (userMetadata && [userMetadata objectForKey:@"token"]){
 //        [bodyDic setObject:[userMetadata objectForKey:@"token"] forKey:@"token"];
@@ -253,9 +253,9 @@
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
         
         
-        [db insertDBUserID:@"15slogn" fromID:_sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+        [db insertDBUserID:[cache getUserID] fromID:_sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
         UploadDB * uploadDb = [[UploadDB alloc]init];
-        [uploadDb insertUploadDB:@"15slogn" filePath:_mp4Path withTime:time withFrom:_sendID withType:@"video"];
+        [uploadDb insertUploadDB:[cache getUserID] filePath:_mp4Path withTime:time withFrom:_sendID withType:@"video"];
         
         if (fileArray!=nil && [fileArray count]!=0) {
             FilesUpload * f =[fileArray objectAtIndex:0];

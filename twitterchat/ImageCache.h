@@ -55,4 +55,9 @@
 -(void) saveDate:(NSDate *)date;
 
 -(NSDate *)getDate;
+
+-(void) saveUserID:(NSString *)userID;
+
+-(NSString *)getUserID;
+
 @end

@@ -10,10 +10,10 @@
 
 @interface TwitterFollower : NSObject
 
-@property (nonatomic, strong)NSString *name;
-@property (nonatomic, strong)NSString *screenName;
-@property (nonatomic, strong)NSString *userid;
-@property (nonatomic, strong)NSString *profileUrl;
-@property (nonatomic, strong)NSString *profilePath;
+@property (nonatomic, retain)NSString *name;
+@property (nonatomic, retain)NSString *screenName;
+@property (nonatomic, retain)NSString *userid;
+@property (nonatomic, retain)NSString *profileUrl;
+@property (nonatomic, retain)NSString *profilePath;
 
 @end

@@ -32,7 +32,7 @@
 
 -(void) sendAudio :(Voice *)voice forBubbleDataArray:(NSMutableArray *)bubbleData forBubbleMyData:(NSData *) myData withSendId:(NSString *)sendID
 {
-//    HandlerUserIdAndDateFormater *handler = [HandlerUserIdAndDateFormater sharedObject];
+    ImageCache *imagecache = [ImageCache sharedObject];
     NSString * bodyData = [NSString stringWithFormat:@"%d",(int)voice.recordTime];
 
     NSMutableDictionary *bodyDic = [[NSMutableDictionary alloc] init];
@@ -40,7 +40,7 @@
     [bodyDic setObject:[NSString stringWithFormat:@"%lld", milliseconds] forKey:@"id"];
     [bodyDic setObject:bodyData forKey:@"duration"];
     [bodyDic setObject:@"voice" forKey:@"type"];
-    [bodyDic setObject:@"15slogn" forKey:@"from"];
+    [bodyDic setObject:[imagecache getUserID] forKey:@"from"];
 
     ImageCache *cache = [ImageCache sharedObject];
 //    NSMutableDictionary *userMetadata = [cache getUserMetadata:sendID];
@@ -95,10 +95,10 @@
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-        [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+        [db insertDBUserID:[imagecache getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
 
         UploadDB * uploadDb = [[UploadDB alloc]init];
-        [uploadDb insertUploadDB:@"15slogn" filePath:voice.recordPath withTime:bodyData withFrom:sendID withType:@"voice"];
+        [uploadDb insertUploadDB:[imagecache getUserID] filePath:voice.recordPath withTime:bodyData withFrom:sendID withType:@"voice"];
         
         if (fileArray != nil && [fileArray count] != 0) {
             FilesUpload * f =[fileArray objectAtIndex:0];

@@ -23,7 +23,6 @@
 
 - (void)doFileUpload:(NSMutableArray *)files{
     
-//    HandlerUserIdAndDateFormater * handler = [HandlerUserIdAndDateFormater sharedObject];
     FilesUpload * f = [files objectAtIndex:0];
     ImageCache * cache  =[ImageCache sharedObject];
     NSData * data = [NSData dataWithContentsOfFile:f.filepath];
@@ -49,7 +48,7 @@
             NSDate *date = [NSDate dateWithTimeIntervalSinceNow:0];
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-            [ack insertDB:f.chatId withUserID:@"15slogn" fromID:f.userId withContent:bodyJsonData withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+            [ack insertDB:f.chatId withUserID:[cache getUserID] fromID:f.userId withContent:bodyJsonData withTime:[dateFormatter stringFromDate:date] withIsMine:0];
             UploadDB * uploadDb = [[UploadDB alloc]init];
             [uploadDb deleteUploadDBFromFilepath:f.filepath];
             [con sendFileMessage:f.userId withFileId:[sf fileId] withMessage:bodyJsonData];

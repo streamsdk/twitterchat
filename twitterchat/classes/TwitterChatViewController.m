@@ -114,7 +114,7 @@
 }
 
 -(void) connect {
-   
+    ImageCache * imagecache  = [ImageCache sharedObject];
     [self setMessagesProtocol:mainVC];
     STreamXMPP *con = [STreamXMPP sharedObject];
     [con setXmppDelegate:self];
@@ -122,7 +122,7 @@
     [self setMessagesProtocol:mainVC];
     if (![con connected]){
         self.title = @"connecting...";
-        [con connect:@"" withPassword:@""];
+        [con connect:[imagecache getUserID] withPassword:@"password"];
     }
     
 }
@@ -176,9 +176,10 @@
 
 - (void)readHistory{
 
+    ImageCache * imagecache = [ImageCache sharedObject];
     STreamObject *so = [[STreamObject alloc] init];
     NSMutableString *history = [[NSMutableString alloc] init];
-    [history appendString:@"15slogn"];
+    [history appendString:[imagecache getUserID]];
     [history appendString:@"messaginghistory"];
     [so loadAll:history];
     NSArray *keys = [so getAllKeys];
@@ -233,7 +234,7 @@
 }
 
 - (void)didReceivePresence:(XMPPPresence *)presence{
-    self.title = @"MyFriends";
+    self.title = @"";
     NSString *presenceType = [presence type];
     if ([presenceType isEqualToString:@"subscribe"]){
         
@@ -255,7 +256,7 @@
     NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc]init];
     NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
     
-    NSString * userID = @"15slogn";
+    NSString * userID = [imageCache getUserID];
     [friendDict setObject:message forKey:@"messages"];
     [jsonDic setObject:friendDict forKey:fromID];
     NSString  *str = [jsonDic JSONString];
@@ -280,7 +281,7 @@
     }
     
     DownloadDB * downloadDB = [[DownloadDB alloc]init];
-    [downloadDB insertDownloadDB:@"15slogn" fileID:fileId withBody:body withFrom:fromID];
+    [downloadDB insertDownloadDB:[imageCache getUserID] fileID:fileId withBody:body withFrom:fromID];
     
     STreamFile *sf = [[STreamFile alloc] init];
     NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
@@ -410,7 +411,7 @@
         }
         
         TalkDB * db = [[TalkDB alloc]init];
-        NSString * userID = @"15slogn";
+        NSString * userID = [imageCache getUserID];
         NSString  *str = [jsonDic JSONString];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
@@ -658,6 +659,7 @@
     if (segmentedControl.selectedSegmentIndex == 0) {
         for (TwitterFollower *f in followerArray) {
             if ([f.screenName isEqualToString:userName]) {
+                f.userid = [NSString stringWithFormat:@"%@",f.userid];
                 [imageCache setFriendID:f.userid];
             }
         }
@@ -665,12 +667,12 @@
     }else{
         for (TwitterFollowing *f in followerArray) {
             if ([f.screenName isEqualToString:userName]) {
+                f.userid = [NSString stringWithFormat:@"%@",f.userid];
                  [imageCache setFriendID:f.userid];
             }
         }
         
     }
-    MainController * mainVC= [[MainController alloc]init];
     [self.navigationController pushViewController:mainVC animated:NO];
 }
 

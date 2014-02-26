@@ -9,10 +9,13 @@
 #import "LoginViewController.h"
 #import "TwitterChatViewController.h"
 #import "MBProgressHUD.h"
+#import <arcstreamsdk/STreamCategoryObject.h>
 #import <arcstreamsdk/STreamUser.h>
+#import <arcstreamsdk/STreamObject.h>
 #import "TwitterFollower.h"
 #import "TwitterFollowing.h"
 #import "ImageCache.h"
+
 @interface LoginViewController ()
 
 @end
@@ -35,9 +38,10 @@
     self.navigationController.navigationBarHidden = YES;
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
-//    [self fetchFellowerAndFollowing:@"15Slogn"];
-    
-    ImageCache * imagechache= [ImageCache sharedObject];
+//    [self fetchFellowerAndFollowing:@"@robguy16"];
+//    
+   /*   ImageCache * imagechache= [ImageCache sharedObject];
+    [imagechache saveUserID:@"1344650912"];
     TwitterChatViewController * vc = [TwitterChatViewController alloc];
     [vc setLoading:YES];
      NSMutableArray *followerArray = [[NSMutableArray alloc]init];
@@ -54,17 +58,21 @@
     [follower1 setProfileUrl:@"http://abs.twimg.com/sticky/default_profile_images/default_profile_3_normal.png"];
     
     TwitterFollower * follower2 = [[TwitterFollower alloc]init];
+//    [follower2 setName:@"wang shuai"];
+//    [follower2 setScreenName:@"wangshuaichen"];
+//    [follower2 setUserid:@"97532178"];
+//    [follower2 setProfileUrl:@"http://pbs.twimg.com/profile_images/579697246/Desert_Landscape_normal.jpg"];
     [follower2 setName:@"wang shuai"];
     [follower2 setScreenName:@"wangshuaichen"];
     [follower2 setUserid:@"97532178"];
     [follower2 setProfileUrl:@"http://pbs.twimg.com/profile_images/579697246/Desert_Landscape_normal.jpg"];
-    
+
     [followerArray addObject:follower];
     [followerArray addObject:follower1];
     [followerArray addObject:follower2];
     [imagechache addTwittersFollower:followerArray];
 
-    NSMutableArray *followingArray = [[NSMutableArray alloc]init];
+  NSMutableArray *followingArray = [[NSMutableArray alloc]init];
     
     TwitterFollower * following = [[TwitterFollower alloc]init];
     [following setName:@"edward yang"];
@@ -88,7 +96,7 @@
     [followingArray addObject:following1];
     [followingArray addObject:following2];
 
-    [imagechache addTwittersFollowing:followingArray];
+    [imagechache addTwittersFollowing:followingArray];*/
     
 
 	// Do any additional setup after loading the view.
@@ -102,14 +110,12 @@
     [self.view addSubview:loginButton];
 }
 -(void)loginUser{
-    
-    STreamUser * user = [[STreamUser alloc]init];
-     __block NSString * error;
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
     HUD.labelText = @"loading friends...";
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
-        [user signUp:@"" withPassword:@"" withMetadata:nil];
+         [self fetchAccounts];
+        
     }completionBlock:^{
         TwitterChatViewController * vc = [TwitterChatViewController alloc];
         [self.navigationController pushViewController:vc animated:YES];
@@ -117,7 +123,7 @@
         HUD = nil;
     }];
     
-//    [self fetchAccounts];
+  
    
 }
 - (void)didReceiveMemoryWarning
@@ -127,6 +133,7 @@
 }
 - (void)fetchAccounts{
     
+    ImageCache * imagecache = [ImageCache sharedObject];
     if ([self userHasAccessToTwitter]) {
         
         ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
@@ -136,8 +143,34 @@
         for (ACAccount *acc in twitterAccounts){
             
             NSLog(@"account name: %@", [acc username]);
-            [self fetchFellowerAndFollowing:[acc username]];
-            
+            id  tData = [acc valueForKey:@"properties"];
+            NSString *userId = [tData valueForKey:@"user_id"];
+            [imagecache saveUserID:userId];
+            STreamUser * user = [[STreamUser alloc]init];
+            NSMutableDictionary *metadata = [[NSMutableDictionary alloc]init];
+            [metadata setObject:userId forKey:@"userid"];
+            [metadata setObject:[acc username] forKey:@"username"];
+            [user signUp:userId withPassword:@"password" withMetadata:metadata];
+            NSLog(@"%@",[user errorMessage]);
+            if ([[user errorMessage] isEqualToString:@""]) {
+                STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
+                STreamObject *so = [[STreamObject alloc] init] ;
+                
+                [so setObjectId:userId];
+                
+                [so addStaff:[acc username] withObject:@"username"];
+                [sto addStreamObject:so];
+                [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
+                    
+                    if (succeed)
+                        NSLog(@"succeed");
+                    else
+                        NSLog(@"failed");
+                }];
+
+            }
+            [self fetchFellowerAndFollowing:[acc accountDescription]];
+            break;
         }
     }
 }
@@ -154,7 +187,7 @@
      TwitterChatViewController * vc = [TwitterChatViewController alloc];
     //  Step 0: Check that the user has local Twitter accounts
     if ([self userHasAccessToTwitter]) {
-        
+    
         //  Step 1:  Obtain access to the user's Twitter accounts
         ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
@@ -236,7 +269,7 @@
                                     NSString *screenName = [user objectForKey:@"screen_name"];
                                     NSString *userId = [user objectForKey:@"id"];
                                     NSString *profileUrl = [user objectForKey:@"profile_image_url"];
-                                     TwitterFollower * following = [[TwitterFollower alloc]init];
+                                    TwitterFollower * following = [[TwitterFollower alloc]init];
                                     [following setName:name];
                                     [following setScreenName:screenName];
                                     [following setUserid:userId];
@@ -244,10 +277,10 @@
                                     
                                     [followingArray addObject:following];
                                     
-                                    NSLog(@"following name: %@", name);
-                                    NSLog(@"following screen name: %@", screenName);
-                                    NSLog(@"following user id: %@", userId);
-                                    NSLog(@"following profile url: %@", profileUrl);
+//                                    NSLog(@"following name: %@", name);
+//                                    NSLog(@"following screen name: %@", screenName);
+//                                    NSLog(@"following user id: %@", userId);
+//                                    NSLog(@"following profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollowing:followingArray];
                                  [vc setLoading:YES];
@@ -262,7 +295,8 @@
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
                         }
                     }
-                }];              }
+                }];
+            }
         }
          ];
         

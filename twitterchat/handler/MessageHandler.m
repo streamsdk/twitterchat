@@ -27,6 +27,8 @@
 }
 
 -(void) sendMessage :(NSString *)messages forBubbleDataArray:(NSMutableArray *)bubbleData forBubbleMyData:(NSData *) myData withSendId:(NSString *)sendID{
+    
+    ImageCache *cache = [ImageCache sharedObject];
     NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc]init];
     NSBubbleData *sendBubble = [NSBubbleData dataWithText:messages date:[NSDate dateWithTimeIntervalSinceNow:0] type:BubbleTypeMine];
     if (myData)
@@ -39,9 +41,9 @@
     [messagesDic setObject:messages forKey:@"message"];
     [messagesDic setObject:[NSString stringWithFormat:@"%lld", milliseconds] forKey:@"id"];
     [messagesDic setObject:@"text" forKey:@"type"];
-    [messagesDic setObject:@"15slogn" forKey:@"from"];
+    [messagesDic setObject:[cache getUserID] forKey:@"from"];
 //
-//    ImageCache *cache = [ImageCache sharedObject];
+//    
 //    NSMutableDictionary *userMetadata = [cache getUserMetadata:sendID];
 //    if (userMetadata && [userMetadata objectForKey:@"token"]){
 //        [messagesDic setObject:[userMetadata objectForKey:@"token"] forKey:@"token"];
@@ -65,7 +67,7 @@
     STreamXMPP *con = [STreamXMPP sharedObject];
      [con sendMessage:sendID withMessage:messageSent];
 
-    [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
+    [db insertDBUserID:[cache getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
 //
    
 }

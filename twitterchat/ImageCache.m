@@ -19,6 +19,7 @@ static NSMutableDictionary *_messagesDict;
 static NSMutableDictionary *_jsonData;
 static NSString * _videoPath;
 static NSDate * _date;
+static NSString * _userId;
 
 @implementation ImageCache
 
@@ -141,4 +142,13 @@ static NSDate * _date;
 -(NSDate *)getDate{
     return _date;
 }
+
+-(void) saveUserID:(NSString *)userID{
+    _userId = userID;
+}
+
+-(NSString *)getUserID{
+    return _userId;
+}
+
 @end

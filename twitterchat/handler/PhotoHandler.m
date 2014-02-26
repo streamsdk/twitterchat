@@ -59,7 +59,7 @@
         [bodyDic setObject:time forKey:@"duration"];
     [bodyDic setObject:[NSString stringWithFormat:@"%lld", milliseconds] forKey:@"id"];
     [bodyDic setObject:@"photo" forKey:@"type"];
-    [bodyDic setObject:@"15slogn" forKey:@"from"];
+    [bodyDic setObject:[cache getUserID] forKey:@"from"];
     
 
 //    NSMutableDictionary *userMetadata = [cache getUserMetadata:sendID];
@@ -95,10 +95,11 @@
          [file setFilepath:photoPath];
         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:0];
         NSBubbleData * bubble;
-        if (time)
+        if (time) {
             bubble = [NSBubbleData dataWithImage:image withImageTime:time withPath:photoPath date:date withType:BubbleTypeMine];
-        else
+        }else{
             bubble = [NSBubbleData dataWithImage:image date:date type:BubbleTypeMine path:photoPath];
+        }
         if (myData) {
             bubble.avatar = [UIImage imageWithData:myData];
         }
@@ -116,10 +117,10 @@
         TalkDB * db = [[TalkDB alloc]init];
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-        [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
+        [db insertDBUserID:[cache getUserID] fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
 
         UploadDB * uploadDb = [[UploadDB alloc]init];
-        [uploadDb insertUploadDB:@"15slogn" filePath:photoPath withTime:time withFrom:sendID withType:@"photo"];
+        [uploadDb insertUploadDB:[cache getUserID] filePath:photoPath withTime:time withFrom:sendID withType:@"photo"];
         
         if (fileArray != nil && [fileArray count] != 0) {
             FilesUpload * f =[fileArray objectAtIndex:0];

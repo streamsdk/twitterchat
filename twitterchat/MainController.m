@@ -22,6 +22,7 @@
 #import "ImageCache.h"
 #import "PlayerDelegate.h"
 #import <arcstreamsdk/JSONKit.h>
+#import <arcstreamsdk/STreamQuery.h>
 #import "PhotoHandler.h"
 #import "VideoHandler.h"
 #import "MessageHandler.h"
@@ -29,6 +30,8 @@
 #import "ImageViewController.h"
 #import "TalkDB.h"
 #import "UIImageViewController.h"
+#import "TwitterFollower.h"
+#import "TwitterFollowing.h"
 
 #define BUTTON_TAG 20000
 #define TOOLBARTAG		200
@@ -111,7 +114,29 @@
 //    [toolBar addSubview:faceButton];
     
 }
-
+-(NSData *)getProfileAvatar{
+    NSData *avatarData;
+    ImageCache * imageCache =  [ImageCache sharedObject];
+    NSString *sendToID = [imageCache getFriendID];
+    NSMutableArray * followerArray = [imageCache getTwittersFollower];
+    for (TwitterFollower *f in followerArray) {
+        
+        f.userid = [NSString stringWithFormat:@"%@",f.userid];
+        if ([f.userid isEqualToString:sendToID]) {
+            avatarData = [NSData dataWithContentsOfFile:f.profilePath];
+        }
+    }
+    NSMutableArray * followingArray = [imageCache getTwittersFollowing];
+    for (TwitterFollowing *f in followingArray) {
+        
+        f.userid = [NSString stringWithFormat:@"%@",f.userid];
+        if ([f.userid isEqualToString:sendToID]) {
+            
+            avatarData = [NSData dataWithContentsOfFile:f.profilePath];
+        }
+    }
+    return avatarData;
+}
 -(void)viewWillAppear:(BOOL)animated{
     
      [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
@@ -119,17 +144,15 @@
     NSString *sendToID = [imageCache getFriendID];
     
     self.title = [NSString stringWithFormat:@"chat to %@",sendToID];
-//
-//    HandlerUserIdAndDateFormater * handler = [HandlerUserIdAndDateFormater sharedObject];
-//    NSString * userID = [handler getUserID];
-//    
+  
     bubbleData = [[NSMutableArray alloc]init];
     TalkDB * talk =[[TalkDB alloc]init];
-    bubbleData = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    bubbleData = [talk readInitDB:[imageCache getUserID] withOtherID:sendToID];
     for (NSBubbleData * data in bubbleData) {
         data.delegate = self;
     }
-//
+    otherData = [self getProfileAvatar];
+   //
 //    NSMutableDictionary *userMetaData = [imageCache getUserMetadata:userID];
 //    NSString *pImageId = [userMetaData objectForKey:@"profileImageId"];
 //    myData = [imageCache getImage:pImageId];
@@ -154,9 +177,9 @@
 //        NSData * data = [NSData dataWithContentsOfFile:path];
 //        [backgroundView setImage:[UIImage imageWithData:data]];
 //    }
-//    [bubbleTableView reloadData];
-//    [self dismissKeyBoard];
-//    [self scrollBubbleViewToBottomAnimated:YES];
+    [bubbleTableView reloadData];
+    [self dismissKeyBoard];
+    [self scrollBubbleViewToBottomAnimated:YES];
 }
 -(void)SetBackground{
     
@@ -249,6 +272,19 @@
     
     audioHandler = [[AudioHandler alloc]init];
 
+    ImageCache * imageCache =  [ImageCache sharedObject];
+   /* STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
+    
+    [sq addLimitId:[imageCache getFriendID]];
+    NSMutableArray *array = [sq find];
+    if (array==nil || [array count]==0) {
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+        label.text =[NSString stringWithFormat:@"%@ no sign up", [imageCache getUserID]];
+        label.textColor = [UIColor grayColor];
+        label.font = [UIFont fontWithName:@"Arial" size:22.0f];
+        bubbleTableView.tableHeaderView=label;
+    }*/
 }
 
 #pragma mark - UIBubbleTableViewDataSource implementation
@@ -275,7 +311,7 @@
 //    NSMutableDictionary *metaData = [imageCache getUserMetadata:sendToID];
 //    NSString *pImageId2 = [metaData objectForKey:@"profileImageId"];
 //    otherData = [imageCache getImage:pImageId2];
-    
+    otherData = [self getProfileAvatar];
     
     NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
     JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
@@ -371,12 +407,11 @@
     NSString *sendToID =[imageCache getFriendID];
     NSMutableArray * dataArray = [[NSMutableArray alloc]init];
     TalkDB * talk =[[TalkDB alloc]init];
-    dataArray = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    dataArray = [talk readInitDB:[imageCache getUserID] withOtherID:sendToID];
     bubbleData = dataArray;
     for (NSBubbleData * data in bubbleData) {
         data.delegate = self;
     }
-    bubbleData = [[NSMutableArray alloc]init];
     if (sendToID) {
         [photoHandler setController:self];
         [photoHandler sendPhoto:data forBubbleDataArray:bubbleData forBubbleMyData:myData withSendId:sendToID withTime:time];
@@ -889,10 +924,10 @@
         ImageCache * imagecache = [ImageCache sharedObject];
         TalkDB * talk = [[TalkDB alloc]init];
         if (buttonIndex == 1) {
-            [talk deleteDB:@"15slogn" withOtherID:[imagecache getFriendID]];
+            [talk deleteDB:[imagecache getUserID] withOtherID:[imagecache getFriendID]];
         }
         bubbleData = [[NSMutableArray alloc]init];
-        bubbleData = [talk readInitDB:@"15slogn" withOtherID:[imagecache getFriendID]];
+        bubbleData = [talk readInitDB:[imagecache getUserID] withOtherID:[imagecache getFriendID]];
         [bubbleTableView reloadData];
         isClearData = NO;
     }
@@ -975,15 +1010,7 @@
 
 -(void) playerVideo:(NSString *)path  withTime:(NSString *)time withDate:(NSDate *)date{
     if ([path hasSuffix:@".mp4"]) {
-//        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-//        NSError *err = nil;
-//        [audioSession setCategory :AVAudioSessionCategoryPlayback error:&err];
-//        DisPlayerViewController * playerVC = [[DisPlayerViewController alloc]init];
-//        playerVC.videopath = path;
-//        playerVC.time = time;
-//        playerVC.date = date;
-//        playerVC.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-//        [self presentViewController:playerVC animated:YES completion:nil];
+
 
     }else{
          return;
@@ -1010,7 +1037,7 @@
         NSString *sendToID =[imageCache getFriendID];
     NSMutableArray * dataArray = [[NSMutableArray alloc]init];
     TalkDB * talk =[[TalkDB alloc]init];
-    dataArray = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    dataArray = [talk readInitDB:[imageCache getUserID] withOtherID:sendToID];
     bubbleData = dataArray;
     for (NSBubbleData * data in bubbleData) {
         data.delegate = self;
