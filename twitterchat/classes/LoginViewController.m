@@ -169,7 +169,7 @@
                 }];
 
             }
-            [self fetchFellowerAndFollowing:[acc accountDescription]];
+            [self fetchFellowerAndFollowing:userId];
             break;
         }
     }
@@ -196,7 +196,7 @@
                 
                 NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
                 NSURL *url = [NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json"];
-                NSDictionary *params = @{@"screen_name" : userName};
+                NSDictionary *params = @{@"user_id" : userName};
                 SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:url parameters:params];
                 [request setAccount:[twitterAccounts lastObject]];
                 
@@ -247,7 +247,7 @@
                 
                 
                 NSURL *followingUrl = [NSURL URLWithString:@"https://api.twitter.com/1.1/friends/list.json"];
-                NSDictionary *followingparams = @{@"screen_name" : userName};
+                NSDictionary *followingparams = @{@"user_id" : userName};
                 SLRequest *followingRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:followingUrl parameters:followingparams];
                 [followingRequest setAccount:[twitterAccounts lastObject]];
                 
