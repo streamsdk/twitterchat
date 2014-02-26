@@ -13,7 +13,6 @@
 #import "TwitterFollower.h"
 #import "TwitterFollowing.h"
 #import "ImageCache.h"
-
 @interface LoginViewController ()
 
 @end
@@ -118,7 +117,7 @@
         HUD = nil;
     }];
     
-    //[self fetchAccounts];
+//    [self fetchAccounts];
    
 }
 - (void)didReceiveMemoryWarning

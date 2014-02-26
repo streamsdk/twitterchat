@@ -14,19 +14,19 @@
 #import "ACKMessageDB.h"
 #import "FilesUpload.h"
 #import "ImageCache.h"
-//#import "UploadDB.h"
+#import "UploadDB.h"
 @implementation AudioHandler
 
 @synthesize isAddUploadDB;
 
 - (void)receiveAudioFile:(NSData *)data withBody:(NSString *)body forBubbleDataArray:(NSMutableArray *)bubbleData forBubbleOtherData:(NSData *) otherData withSendId:(NSString *)sendID withFromId:(NSString *)fromID{
-//    HandlerUserIdAndDateFormater *handler = [HandlerUserIdAndDateFormater sharedObject];
-//       if ([fromID isEqualToString:sendID]) {
-//        NSBubbleData *bubble = [NSBubbleData dataWithtimes:body date:[handler getDate] type:BubbleTypeSomeoneElse withData:data];
-//        if (otherData)
-//            bubble.avatar = [UIImage imageWithData:otherData];
-//        [bubbleData addObject:bubble];
-//    }
+    ImageCache *imagecahce = [ImageCache sharedObject];
+       if ([fromID isEqualToString:sendID]) {
+        NSBubbleData *bubble = [NSBubbleData dataWithtimes:body date:[imagecahce getDate] type:BubbleTypeSomeoneElse withData:data];
+        if (otherData)
+            bubble.avatar = [UIImage imageWithData:otherData];
+        [bubbleData addObject:bubble];
+    }
 }
 
 
@@ -56,25 +56,25 @@
     [file setBodyDict:bodyDic];
     [file setUserId:sendID];
     [file setChatId:[NSString stringWithFormat:@"%lld", milliseconds]];
-//
-//    
-//    if (isAddUploadDB) {
-//        isAddUploadDB = NO;
-//        if (fileArray!=nil && [fileArray count]!=0) {
-//            FilesUpload * f =[fileArray objectAtIndex:0];
-//            long long ftime = [f.time longLongValue];
-//            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
-//                [cache addFileUpload:file];
-//                return;
-//            }
-//            
-//        }else{
-//            [cache addFileUpload:file];
-//        }
-//        
-//        [super doFileUpload:fileArray];
-//        
-//    }else{
+
+    
+    if (isAddUploadDB) {
+        isAddUploadDB = NO;
+        if (fileArray!=nil && [fileArray count]!=0) {
+            FilesUpload * f =[fileArray objectAtIndex:0];
+            long long ftime = [f.time longLongValue];
+            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
+                [cache addFileUpload:file];
+                return;
+            }
+            
+        }else{
+            [cache addFileUpload:file];
+        }
+        
+        [super doFileUpload:fileArray];
+        
+    }else{
         NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc] init];
         NSURL* url = [NSURL fileURLWithPath:voice.recordPath];
         NSError * err = nil;
@@ -96,22 +96,22 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
         [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
-//
-//        UploadDB * uploadDb = [[UploadDB alloc]init];
-//        [uploadDb insertUploadDB:[handler getUserID] filePath:voice.recordPath withTime:bodyData withFrom:sendID withType:@"voice"];
-//        
-//        if (fileArray != nil && [fileArray count] != 0) {
-//            FilesUpload * f =[fileArray objectAtIndex:0];
-//            long long ftime = [f.time longLongValue];
-//            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
-//                [cache addFileUpload:file];
-//                return;
-//            }
-//        }
+
+        UploadDB * uploadDb = [[UploadDB alloc]init];
+        [uploadDb insertUploadDB:@"15slogn" filePath:voice.recordPath withTime:bodyData withFrom:sendID withType:@"voice"];
+        
+        if (fileArray != nil && [fileArray count] != 0) {
+            FilesUpload * f =[fileArray objectAtIndex:0];
+            long long ftime = [f.time longLongValue];
+            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
+                [cache addFileUpload:file];
+                return;
+            }
+        }
         [cache addFileUpload:file];
         [super doFileUpload:fileArray];
-//    }
-//    
+    }
+    
 }
 
 @end

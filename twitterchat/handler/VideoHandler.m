@@ -18,7 +18,7 @@
 #import "AppDelegate.h"
 #import "Progress.h"
 #import "TalkDB.h"
-
+#import "UploadDB.h"
 @implementation VideoHandler
 
 @synthesize controller,videoPath;
@@ -26,23 +26,23 @@
 @synthesize type;
 
 - (void)receiveVideoFile:(NSData *)data forBubbleDataArray:(NSMutableArray *)bubbleData forBubbleOtherData:(NSData *) otherData withVideoTime:(NSString *)time withSendId:(NSString *)sendID withFromId:(NSString *)fromID withJsonBody:(NSString *)body{
-//
-//    HandlerUserIdAndDateFormater * handler = [HandlerUserIdAndDateFormater sharedObject];
-//    
-//    NSString * mp4Path = [handler getVideopath];
-//   
-//    if ([fromID isEqualToString:sendID]) {
-////        NSURL *url = [NSURL fileURLWithPath:mp4Path];
-////        MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:url];
-////        player.shouldAutoplay = NO;
-////        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-//        UIImage *fileImage = [UIImage imageWithData:data];
-//        NSBubbleData *bdata = [NSBubbleData dataWithImage:fileImage withTime:time withType:@"video" date:[handler getDate] type:BubbleTypeSomeoneElse withVidePath:mp4Path withJsonBody:body];
-//        if (otherData)
-//            bdata.avatar = [UIImage imageWithData:otherData];
-//        [bubbleData addObject:bdata];
-//        
-//    }
+
+    ImageCache * imagecache = [ImageCache sharedObject];
+    
+    NSString * mp4Path = [imagecache getVideopath];
+   
+    if ([fromID isEqualToString:sendID]) {
+//        NSURL *url = [NSURL fileURLWithPath:mp4Path];
+//        MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:url];
+//        player.shouldAutoplay = NO;
+//        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+        UIImage *fileImage = [UIImage imageWithData:data];
+        NSBubbleData *bdata = [NSBubbleData dataWithImage:fileImage withTime:time withType:@"video" date:[imagecache getDate] type:BubbleTypeSomeoneElse withVidePath:mp4Path withJsonBody:body];
+        if (otherData)
+            bdata.avatar = [UIImage imageWithData:otherData];
+        [bubbleData addObject:bdata];
+        
+    }
 
 }
 -(void)sendVideoforBubbleDataArray:(NSMutableArray *)bubbleData withVideoTime:(NSString *)time forBubbleMyData:(NSData *) myData withSendId:(NSString *)sendID
@@ -51,23 +51,23 @@
     _myData = myData;
     _sendID = sendID;
     _time = time;
-//    if ([type isEqualToString:@"video"]) {
-//        _mp4Path = [videoPath path];
-//        NSData *videoData = [NSData dataWithContentsOfURL:videoPath];
-//        
-//        date = [NSDate dateWithTimeIntervalSinceNow:0];
-//        MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:videoPath];
-//        player.shouldAutoplay = NO;
-//        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-//        NSBubbleData * bdata = [NSBubbleData dataWithImage:fileImage withTime:_time withType:@"video" date:date type:BubbleTypeMine withVidePath:_mp4Path];
-//        if (_myData)
-//            bdata.avatar = [UIImage imageWithData:_myData];
-//        [_bubbleData addObject:bdata];
-//        UIImage *fileImage = [UIImage imageNamed:@""];
-//        [self sendVideo:fileImage withData:videoData withVideoTime:_time];
-//    }else{
+    if ([type isEqualToString:@"video"]) {
+        /*_mp4Path = [videoPath path];
+        NSData *videoData = [NSData dataWithContentsOfURL:videoPath];
+        
+        date = [NSDate dateWithTimeIntervalSinceNow:0];
+        MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:videoPath];
+        player.shouldAutoplay = NO;
+        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+        NSBubbleData * bdata = [NSBubbleData dataWithImage:fileImage withTime:_time withType:@"video" date:date type:BubbleTypeMine withVidePath:_mp4Path];
+        if (_myData)
+            bdata.avatar = [UIImage imageWithData:_myData];
+        [_bubbleData addObject:bdata];
+        UIImage *fileImage = [UIImage imageNamed:@""];
+        [self sendVideo:fileImage withData:videoData withVideoTime:_time];*/
+    }else{
         [self encodeToMp4];
-//    }
+    }
     
 }
 - (void)encodeToMp4
@@ -129,12 +129,12 @@
         date = [NSDate dateWithTimeIntervalSinceNow:0];
         MPMoviePlayerController *player = [[MPMoviePlayerController alloc]initWithContentURL:videoPath];
         player.shouldAutoplay = NO;
-        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-        img = fileImage;
-        NSBubbleData * bdata = [NSBubbleData dataWithImage:fileImage withTime:_time withType:@"video" date:date type:BubbleTypeMine withVidePath:_mp4Path withJsonBody:@""];
-        if (_myData)
-            bdata.avatar = [UIImage imageWithData:_myData];
-        [_bubbleData addObject:bdata];
+//        UIImage *fileImage = [player thumbnailImageAtTime:1.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+//        img = fileImage;
+//        NSBubbleData * bdata = [NSBubbleData dataWithImage:fileImage withTime:_time withType:@"video" date:date type:BubbleTypeMine withVidePath:_mp4Path withJsonBody:@""];
+//        if (_myData)
+//            bdata.avatar = [UIImage imageWithData:_myData];
+//        [_bubbleData addObject:bdata];
     }
     else
     {
@@ -254,8 +254,8 @@
         
         
         [db insertDBUserID:@"15slogn" fromID:_sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
-//        UploadDB * uploadDb = [[UploadDB alloc]init];
-//        [uploadDb insertUploadDB:[handler getUserID] filePath:_mp4Path withTime:time withFrom:_sendID withType:@"video"];
+        UploadDB * uploadDb = [[UploadDB alloc]init];
+        [uploadDb insertUploadDB:@"15slogn" filePath:_mp4Path withTime:time withFrom:_sendID withType:@"video"];
         
         if (fileArray!=nil && [fileArray count]!=0) {
             FilesUpload * f =[fileArray objectAtIndex:0];

@@ -153,6 +153,8 @@
 		039FA47C1879D9C400E9F255 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 039FA47A1879D9C400E9F255 /* InfoPlist.strings */; };
 		039FA47E1879D9C400E9F255 /* twitterchatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 039FA47D1879D9C400E9F255 /* twitterchatTests.m */; };
 		039FA4881879DAB900E9F255 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4871879DAB900E9F255 /* Social.framework */; };
+		0E41CC6118BD976500D000DD /* DownloadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5D18BD976500D000DD /* DownloadDB.m */; };
+		0E41CC6218BD976500D000DD /* UploadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5F18BD976500D000DD /* UploadDB.m */; };
 		0EB18D2F18B717EA008D76B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB18D2E18B717EA008D76B6 /* LoginViewController.m */; };
 		0EE10E7418B9BF28006E3BE1 /* settings2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E7318B9BF28006E3BE1 /* settings2.png */; };
 		0EE10E8B18BA1764006E3BE1 /* black_bg_ip5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E7618BA1764006E3BE1 /* black_bg_ip5@2x.png */; };
@@ -545,6 +547,12 @@
 		039FA47B1879D9C400E9F255 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		039FA47D1879D9C400E9F255 /* twitterchatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = twitterchatTests.m; sourceTree = "<group>"; };
 		039FA4871879DAB900E9F255 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		0E41CC5B18BD859800D000DD /* GetAllMessagesProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetAllMessagesProtocol.h; sourceTree = "<group>"; };
+		0E41CC5C18BD976500D000DD /* DownloadDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadDB.h; sourceTree = "<group>"; };
+		0E41CC5D18BD976500D000DD /* DownloadDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadDB.m; sourceTree = "<group>"; };
+		0E41CC5E18BD976500D000DD /* UploadDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadDB.h; sourceTree = "<group>"; };
+		0E41CC5F18BD976500D000DD /* UploadDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadDB.m; sourceTree = "<group>"; };
+		0E41CC6018BD976500D000DD /* UploadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadProtocol.h; sourceTree = "<group>"; };
 		0EB18D2D18B717EA008D76B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = classes/LoginViewController.h; sourceTree = "<group>"; };
 		0EB18D2E18B717EA008D76B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = classes/LoginViewController.m; sourceTree = "<group>"; };
 		0EE10E7318B9BF28006E3BE1 /* settings2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings2.png; sourceTree = "<group>"; };
@@ -1434,6 +1442,11 @@
 		0382496618A791F0006AE205 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				0E41CC5C18BD976500D000DD /* DownloadDB.h */,
+				0E41CC5D18BD976500D000DD /* DownloadDB.m */,
+				0E41CC5E18BD976500D000DD /* UploadDB.h */,
+				0E41CC5F18BD976500D000DD /* UploadDB.m */,
+				0E41CC6018BD976500D000DD /* UploadProtocol.h */,
 				0EFE583518BC6BF20083D94E /* TalkDB.h */,
 				0EFE583618BC6BF20083D94E /* TalkDB.m */,
 				0382496718A79201006AE205 /* ACKMessageDB.h */,
@@ -1513,6 +1526,7 @@
 				0EF5988C18B884D500F2DFC2 /* sort */,
 				0EF5984218B870EE00F2DFC2 /* cache */,
 				0EF5983D18B86DC600F2DFC2 /* MBPHUD */,
+				0E41CC5A18BD857E00D000DD /* protocaol */,
 				0EFE580D18BC4F730083D94E /* imagecontroller */,
 				0EF5984118B86DEC00F2DFC2 /* viewcontroller */,
 				039FA4611879D9C400E9F255 /* AppDelegate.h */,
@@ -1553,6 +1567,16 @@
 				039FA47A1879D9C400E9F255 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0E41CC5A18BD857E00D000DD /* protocaol */ = {
+			isa = PBXGroup;
+			children = (
+				0EFE580E18BC4F730083D94E /* ImageSendProtocol.h */,
+				0E41CC5B18BD859800D000DD /* GetAllMessagesProtocol.h */,
+			);
+			name = protocaol;
+			path = imagecontroller;
 			sourceTree = "<group>";
 		};
 		0EE10E7518BA1764006E3BE1 /* libs */ = {
@@ -1762,7 +1786,6 @@
 		0EFE580D18BC4F730083D94E /* imagecontroller */ = {
 			isa = PBXGroup;
 			children = (
-				0EFE580E18BC4F730083D94E /* ImageSendProtocol.h */,
 				0EFE580F18BC4F730083D94E /* ImageViewController.h */,
 				0EFE581018BC4F730083D94E /* ImageViewController.m */,
 				0EFE581118BC4F730083D94E /* MyToolbar.h */,
@@ -1988,6 +2011,7 @@
 				038248CE18A78E5C006AE205 /* TURNSocket.m in Sources */,
 				038248CF18A78E5C006AE205 /* XMPPIQ+XEP_0066.m in Sources */,
 				038247BF18A78E52006AE205 /* XMPPModule.m in Sources */,
+				0E41CC6218BD976500D000DD /* UploadDB.m in Sources */,
 				038248B418A78E5C006AE205 /* XMPPRoomHybridStorage.m in Sources */,
 				0EFE57D518BC3AB60083D94E /* MBProgressHUD.m in Sources */,
 				0EFE581718BC4F730083D94E /* ImageViewController.m in Sources */,
@@ -2029,6 +2053,7 @@
 				038248A218A78E5C006AE205 /* XMPPRosterCoreDataStorage.m in Sources */,
 				038247BD18A78E52006AE205 /* XMPPJID.m in Sources */,
 				0382495418A78E80006AE205 /* DispatchQueueLogFormatter.m in Sources */,
+				0E41CC6118BD976500D000DD /* DownloadDB.m in Sources */,
 				038248C018A78E5C006AE205 /* XMPPvCardCoreDataStorageObject.m in Sources */,
 				038248BA18A78E5C006AE205 /* XMPPMessage+XEP0045.m in Sources */,
 				038248DA18A78E5C006AE205 /* XMPPMessageArchiving.xcdatamodeld in Sources */,

@@ -8,7 +8,6 @@
 
 #import "PhotoHandler.h"
 #import "NSBubbleData.h"
-//#import "UIImageViewController.h"
 #import "TalkDB.h"
 #import "STreamXMPP.h"
 #import <arcstreamsdk/JSONKit.h>
@@ -17,7 +16,7 @@
 #import "ImageCache.h"
 #import "FilesUpload.h"
 #import "AppDelegate.h"
-//#import "UploadDB.h"
+#import "UploadDB.h"
 #import "Progress.h"
 
 @interface PhotoHandler()
@@ -25,28 +24,27 @@
 @end
 @implementation PhotoHandler
 
-@synthesize delegate;
 @synthesize controller;
 @synthesize type;
 @synthesize photopath;
 
 -(void)receiveFile:(NSData *)data withPath:(NSString *)path forBubbleDataArray:(NSMutableArray *)bubbleData withTime:(NSString *)time forBubbleOtherData:(NSData *) otherData withSendId:(NSString *)sendID withFromId:(NSString *)fromID{
-//    HandlerUserIdAndDateFormater * handler = [HandlerUserIdAndDateFormater sharedObject];
-//
-//    if ([fromID isEqualToString:sendID]) {
-//        UIImage * image = [UIImage imageWithData:data];
-//        NSBubbleData * bubble;
-//        if (time) {
-//             bubble = [NSBubbleData dataWithImage:image withImageTime:time withPath:path date:[handler getDate] withType:BubbleTypeSomeoneElse];
-//        }else{
-//            bubble = [NSBubbleData dataWithImage:image date:[handler getDate] type:BubbleTypeSomeoneElse path:path];
-//        }
-//        if (otherData) {
-//            bubble.avatar = [UIImage imageWithData:otherData];
-//        }
-//        [bubbleData addObject:bubble];
-//    }
-//    
+    ImageCache * imagecache = [ImageCache sharedObject];
+
+    if ([fromID isEqualToString:sendID]) {
+        UIImage * image = [UIImage imageWithData:data];
+        NSBubbleData * bubble;
+        if (time) {
+             bubble = [NSBubbleData dataWithImage:image withImageTime:time withPath:path date:[imagecache getDate] withType:BubbleTypeSomeoneElse];
+        }else{
+            bubble = [NSBubbleData dataWithImage:image date:[imagecache getDate] type:BubbleTypeSomeoneElse path:path];
+        }
+        if (otherData) {
+            bubble.avatar = [UIImage imageWithData:otherData];
+        }
+        [bubbleData addObject:bubble];
+    }
+    
 }
 
 -(void) sendPhoto :(NSData *)data forBubbleDataArray:(NSMutableArray *)bubbleData forBubbleMyData:(NSData *) myData withSendId:(NSString *)sendID withTime:(NSString *)time{
@@ -76,25 +74,25 @@
     [file setBodyDict:bodyDic];
     [file setUserId:sendID];
     [file setChatId:[NSString stringWithFormat:@"%lld", milliseconds]];
-//
-//    if ([type isEqualToString:@"photo"]) {
-//        photoPath = photopath;
-//         [file setFilepath:photoPath];
-//        type = nil;
-//        if (fileArray != nil && [fileArray count] != 0) {
-//            FilesUpload * f =[fileArray objectAtIndex:0];
-//            long long ftime = [f.time longLongValue];
-//            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
-//                [cache addFileUpload:file];
-//                return;
-//            }
-//        }else{
-//             [cache addFileUpload:file];
-//        }
-//       
-//        [super doFileUpload:fileArray];
-//    }else{
-//         [file setFilepath:photoPath];
+
+    if ([type isEqualToString:@"photo"]) {
+        photoPath = photopath;
+         [file setFilepath:photoPath];
+        type = nil;
+        if (fileArray != nil && [fileArray count] != 0) {
+            FilesUpload * f =[fileArray objectAtIndex:0];
+            long long ftime = [f.time longLongValue];
+            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
+                [cache addFileUpload:file];
+                return;
+            }
+        }else{
+             [cache addFileUpload:file];
+        }
+       
+        [super doFileUpload:fileArray];
+    }else{
+         [file setFilepath:photoPath];
         NSDate *date = [NSDate dateWithTimeIntervalSinceNow:0];
         NSBubbleData * bubble;
         if (time)
@@ -119,25 +117,23 @@
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
         [db insertDBUserID:@"15slogn" fromID:sendID withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:0];
-//
-//        UploadDB * uploadDb = [[UploadDB alloc]init];
-//        [uploadDb insertUploadDB:[handler getUserID] filePath:photoPath withTime:time withFrom:sendID withType:@"photo"];
-//        
-//        if (fileArray != nil && [fileArray count] != 0) {
-//            FilesUpload * f =[fileArray objectAtIndex:0];
-//            long long ftime = [f.time longLongValue];
-//            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
-//                [cache addFileUpload:file];
-//                return;
-//            }
-//        }
+
+        UploadDB * uploadDb = [[UploadDB alloc]init];
+        [uploadDb insertUploadDB:@"15slogn" filePath:photoPath withTime:time withFrom:sendID withType:@"photo"];
+        
+        if (fileArray != nil && [fileArray count] != 0) {
+            FilesUpload * f =[fileArray objectAtIndex:0];
+            long long ftime = [f.time longLongValue];
+            if ((milliseconds/1000.0 - ftime/1000.0)<8) {
+                [cache addFileUpload:file];
+                return;
+            }
+        }
         [cache addFileUpload:file];
         
         [super doFileUpload:fileArray];
+    }
     
-    [delegate reloadTable];
-//    }
-//    
 }
 
 @end

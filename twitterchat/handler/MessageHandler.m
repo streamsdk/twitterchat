@@ -32,11 +32,7 @@
     if (myData)
         sendBubble.avatar = [UIImage imageWithData:myData];
     [bubbleData addObject:sendBubble];
-  
-//    HandlerUserIdAndDateFormater *handler =[HandlerUserIdAndDateFormater sharedObject];
-//    
-    
-//
+
     //new message format
     long long milliseconds = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
     NSMutableDictionary *messagesDic = [[NSMutableDictionary alloc] init];
@@ -63,8 +59,8 @@
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
 
-//    ACKMessageDB *ack = [[ACKMessageDB alloc]init];
-//    [ack insertDB:[NSString stringWithFormat:@"%lld", milliseconds] withUserID:@"15slog" fromID:sendID withContent:messageSent withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
+    ACKMessageDB *ack = [[ACKMessageDB alloc]init];
+    [ack insertDB:[NSString stringWithFormat:@"%lld", milliseconds] withUserID:@"15slog" fromID:sendID withContent:messageSent withTime:[dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceNow:0]] withIsMine:0];
 
     STreamXMPP *con = [STreamXMPP sharedObject];
      [con sendMessage:sendID withMessage:messageSent];

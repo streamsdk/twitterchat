@@ -14,10 +14,18 @@
 #import "ChineseString.h"
 #import "pinyin.h"
 #import "MainController.h"
+#import "MBProgressHUD.h"
+#import "STreamXMPP.h"
+#import <arcstreamsdk/JSONKit.h>
+#import <arcstreamsdk/STreamFile.h>
+#import "TalkDB.h"
+#import "DownloadDB.h"
+#import "UploadDB.h"
 
-@interface TwitterChatViewController ()
+@interface TwitterChatViewController ()<STreamXMPPProtocol>
 {
     NSMutableArray * followerArray;
+    MainController *mainVC;
 }
 @end
 
@@ -26,6 +34,8 @@
 @synthesize sectionHeadsKeys;
 @synthesize sortedArrForArrays;
 @synthesize segmentedControl;
+@synthesize messagesProtocol;
+@synthesize uploadProtocol;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -43,6 +53,9 @@
     [super viewDidLoad];
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
+    
+    mainVC = [[MainController alloc]init];
+    
      self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings2.png"] style:UIBarButtonItemStyleDone target:self action:@selector(settingClicked)];
     UISegmentedControl *segmentedTemp = [[UISegmentedControl alloc]initWithFrame: CGRectMake(80.0, 3.0, 160.0, 38.0)];
     segmentedControl = segmentedTemp;
@@ -71,6 +84,47 @@
         [self.tableView reloadData];
     }];
    
+    __block MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+    hud.labelText = @"connecting ...";
+    [self.view addSubview:HUD];
+    [hud showAnimated:YES whileExecutingBlock:^{
+        [self connect];
+    }completionBlock:^{
+        [self.tableView reloadData];
+        [hud removeFromSuperview];
+        hud = nil;
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appHasBackInForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+- (void)appHasBackInForeground{
+    __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    HUD.labelText = @"connecting ...";
+    [self.view addSubview:HUD];
+    [HUD showAnimated:YES whileExecutingBlock:^{
+        [self connect];
+    }completionBlock:^{
+        [self.tableView reloadData];
+        [HUD removeFromSuperview];
+        HUD = nil;
+    }];
+}
+
+-(void) connect {
+   
+    [self setMessagesProtocol:mainVC];
+    STreamXMPP *con = [STreamXMPP sharedObject];
+    [con setXmppDelegate:self];
+    [self setUploadProtocol:mainVC];
+    [self setMessagesProtocol:mainVC];
+    if (![con connected]){
+        self.title = @"connecting...";
+        [con connect:@"" withPassword:@""];
+    }
+    
 }
 -(void)loadingFollower{
     while(loading){
@@ -82,6 +136,295 @@
         sleep(1);
     }
 }
+
+- (void)startDownload{
+    DownloadDB * downloadDB = [[DownloadDB alloc]init];
+    NSMutableArray * downloadArray = [downloadDB readDownloadDB];
+    if (downloadArray!=nil && [downloadArray count]!=0) {
+        for (NSMutableArray* array in downloadArray) {
+            NSString * fileId = [array objectAtIndex:0];
+            NSString * body = [array objectAtIndex:1];
+            NSString * fromId = [array objectAtIndex:2];
+            
+            NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
+            JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+            NSMutableDictionary *json = [decoder objectWithData:jsonData];
+            NSString *type = [json objectForKey:@"type"];
+            if (![type isEqualToString:@"video"]) {
+                [downloadDB deleteDownloadDBFromFileID:fileId];
+                [self didReceiveFile:fileId withBody:body withFrom:fromId];
+            }
+            
+        }
+    }
+}
+
+- (void)startUpload{
+    
+    UploadDB * uploadDB = [[UploadDB alloc]init];
+    NSMutableArray * uploadArray = [uploadDB readUploadDB];
+    if (uploadArray != nil && [uploadArray count] != 0) {
+        for (NSMutableArray* array in uploadArray) {
+            NSString * filePath = [array objectAtIndex:0];
+            NSString * time= [array objectAtIndex:1];
+            NSString * fromId = [array objectAtIndex:2];
+            NSString * type = [array objectAtIndex:3];
+            [uploadProtocol uploadVideoPath:filePath withTime:time withFrom:fromId withType:type];
+        }
+    }
+}
+
+- (void)readHistory{
+
+    STreamObject *so = [[STreamObject alloc] init];
+    NSMutableString *history = [[NSMutableString alloc] init];
+    [history appendString:@"15slogn"];
+    [history appendString:@"messaginghistory"];
+    [so loadAll:history];
+    NSArray *keys = [so getAllKeys];
+    NSMutableString *removedKeys = [[NSMutableString alloc] init];
+    int index = 0;
+    for (NSString *key in keys){
+        NSString *value = [so getValue:key];
+        NSString *jsonValue = [value substringFromIndex:13];
+        NSData *jsonData = [jsonValue dataUsingEncoding:NSUTF8StringEncoding];
+        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+        NSDictionary *json = [decoder objectWithData:jsonData];
+        NSString *type = [json objectForKey:@"type"];
+        NSString *from = [json objectForKey:@"from"];
+        if ([type isEqualToString:@"text"]){
+            NSString *receivedMessage = [json objectForKey:@"message"];
+            [self didReceiveMessage:receivedMessage withFrom:from];
+        }
+        if ([type isEqualToString:@"video"] || [type isEqualToString:@"photo"] || [type isEqualToString:@"voice"]){
+            NSString *fileId = [json objectForKey:@"fileId"];
+            [self didReceiveFile:fileId withBody:jsonValue withFrom:from];
+        }
+               [removedKeys appendString:key];
+        if (index != [keys count] - 1){
+            [removedKeys appendString:@"&&"];
+        }
+        
+        index++;
+    }
+    
+    if ([keys count] > 0){
+        STreamObject *sob = [[STreamObject alloc] init];
+        [sob removeKeyInBackground:removedKeys forObjectId:history];
+    }
+    
+}
+
+
+#pragma mark - STreamXMPPProtocol
+- (void)didAuthenticate{
+    NSLog(@"");
+    self.title = @"reading...";
+    [self startDownload];
+    [self readHistory];
+    [self startUpload];
+}
+
+
+
+- (void)didNotAuthenticate:(NSXMLElement *)error{
+    self.title = @"failed...";
+    NSLog(@" ");
+}
+
+- (void)didReceivePresence:(XMPPPresence *)presence{
+    self.title = @"MyFriends";
+    NSString *presenceType = [presence type];
+    if ([presenceType isEqualToString:@"subscribe"]){
+        
+    }
+    if ([presenceType isEqualToString:@"available"]){
+    }
+    if ([presenceType isEqualToString:@"unavailable"]){
+        
+    }
+    
+}
+- (void)didReceiveMessage:(NSString *)message withFrom:(NSString *)fromID{
+    ImageCache *imageCache = [ImageCache sharedObject];
+    NSString *friendId = [imageCache getFriendID];
+    if (![friendId isEqualToString:fromID]) {
+        [imageCache saveMessagesCount:fromID];
+    }
+    
+    NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc]init];
+    NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+    
+    NSString * userID = @"15slogn";
+    [friendDict setObject:message forKey:@"messages"];
+    [jsonDic setObject:friendDict forKey:fromID];
+    NSString  *str = [jsonDic JSONString];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    NSDate * date =[NSDate dateWithTimeIntervalSinceNow:0];
+    NSString * str2 = [dateFormatter stringFromDate:date];
+    
+    TalkDB * db = [[TalkDB alloc]init];
+    [db insertDBUserID:userID fromID:fromID withContent:str withTime:str2 withIsMine:1];
+    
+    [messagesProtocol getMessages:message withFromID:fromID];
+    [self.tableView reloadData];
+}
+
+- (void)didReceiveFile:(NSString *)fileId withBody:(NSString *)body withFrom:(NSString *)fromID{
+    ImageCache *imageCache = [ImageCache sharedObject];    
+    NSString *friendId = [imageCache getFriendID];
+    if (![friendId isEqualToString:fromID]) {
+        [imageCache saveMessagesCount:fromID];
+    }
+    
+    DownloadDB * downloadDB = [[DownloadDB alloc]init];
+    [downloadDB insertDownloadDB:@"15slogn" fileID:fileId withBody:body withFrom:fromID];
+    
+    STreamFile *sf = [[STreamFile alloc] init];
+    NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
+    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+    NSMutableDictionary *json = [decoder objectWithData:jsonData];
+    NSString *type = [json objectForKey:@"type"];
+    
+    /*if ([type isEqualToString:@"video"]) {
+        
+        
+      NSString *tid= [json objectForKey:@"tid"];
+        if (tid){
+            fileId = tid;
+            [downloadDB insertDownloadDB:[handler getUserID] fileID:fileId withBody:body withFrom:fromID];
+        }else {
+            [imageCache saveJsonData:body forFileId:fileId];
+            NSString *jsonBody = [imageCache getJsonData:fileId];
+            NSData *jsonData = [jsonBody dataUsingEncoding:NSUTF8StringEncoding];
+            JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+            NSMutableDictionary *json = [decoder objectWithData:jsonData];
+            NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc]init];
+            NSString *type = [json objectForKey:@"type"];
+            NSString *fromUser = [json objectForKey:@"from"];
+            NSString * fileId = [json objectForKey:@"fileId"];
+            NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+            NSString *duration = [json objectForKey:@"duration"];
+            NSString * tidpath= [[handler getPath] stringByAppendingString:@".png"];
+            NSData *data ;
+            [data writeToFile:tidpath atomically:YES];
+            [handler videoPath:tidpath];
+            
+            if (duration)
+                [friendDict setObject:duration forKey:@"duration"];
+            [friendDict setObject:tidpath forKey:@"tidpath"];
+            [friendDict setObject:fileId forKey:@"fileId"];
+            [jsonDic setObject:friendDict forKey:fromUser];
+            
+            NSMutableDictionary * jsondict = [[NSMutableDictionary alloc]init];
+            [jsondict setObject:type forKey:@"type"];
+            [jsondict setObject:tidpath forKey:@"tidpath"];
+            if (duration)
+                [jsondict setObject:duration forKey:@"duration"];
+            [jsondict setObject:fileId forKey:@"fileId"];
+            
+            NSString* jsBody = [jsondict JSONString];
+            
+            TalkDB * db = [[TalkDB alloc]init];
+            NSString * userID = [handler getUserID];
+            NSString  *str = [jsonDic JSONString];
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+            NSDate * date = [NSDate dateWithTimeIntervalSinceNow:0];
+            [handler setDate:date];
+            [db insertDBUserID:userID fromID:fromUser withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:1];
+            [messagesProtocol getFiles:data withFromID:fromUser withBody:jsBody withPath:tidpath];
+            [self.tableView reloadData];
+            return;
+        }
+    }*/
+    [imageCache saveJsonData:body forFileId:fileId];
+    
+    
+    [sf downloadAsData:fileId downloadedData:^(NSData *data, NSString *objectId){
+        
+        
+        NSString *jsonBody = [imageCache getJsonData:objectId];
+        [downloadDB deleteDownloadDBFromFileID:objectId];
+        NSData *jsonData = [jsonBody dataUsingEncoding:NSUTF8StringEncoding];
+        JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
+        NSMutableDictionary *json = [decoder objectWithData:jsonData];
+        NSString *type = [json objectForKey:@"type"];
+        NSString *fromUser = [json objectForKey:@"from"];
+        
+        NSMutableDictionary *jsonDic = [[NSMutableDictionary alloc]init];
+        NSString * path;
+        NSString * jsBody;
+        if ([type isEqualToString:@"photo"]) {
+            NSString *duration = [json objectForKey:@"duration"];
+            NSString *photoPath = [[imageCache getPath] stringByAppendingString:@".png"];
+            [data writeToFile:photoPath atomically:YES];
+            NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+            if (duration) {
+                [friendDict setObject:duration forKey:@"time"];
+            }
+            [friendDict setObject:photoPath forKey:@"photo"];
+            [jsonDic setObject:friendDict forKey:fromUser];
+            path = photoPath;
+            jsBody = body;
+        }else if ([type isEqualToString:@"video"]){
+            
+            NSString * tid = [json objectForKey:@"tid"];
+            NSString * fileId = [json objectForKey:@"fileId"];
+            NSMutableDictionary *friendDict = [NSMutableDictionary dictionary];
+            NSString *duration = [json objectForKey:@"duration"];
+            NSString * tidpath= [[imageCache getPath] stringByAppendingString:@".png"];
+            [data writeToFile : tidpath atomically: YES ];
+            [imageCache savevideoPath:tidpath];
+            
+            if (duration)
+                [friendDict setObject:duration forKey:@"duration"];
+            [friendDict setObject:tidpath forKey:@"tidpath"];
+            [friendDict setObject:tid forKey:@"tid"];
+            [friendDict setObject:fileId forKey:@"fileId"];
+            [jsonDic setObject:friendDict forKey:fromUser];
+            path = tidpath;
+            
+            
+            NSMutableDictionary * jsondict = [[NSMutableDictionary alloc]init];
+            [jsondict setObject:type forKey:@"type"];
+            [jsondict setObject:tidpath forKey:@"tidpath"];
+            if (duration)
+                [jsondict setObject:duration forKey:@"duration"];
+            [jsondict setObject:tid forKey:@"tid"];
+            [jsondict setObject:fileId forKey:@"fileId"];
+            jsBody = [jsondict JSONString];
+        }else if ([type isEqualToString:@"voice"]){
+            
+            NSString *duration = [json objectForKey:@"duration"];
+            NSMutableDictionary * friendsDict = [NSMutableDictionary dictionary];
+            NSString * recordFilePath = [[imageCache getPath] stringByAppendingString:@".aac"];
+            [data writeToFile:recordFilePath atomically:YES];
+            path = recordFilePath;
+            [friendsDict setObject:duration forKey:@"time"];
+            [friendsDict setObject:recordFilePath forKey:@"audiodata"];
+            [jsonDic setObject:friendsDict forKey:fromUser];
+            jsBody = body;
+        }
+        
+        TalkDB * db = [[TalkDB alloc]init];
+        NSString * userID = @"15slogn";
+        NSString  *str = [jsonDic JSONString];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        NSDate * date = [NSDate dateWithTimeIntervalSinceNow:0];
+        [imageCache saveDate:date];
+        [db insertDBUserID:userID fromID:fromUser withContent:str withTime:[dateFormatter stringFromDate:date] withIsMine:1];
+        [messagesProtocol getFiles:data withFromID:fromUser withBody:jsBody withPath:path];
+        [self.tableView reloadData];
+        
+    }];
+    
+    
+}
+
 -(void) segmentAction:(UISegmentedControl *)segmented{
     
     sectionHeadsKeys=[[NSMutableArray alloc]init];

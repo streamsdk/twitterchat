@@ -8,18 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "MediaHandler.h"
-@protocol reloadTableDeleage <NSObject>
 
--(void)reloadTable;
-
-@end
 @interface PhotoHandler : MediaHandler
 
 @property (nonatomic,retain) NSString  *type;
 
 @property (nonatomic,retain) NSString  *photopath;
-
-@property (assign)id<reloadTableDeleage>delegate;
 
 @property(nonatomic, strong)UIViewController *controller;
 

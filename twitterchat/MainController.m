@@ -29,6 +29,7 @@
 #import "ImageViewController.h"
 #import "TalkDB.h"
 #import "UIImageViewController.h"
+
 #define BUTTON_TAG 20000
 #define TOOLBARTAG		200
 #define TABLEVIEWTAG	300
@@ -172,13 +173,13 @@
 }
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (isVideo) {
-        CGFloat _time = [self getVideoDuration:videoPath];
+       /* CGFloat _time = [self getVideoDuration:videoPath];
         NSString * time = [NSString stringWithFormat:@"%f",_time];
         if (buttonIndex == 0) {
             [self sendVideo:time];
         }else{
             [self sendVideo:nil];
-        }
+        }*/
         isVideo = NO;
     }else{
         if (buttonIndex ==0) {
@@ -259,20 +260,18 @@
 
 - (NSBubbleData *)bubbleTableView:(UIBubbleTableView *)tableView dataForRow:(NSInteger)row
 {
-    ImageCache *imageCache = [ImageCache sharedObject];
-    
     return [bubbleData objectAtIndex:row];
 }
 
 -(void)getFiles:(NSData *)data withFromID:(NSString *)fromID withBody:(NSString *)body withPath:(NSString *)path{
     
-//    ImageCache *imageCache = [ImageCache sharedObject];
-//    HandlerUserIdAndDateFormater *handler = [HandlerUserIdAndDateFormater sharedObject];
+    ImageCache *imageCache = [ImageCache sharedObject];
+    NSString *sendToID =[imageCache getFriendID];
 //    
 //    NSMutableDictionary *userMetaData = [imageCache getUserMetadata:[handler getUserID]];
 //    NSString *pImageId = [userMetaData objectForKey:@"profileImageId"];
 //    myData = [imageCache getImage:pImageId];
-//    NSString *sendToID =[imageCache getFriendID];
+
 //    NSMutableDictionary *metaData = [imageCache getUserMetadata:sendToID];
 //    NSString *pImageId2 = [metaData objectForKey:@"profileImageId"];
 //    otherData = [imageCache getImage:pImageId2];
@@ -292,21 +291,21 @@
       
         
     }else{
-//        if ([type isEqualToString:@"photo"]) {
-//            [photoHandler setController:self];
-//            [photoHandler receiveFile:data withPath:path forBubbleDataArray:bubbleData withTime:time forBubbleOtherData:otherData withSendId:sendToID withFromId:fromID];
-//            
-//        }else if ([type isEqualToString:@"video"]){
-//
-//            [videoHandler setController:self];
-//            [videoHandler receiveVideoFile:data forBubbleDataArray:bubbleData forBubbleOtherData:otherData withVideoTime:time withSendId:sendToID withFromId:fromID withJsonBody:body];
-//
-//           
-//        }else if ([type isEqualToString:@"voice"]){
-//            [audioHandler receiveAudioFile:data withBody:time forBubbleDataArray:bubbleData forBubbleOtherData:otherData withSendId:sendToID withFromId:fromID];
-//        }
-//        NSBubbleData * bubble = [bubbleData lastObject];
-//        bubble.delegate = self;
+        if ([type isEqualToString:@"photo"]) {
+            [photoHandler setController:self];
+            [photoHandler receiveFile:data withPath:path forBubbleDataArray:bubbleData withTime:time forBubbleOtherData:otherData withSendId:sendToID withFromId:fromID];
+
+        }else if ([type isEqualToString:@"video"]){
+
+            [videoHandler setController:self];
+            [videoHandler receiveVideoFile:data forBubbleDataArray:bubbleData forBubbleOtherData:otherData withVideoTime:time withSendId:sendToID withFromId:fromID withJsonBody:body];
+
+           
+        }else if ([type isEqualToString:@"voice"]){
+            [audioHandler receiveAudioFile:data withBody:time forBubbleDataArray:bubbleData forBubbleOtherData:otherData withSendId:sendToID withFromId:fromID];
+        }
+        NSBubbleData * bubble = [bubbleData lastObject];
+        bubble.delegate = self;
 
     }
     [bubbleTableView reloadData];
@@ -787,7 +786,6 @@
         imagePickerController.sourceType=UIImagePickerControllerSourceTypeCamera;
         imagePickerController.videoQuality = UIImagePickerControllerQualityTypeMedium;
         imagePickerController.delegate = self;
-//        imagePickerController.modalTransitionStyle=UIModalTransitionStyleFlipHorizontal;
          imagePickerController.mediaTypes = [NSArray arrayWithObjects:(NSString*)kUTTypeImage,(NSString*)kUTTypeMovie,nil];
         imagePickerController.videoMaximumDuration = 30;
         
@@ -992,6 +990,9 @@
     }
    
 }
+-(void)disappearImage:(UIImage *)image withDissapearTime:(NSString *)time withDissapearPath:(NSString *)path withSendOrReceiveTime:(NSDate *)date{
+    NSLog(@"");
+}
 -(void)reloadTable{
     NSBubbleData * bubble = [bubbleData lastObject];
     bubble.delegate = self;
@@ -1001,7 +1002,51 @@
 }
 -(void)sendImages:(NSData *)data withTime:(NSString *)time{
     [self sendPhoto:data withTime:time];
+
 }
+-(void) uploadVideoPath:(NSString *)filePath withTime:(NSString *)time withFrom:(NSString *)fromID withType:(NSString *)type{
+    [self dismissKeyBoard];
+    ImageCache *imageCache = [ImageCache sharedObject];
+        NSString *sendToID =[imageCache getFriendID];
+    NSMutableArray * dataArray = [[NSMutableArray alloc]init];
+    TalkDB * talk =[[TalkDB alloc]init];
+    dataArray = [talk readInitDB:@"15slogn" withOtherID:sendToID];
+    bubbleData = dataArray;
+    for (NSBubbleData * data in bubbleData) {
+        data.delegate = self;
+    }
+    if ([time isEqualToString:@"nil"]) {
+        time =nil;
+    }
+    if ([type isEqualToString:@"video"]) {
+        NSURL* _videoPath = [NSURL fileURLWithPath:filePath];
+        
+        [videoHandler setController:self];
+        [videoHandler setVideoPath:_videoPath];
+        [videoHandler setType:@"video"];
+        [videoHandler sendVideoforBubbleDataArray:bubbleData withVideoTime:time forBubbleMyData:myData withSendId:fromID];
+        NSBubbleData * last = [bubbleData lastObject];
+        last.delegate = self;
+        videoHandler.delegate = self;
+    }
+    if ([type isEqualToString:@"photo"]) {
+        NSData * data = [NSData dataWithContentsOfFile:filePath];
+        [photoHandler setController:self];
+        [photoHandler setType:@"photo"];
+        [photoHandler setPhotopath:filePath];
+        [photoHandler sendPhoto:data forBubbleDataArray:bubbleData forBubbleMyData:myData withSendId:fromID withTime:time];
+    }
+    if ([type isEqualToString:@"voice"]) {
+        Voice * v = [[Voice alloc]init];
+        [v setRecordPath:filePath];
+        [v setRecordTime:[time floatValue]];
+        [audioHandler setIsAddUploadDB:YES];
+        [audioHandler sendAudio:v forBubbleDataArray:bubbleData forBubbleMyData:myData withSendId:fromID];
+    }
+    [bubbleTableView reloadData];
+    [self scrollBubbleViewToBottomAnimated:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

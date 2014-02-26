@@ -37,4 +37,22 @@
 -(void)addBrushColor:(UIColor *)color;
 
 -(NSMutableArray *)getBrushColor;
+
+-(void) saveMessagesCount:(NSString *)friendId;
+
+-(NSInteger)getMessagesCount:(NSString *)friendId;
+
+-(void) removeFriendID:(NSString *)friendId;
+
+-(void)saveJsonData:(NSString *)jd forFileId:(NSString *)fileId;
+
+-(NSString *)getJsonData:(NSString *)fileId;
+
+-(void) savevideoPath:(NSString *)video;
+
+-(NSString *)getVideopath;
+
+-(void) saveDate:(NSDate *)date;
+
+-(NSDate *)getDate;
 @end

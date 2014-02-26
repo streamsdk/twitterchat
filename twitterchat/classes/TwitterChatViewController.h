@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "GetAllMessagesProtocol.h"
+#import "UploadProtocol.h"
 @interface TwitterChatViewController : UITableViewController
 @property (assign)BOOL loading;
 @property (nonatomic, retain) NSMutableArray *sortedArrForArrays;
 @property (nonatomic, retain) NSMutableArray *sectionHeadsKeys;
 @property (nonatomic,strong) UISegmentedControl *segmentedControl;
+@property (assign,nonatomic) id<GetAllMessagesProtocol> messagesProtocol;
+@property (assign,nonatomic) id<UploadProtocol> uploadProtocol;
 @end

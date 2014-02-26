@@ -12,6 +12,8 @@
 #import "LoginViewController.h"
 #import "TalkDB.h"
 #import "ACKMessageDB.h"
+#import "DownloadDB.h"
+#import "UploadDB.h"
 
 @implementation AppDelegate
 
@@ -22,6 +24,12 @@
     TalkDB * talk = [[TalkDB alloc]init];
     [talk initDB];
     
+    DownloadDB * downloadDB = [[DownloadDB alloc]init];
+    [downloadDB initDB];
+    //upload
+    UploadDB *uploadDb = [[UploadDB alloc]init];
+    [uploadDb initDB];
+
     [STreamSession setUpServerUrl:@"http://streamsdk.cn/api/"];
     [STreamSession authenticate:@"D0F265CCCA4B5CD697C95BD5048A7A88" secretKey:@"64163935A44EDEDFD1D19BD12929431A"
                       clientKey:@"A872FAB46994591F3A6CFE6E2F8EC32F" response:^(BOOL succeed, NSString *response){
