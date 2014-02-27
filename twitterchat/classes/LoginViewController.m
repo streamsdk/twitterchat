@@ -17,11 +17,14 @@
 #import "ImageCache.h"
 
 @interface LoginViewController ()
-
+{
+    TwitterChatViewController * twitterVC;
+}
 @end
 
 @implementation LoginViewController
 @synthesize accountStore = _accountStore;
+@synthesize requestCompletionDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,8 +41,11 @@
     self.navigationController.navigationBarHidden = YES;
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
+    
+    twitterVC = [[TwitterChatViewController alloc]init];
+    [self setRequestCompletionDelegate:twitterVC];
 //    [self fetchFellowerAndFollowing:@"@robguy16"];
-//    
+//
    /*   ImageCache * imagechache= [ImageCache sharedObject];
     [imagechache saveUserID:@"1344650912"];
     TwitterChatViewController * vc = [TwitterChatViewController alloc];
@@ -184,7 +190,6 @@
 - (void)fetchFellowerAndFollowing:(NSString *)userName{
     
     ImageCache * imagechache= [ImageCache sharedObject];
-     TwitterChatViewController * vc = [TwitterChatViewController alloc];
     //  Step 0: Check that the user has local Twitter accounts
     if ([self userHasAccessToTwitter]) {
     
@@ -231,16 +236,19 @@
                                     NSLog(@"follower profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollower:followerArray];
-                                [vc setLoading:YES];
+//                                [vc setLoading:YES];
+                                [requestCompletionDelegate requestCompletion];
                             }
                             else {
                                 // Our JSON deserialization went awry
                                 NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
+                                [requestCompletionDelegate requestFailed];
                             }
                         }
                         else {
                             // The server did not respond ... were we rate-limited?
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
+                            [requestCompletionDelegate requestFailed];
                         }
                     }
                 }];
@@ -277,22 +285,25 @@
                                     
                                     [followingArray addObject:following];
                                     
-//                                    NSLog(@"following name: %@", name);
-//                                    NSLog(@"following screen name: %@", screenName);
-//                                    NSLog(@"following user id: %@", userId);
-//                                    NSLog(@"following profile url: %@", profileUrl);
+                                    NSLog(@"following name: %@", name);
+                                    NSLog(@"following screen name: %@", screenName);
+                                    NSLog(@"following user id: %@", userId);
+                                    NSLog(@"following profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollowing:followingArray];
-                                 [vc setLoading:YES];
+//                                 [vc setLoading:YES];
+                                [requestCompletionDelegate requestCompletion];
                             }
                             else {
                                 // Our JSON deserialization went awry
                                 NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
+                                [requestCompletionDelegate requestFailed];
                             }
                         }
                         else {
                             // The server did not respond ... were we rate-limited?
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
+                            [requestCompletionDelegate requestFailed];
                         }
                     }
                 }];

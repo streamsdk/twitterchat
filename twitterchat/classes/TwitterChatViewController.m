@@ -45,6 +45,25 @@
     }
     return self;
 }
+
+-(void) requestCompletion{
+    loading=YES;
+    if (segmentedControl.selectedSegmentIndex == 0) {
+        ImageCache * imageCache =[ImageCache sharedObject];
+        followerArray = [imageCache getTwittersFollower];
+    }else  if (segmentedControl.selectedSegmentIndex == 1) {
+        ImageCache * imageCache =[ImageCache sharedObject];
+        followerArray = [imageCache getTwittersFollowing];
+    }
+    sectionHeadsKeys=[[NSMutableArray alloc]init];
+    sortedArrForArrays = [self getChineseStringArr:followerArray];
+    [self.tableView reloadData];
+}
+-(void) requestFailed{
+
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self.tableView cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+    [alertView  show];
+}
 -(void)settingClicked{
     NSLog(@"");
 }
@@ -76,8 +95,10 @@
     [HUD showAnimated:YES whileExecutingBlock:^{
         [self loadingFollower];
     }completionBlock:^{
-        ImageCache * imageCache =[ImageCache sharedObject];
-        followerArray = [imageCache getTwittersFollower];
+        if (segmentedControl.selectedSegmentIndex == 0) {
+            ImageCache * imageCache =[ImageCache sharedObject];
+            followerArray = [imageCache getTwittersFollower];
+        }
         [HUD removeFromSuperview];
         HUD = nil;
         sortedArrForArrays = [self getChineseStringArr:followerArray];

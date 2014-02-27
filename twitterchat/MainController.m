@@ -85,7 +85,6 @@
     }
     return self;
 }
-
 -(void)initWithToolBar{
     
     //初始化为NO added
@@ -177,6 +176,19 @@
 //        NSData * data = [NSData dataWithContentsOfFile:path];
 //        [backgroundView setImage:[UIImage imageWithData:data]];
 //    }
+    
+  /*  STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
+    
+    [sq addLimitId:[imageCache getFriendID]];
+    NSMutableArray *array = [sq find];
+    if (array==nil || [array count]==0) {
+        
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+        label.text =[NSString stringWithFormat:@"%@ no sign up", [imageCache getFriendID]];
+        label.textColor = [UIColor grayColor];
+        label.font = [UIFont fontWithName:@"Arial" size:22.0f];
+        bubbleTableView.tableHeaderView=label;
+    }*/
     [bubbleTableView reloadData];
     [self dismissKeyBoard];
     [self scrollBubbleViewToBottomAnimated:YES];
@@ -272,19 +284,8 @@
     
     audioHandler = [[AudioHandler alloc]init];
 
-    ImageCache * imageCache =  [ImageCache sharedObject];
-   /* STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
+//    ImageCache * imageCache =  [ImageCache sharedObject];
     
-    [sq addLimitId:[imageCache getFriendID]];
-    NSMutableArray *array = [sq find];
-    if (array==nil || [array count]==0) {
-        
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-        label.text =[NSString stringWithFormat:@"%@ no sign up", [imageCache getUserID]];
-        label.textColor = [UIColor grayColor];
-        label.font = [UIFont fontWithName:@"Arial" size:22.0f];
-        bubbleTableView.tableHeaderView=label;
-    }*/
 }
 
 #pragma mark - UIBubbleTableViewDataSource implementation
