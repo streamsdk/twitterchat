@@ -236,7 +236,6 @@
                                     NSLog(@"follower profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollower:followerArray];
-//                                [vc setLoading:YES];
                                 [requestCompletionDelegate requestCompletion];
                             }
                             else {
@@ -291,7 +290,6 @@
                                     NSLog(@"following profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollowing:followingArray];
-//                                 [vc setLoading:YES];
                                 [requestCompletionDelegate requestCompletion];
                             }
                             else {
