@@ -30,7 +30,6 @@
 @end
 
 @implementation TwitterChatViewController
-@synthesize loading;
 @synthesize sectionHeadsKeys;
 @synthesize sortedArrForArrays;
 @synthesize segmentedControl;
@@ -48,7 +47,6 @@
 }
 
 -(void) requestCompletion{
-    loading=YES;
     if (segmentedControl.selectedSegmentIndex == 0) {
         ImageCache * imageCache =[ImageCache sharedObject];
         followerArray = [imageCache getTwittersFollower];
@@ -62,7 +60,7 @@
 }
 -(void) requestFailed{
 
-    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self.tableView cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
     [alertView  show];
 }
 -(void)settingClicked{
@@ -86,29 +84,19 @@
     segmentedControl.selectedSegmentIndex= 0;
     [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];
     [ self.navigationController.navigationBar.topItem setTitleView:segmentedControl];
-//    [segmentedControl setBackgroundColor:[UIColor lightGrayColor]];
 
     sectionHeadsKeys=[[NSMutableArray alloc]init];
     
-    __block MBProgressHUD *HUD = [[MBProgressHUD alloc] init];
-    HUD.labelText = @"loading ...";
-    [self.view addSubview:HUD];
-    [HUD showAnimated:YES whileExecutingBlock:^{
-        [self loadingFollower];
-    }completionBlock:^{
-        if (segmentedControl.selectedSegmentIndex == 0) {
-            ImageCache * imageCache =[ImageCache sharedObject];
-            followerArray = [imageCache getTwittersFollower];
-        }
-        [HUD removeFromSuperview];
-        HUD = nil;
-        sortedArrForArrays = [self getChineseStringArr:followerArray];
-        [self.tableView reloadData];
-    }];
+    ImageCache * imageCache =[ImageCache sharedObject];
+    followerArray = [imageCache getTwittersFollower];
+    
+    sortedArrForArrays = [self getChineseStringArr:followerArray];
+    [self.tableView reloadData];
+
    
     __block MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
     hud.labelText = @"connecting ...";
-    [self.view addSubview:HUD];
+    [self.view addSubview:hud];
     [hud showAnimated:YES whileExecutingBlock:^{
         [self connect];
     }completionBlock:^{
@@ -147,16 +135,6 @@
         [con connect:[imagecache getUserID] withPassword:@"password"];
     }
     
-}
--(void)loadingFollower{
-    while(loading){
-        sleep(1);
-    }
-}
--(void) loadingFollowing{
-    while(loading){
-        sleep(1);
-    }
 }
 
 - (void)startDownload{
@@ -449,41 +427,18 @@
 }
 
 -(void) segmentAction:(UISegmentedControl *)segmented{
-    
+    ImageCache * imageCache =[ImageCache sharedObject];
     sectionHeadsKeys=[[NSMutableArray alloc]init];
     if (segmented.selectedSegmentIndex == 0) {
        
-        
-        __block MBProgressHUD *HUD = [[MBProgressHUD alloc] init];
-        HUD.labelText = @"loading ...";
-        [self.view addSubview:HUD];
-        [HUD showAnimated:YES whileExecutingBlock:^{
-            [self loadingFollower];
-        }completionBlock:^{
-            ImageCache * imageCache =[ImageCache sharedObject];
-            followerArray = [imageCache getTwittersFollower];
-            [HUD removeFromSuperview];
-            HUD = nil;
-            sortedArrForArrays = [self getChineseStringArr:followerArray];
-            [self.tableView reloadData];
-        }];
-
+        followerArray = [imageCache getTwittersFollower];
+        sortedArrForArrays = [self getChineseStringArr:followerArray];
+        [self.tableView reloadData];
     }else{
-        __block MBProgressHUD *HUD = [[MBProgressHUD alloc] init];
-        HUD.labelText = @"loading ...";
-        [self.view addSubview:HUD];
-        [HUD showAnimated:YES whileExecutingBlock:^{
-            [self loadingFollowing];
-        }completionBlock:^{
-            ImageCache * imageCache =[ImageCache sharedObject];
-            followerArray = [imageCache getTwittersFollowing];
-            [HUD removeFromSuperview];
-            HUD = nil;
-            sortedArrForArrays = [self getChineseStringArr:followerArray];
-            [self.tableView reloadData];
-        }];
-
-    }
+        
+        followerArray = [imageCache getTwittersFollowing];
+        sortedArrForArrays = [self getChineseStringArr:followerArray];
+        [self.tableView reloadData];    }
 }
 - (void)didReceiveMemoryWarning
 {

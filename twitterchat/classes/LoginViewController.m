@@ -19,6 +19,8 @@
 @interface LoginViewController ()
 {
     TwitterChatViewController * twitterVC;
+    BOOL requestSucceed;
+    BOOL requestFailed;
 }
 @end
 
@@ -45,7 +47,8 @@
     twitterVC = [[TwitterChatViewController alloc]init];
     [self setRequestCompletionDelegate:twitterVC];
     
-    
+    requestSucceed = NO;
+    requestFailed = NO;
 //    [self fetchFellowerAndFollowing:@"@robguy16"];
 //
    /*   ImageCache * imagechache= [ImageCache sharedObject];
@@ -123,10 +126,13 @@
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
          [self fetchAccounts];
-        
+         while (!requestSucceed) {
+             NSLog(@"");
+         }
     }completionBlock:^{
-        TwitterChatViewController * vc = [TwitterChatViewController alloc];
-        [self.navigationController pushViewController:vc animated:YES];
+        if (!requestFailed) {
+            [self.navigationController pushViewController:twitterVC animated:YES];
+        }
         [HUD removeFromSuperview];
         HUD = nil;
     }];
@@ -225,6 +231,8 @@
         //  Step 1:  Obtain access to the user's Twitter accounts
         ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
+        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+        
         [self.accountStore requestAccessToAccountsWithType:twitterAccountType options:NULL completion:^(BOOL granted, NSError *error) {
             if (granted) {
                 
@@ -264,19 +272,25 @@
                                     NSLog(@"follower user id: %@", userId);
                                     NSLog(@"follower profile url: %@", profileUrl);
                                 }
+                                
                                 [imagechache addTwittersFollower:followerArray];
-                                [requestCompletionDelegate requestCompletion];
+                                requestSucceed = YES;
+        
                             }
                             else {
                                 // Our JSON deserialization went awry
                                 NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-                                [requestCompletionDelegate requestFailed];
+//                                [requestCompletionDelegate requestFailed];
+                                requestFailed = YES;
+                                requestSucceed = YES;
+                                [alertView  show];
                             }
                         }
                         else {
                             // The server did not respond ... were we rate-limited?
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
-                            [requestCompletionDelegate requestFailed];
+//                            [requestCompletionDelegate requestFailed];
+                            [alertView  show];
                         }
                     }
                 }];
@@ -319,18 +333,18 @@
                                     NSLog(@"following profile url: %@", profileUrl);
                                 }
                                 [imagechache addTwittersFollowing:followingArray];
-                                [requestCompletionDelegate requestCompletion];
+//                                [requestCompletionDelegate requestCompletion];
                             }
                             else {
                                 // Our JSON deserialization went awry
                                 NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-                                [requestCompletionDelegate requestFailed];
+//                                [requestCompletionDelegate requestFailed];
                             }
                         }
                         else {
                             // The server did not respond ... were we rate-limited?
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
-                            [requestCompletionDelegate requestFailed];
+//                            [requestCompletionDelegate requestFailed];
                         }
                     }
                 }];

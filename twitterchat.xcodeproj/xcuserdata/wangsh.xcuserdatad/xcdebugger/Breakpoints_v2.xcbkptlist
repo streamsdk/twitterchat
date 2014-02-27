@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/classes/TwitterChatViewController.m"
-            timestampString = "415182634.373092"
+            timestampString = "415184728.62857"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "272"
-            endingLineNumber = "272"
+            startingLineNumber = "250"
+            endingLineNumber = "250"
             landmarkName = "-didReceiveMessage:withFrom:"
             landmarkType = "5">
          </BreakpointContent>
@@ -192,22 +192,6 @@
             startingLineNumber = "251"
             endingLineNumber = "251"
             landmarkName = "-xmppStream:didReceiveMessage:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "twitterchat/classes/LoginViewController.m"
-            timestampString = "415184169.481567"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "-fetchAccounts"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

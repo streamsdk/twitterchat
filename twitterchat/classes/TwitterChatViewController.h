@@ -12,7 +12,6 @@
 #import "LoginViewController.h"
 
 @interface TwitterChatViewController : UITableViewController <RequestCompletionDelegate>
-@property (assign)BOOL loading;
 @property (nonatomic, retain) NSMutableArray *sortedArrForArrays;
 @property (nonatomic, retain) NSMutableArray *sectionHeadsKeys;
 @property (nonatomic,strong) UISegmentedControl *segmentedControl;
