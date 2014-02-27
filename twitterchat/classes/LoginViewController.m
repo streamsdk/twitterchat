@@ -142,7 +142,7 @@
     }];
 
   
-   [self fetchAccounts];
+   //[self fetchAccounts];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -216,7 +216,8 @@
 
             }
             
-            [self fetchFellowerAndFollowing:userId];
+            //[self fetchFellowerAndFollowing:userId];
+            [self getAllFollowing:userId withCursorId:@"-1"];
         }
       /*  if ([twitterAccounts count]>1) {
             
@@ -240,6 +241,81 @@
 {
     return [SLComposeViewController
             isAvailableForServiceType:SLServiceTypeTwitter];
+}
+
+
+-(void)getAllFollowing:(NSString *)userName withCursorId:(NSString *)cursor{
+    
+    ImageCache * imagechache= [ImageCache sharedObject];
+    ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
+    NSURL *followingUrl = [NSURL URLWithString:@"https://api.twitter.com/1.1/friends/list.json"];
+    //NSDictionary *followingparams = @{@"user_id" : userName, @"cursor" : cursor};
+    NSMutableDictionary *followingparams = [[NSMutableDictionary alloc] init];
+    [followingparams setObject:userName forKey:@"user_id"];
+    [followingparams setObject:cursor forKey:@"cursor"];
+    SLRequest *followingRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:followingUrl parameters:followingparams];
+    [followingRequest setAccount:[twitterAccounts lastObject]];
+    [self.accountStore requestAccessToAccountsWithType:twitterAccountType options:NULL completion:^(BOOL granted, NSError *error) {
+        if (granted) {
+            [followingRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                
+                if (responseData) {
+                    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+                        
+                        NSError *jsonError;
+                        NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
+                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
+                        
+                        if (timelineData) {
+                            //NSLog(@"Timeline Response: %@\n", timelineData);
+                            NSMutableArray *followingArray = [[NSMutableArray alloc]init];
+                            
+                            
+                            NSArray *users = [timelineData objectForKey:@"users"];
+                            for (NSDictionary *user in users){
+                                NSString *name = [user objectForKey:@"name"];
+                                NSString *screenName = [user objectForKey:@"screen_name"];
+                                NSString *userId = [user objectForKey:@"id"];
+                                NSString *profileUrl = [user objectForKey:@"profile_image_url"];
+                                TwitterFollower * following = [[TwitterFollower alloc]init];
+                                [following setName:name];
+                                [following setScreenName:screenName];
+                                [following setUserid:userId];
+                                [following setProfileUrl:profileUrl];
+                                
+                                [followingArray addObject:following];
+                                
+                                NSLog(@"following name: %@", name);
+                                NSLog(@"following screen name: %@", screenName);
+                                NSLog(@"following user id: %@", userId);
+                                NSLog(@"following profile url: %@", profileUrl);
+                            }
+                            if (![cur isEqualToString:@"0"]){
+                                [self getAllFollowing:userName withCursorId:cur];
+                            }
+                            
+                            
+                            //                                [requestCompletionDelegate requestCompletion];
+                        }
+                        else {
+                            // Our JSON deserialization went awry
+                            NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
+                            //                                [requestCompletionDelegate requestFailed];
+                        }
+                    }
+                    else {
+                        // The server did not respond ... were we rate-limited?
+                        NSLog(@"The response status code is %d", urlResponse.statusCode);
+                        //                            [requestCompletionDelegate requestFailed];
+                    }
+                }
+            }];
+        }
+    }];
+    
+   
+    
 }
 
 - (void)fetchFellowerAndFollowing:(NSString *)userName{
@@ -313,63 +389,11 @@
                             [alertView  show];
                         }
                     }
-                }];
+                 }];
                 
-                
-                NSURL *followingUrl = [NSURL URLWithString:@"https://api.twitter.com/1.1/friends/list.json"];
-                NSDictionary *followingparams = @{@"user_id" : userName};
-                SLRequest *followingRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:followingUrl parameters:followingparams];
-                [followingRequest setAccount:[twitterAccounts lastObject]];
-                
-                [followingRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                    
-                    if (responseData) {
-                        if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
-                            
-                            NSError *jsonError;
-                            NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-                            if (timelineData) {
-                                //NSLog(@"Timeline Response: %@\n", timelineData);
-                                NSMutableArray *followingArray = [[NSMutableArray alloc]init];
-                               
-                                
-                                NSArray *users = [timelineData objectForKey:@"users"];
-                                for (NSDictionary *user in users){
-                                    NSString *name = [user objectForKey:@"name"];
-                                    NSString *screenName = [user objectForKey:@"screen_name"];
-                                    NSString *userId = [user objectForKey:@"id"];
-                                    NSString *profileUrl = [user objectForKey:@"profile_image_url"];
-                                    TwitterFollower * following = [[TwitterFollower alloc]init];
-                                    [following setName:name];
-                                    [following setScreenName:screenName];
-                                    [following setUserid:userId];
-                                    [following setProfileUrl:profileUrl];
-                                    
-                                    [followingArray addObject:following];
-                                    
-                                    NSLog(@"following name: %@", name);
-                                    NSLog(@"following screen name: %@", screenName);
-                                    NSLog(@"following user id: %@", userId);
-                                    NSLog(@"following profile url: %@", profileUrl);
-                                }
-                                [imagechache addTwittersFollowing:followingArray];
-//                                [requestCompletionDelegate requestCompletion];
-                            }
-                            else {
-                                // Our JSON deserialization went awry
-                                NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-//                                [requestCompletionDelegate requestFailed];
-                            }
-                        }
-                        else {
-                            // The server did not respond ... were we rate-limited?
-                            NSLog(@"The response status code is %d", urlResponse.statusCode);
-//                            [requestCompletionDelegate requestFailed];
-                        }
-                    }
-                }];
-            }
-        }
+               }
+             }
+         
          ];
         
         
