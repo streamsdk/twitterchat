@@ -155,6 +155,7 @@
 		039FA4881879DAB900E9F255 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4871879DAB900E9F255 /* Social.framework */; };
 		0E41CC6118BD976500D000DD /* DownloadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5D18BD976500D000DD /* DownloadDB.m */; };
 		0E41CC6218BD976500D000DD /* UploadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5F18BD976500D000DD /* UploadDB.m */; };
+		0E6BDB4518BF31830099E62E /* message_count.png in Resources */ = {isa = PBXBuildFile; fileRef = 0E6BDB4418BF31830099E62E /* message_count.png */; };
 		0EB18D2F18B717EA008D76B6 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB18D2E18B717EA008D76B6 /* LoginViewController.m */; };
 		0EE10E7418B9BF28006E3BE1 /* settings2.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E7318B9BF28006E3BE1 /* settings2.png */; };
 		0EE10E8B18BA1764006E3BE1 /* black_bg_ip5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E7618BA1764006E3BE1 /* black_bg_ip5@2x.png */; };
@@ -553,6 +554,7 @@
 		0E41CC5E18BD976500D000DD /* UploadDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadDB.h; sourceTree = "<group>"; };
 		0E41CC5F18BD976500D000DD /* UploadDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadDB.m; sourceTree = "<group>"; };
 		0E41CC6018BD976500D000DD /* UploadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadProtocol.h; sourceTree = "<group>"; };
+		0E6BDB4418BF31830099E62E /* message_count.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message_count.png; sourceTree = "<group>"; };
 		0EB18D2D18B717EA008D76B6 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = classes/LoginViewController.h; sourceTree = "<group>"; };
 		0EB18D2E18B717EA008D76B6 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = classes/LoginViewController.m; sourceTree = "<group>"; };
 		0EE10E7318B9BF28006E3BE1 /* settings2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings2.png; sourceTree = "<group>"; };
@@ -1652,6 +1654,7 @@
 		0EF5984F18B878AF00F2DFC2 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				0E6BDB4418BF31830099E62E /* message_count.png */,
 				0EFE581B18BC505E0083D94E /* back.png */,
 				0EFE581C18BC505E0083D94E /* brush.png */,
 				0EFE581D18BC505E0083D94E /* clocknew.png */,
@@ -1883,6 +1886,7 @@
 				0EFE57B918BC3A850083D94E /* camera_icon150.png in Resources */,
 				0EFE580618BC44450083D94E /* microphonefat.png in Resources */,
 				0EF5987718B878AF00F2DFC2 /* facesBack.png in Resources */,
+				0E6BDB4518BF31830099E62E /* message_count.png in Resources */,
 				0EFE580A18BC45A00083D94E /* face512.png in Resources */,
 				0EFE582C18BC505E0083D94E /* redo.png in Resources */,
 				0EF5987318B878AF00F2DFC2 /* face.png in Resources */,

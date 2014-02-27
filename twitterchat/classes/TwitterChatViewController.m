@@ -36,6 +36,7 @@
 @synthesize segmentedControl;
 @synthesize messagesProtocol;
 @synthesize uploadProtocol;
+@synthesize countButton;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -528,16 +529,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         CALayer *l = [cell.imageView layer];
         [l setMasksToBounds:YES];
         [l setCornerRadius:8.0];
+        countButton = [UIButton buttonWithType:UIButtonTypeCustom];
+     
+        [countButton setFrame:CGRectMake(50, 0, 28, 28)];
+        cell.textLabel.font = [UIFont fontWithName:@"Arial" size:10.0f];
+        [cell addSubview:countButton];
+
     }
     NSArray *arr = [sortedArrForArrays objectAtIndex:indexPath.section];
      ChineseString *str = (ChineseString *) [arr objectAtIndex:indexPath.row];
+    ImageCache * imageCache = [ImageCache sharedObject];
     if (segmentedControl.selectedSegmentIndex == 0) {
         for (TwitterFollower *f in followerArray) {
             if ([f.screenName isEqualToString:str.string]) {
@@ -555,7 +563,14 @@
         }
 
     }
+    NSInteger count = [imageCache getMessagesCount:str.string];
     
+    if (count!= 0) {
+        NSString * title =[NSString stringWithFormat:@"%d",count];
+        [countButton setBackgroundImage:[UIImage imageNamed:@"message_count.png"] forState:UIControlStateNormal];
+        [countButton setTitle:title forState:UIControlStateNormal];
+    }
+
     cell.textLabel.text = str.string;
     cell.textLabel.font = [UIFont fontWithName:@"Arial" size:18.0f];
     

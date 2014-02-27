@@ -44,6 +44,8 @@
     
     twitterVC = [[TwitterChatViewController alloc]init];
     [self setRequestCompletionDelegate:twitterVC];
+    
+    
 //    [self fetchFellowerAndFollowing:@"@robguy16"];
 //
    /*   ImageCache * imagechache= [ImageCache sharedObject];
@@ -156,25 +158,52 @@
             NSMutableDictionary *metadata = [[NSMutableDictionary alloc]init];
             [metadata setObject:userId forKey:@"userid"];
             [metadata setObject:[acc username] forKey:@"username"];
-            [user signUp:userId withPassword:@"password" withMetadata:metadata];
-            NSLog(@"%@",[user errorMessage]);
-            if ([[user errorMessage] isEqualToString:@""]) {
-                STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
-                STreamObject *so = [[STreamObject alloc] init] ;
-                
-                [so setObjectId:userId];
-                
-                [so addStaff:[acc username] withObject:@"username"];
-                [sto addStreamObject:so];
-                [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            NSString * username= [userDefaults objectForKey:@"username"];
+            if (username!=nil && ![username isEqualToString:@""]) {
+                [user logIn:username withPassword:@"password"];
+            }else{
+                [user signUp:userId withPassword:@"password" withMetadata:metadata];
+                NSLog(@"%@",[user errorMessage]);
+                if ([[user errorMessage] isEqualToString:@""]) {
                     
-                    if (succeed)
-                        NSLog(@"succeed");
-                    else
-                        NSLog(@"failed");
-                }];
+                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                    [userDefaults setObject:userId forKey:@"username"];
+                    
+                    STreamObject * history = [[STreamObject alloc]init];
+                    [history setObjectId:[userId stringByAppendingString:@"messaginghistory"]];
+                    [history createNewObject:^(BOOL succeed, NSString *objectId) {
+                        if (succeed)
+                            NSLog(@"succeed");
+                        else
+                            NSLog(@"failed");
+                    }];
+                    STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
+                    STreamObject *so = [[STreamObject alloc] init] ;
+                    
+                    [so setObjectId:userId];
+                    
+                    [so addStaff:[acc username] withObject:@"username"];
+                    [sto addStreamObject:so];
+                    [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
+                        
+                        if (succeed)
+                            NSLog(@"succeed");
+                        else
+                            NSLog(@"failed");
+                    }];
+                    
+                }else{
+                    [user logIn:userId withPassword:@"password"];
+                    if ([[user errorMessage] isEqualToString:@""]) {
+                        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                        [userDefaults setObject:userId forKey:@"username"];
+                    }
+                    
+                }
 
             }
+            
             [self fetchFellowerAndFollowing:userId];
             break;
         }

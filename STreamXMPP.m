@@ -228,7 +228,7 @@ static XMPPReconnect *xmppReconnect;
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     
-    NSString *from = [message fromStr];
+    /*NSString *from = [message fromStr];
     NSArray *array = [from componentsSeparatedByString:@"@streamsdk.cn"];
     
     NSString * str = [[STreamSession getClientAuthKey] lowercaseString];
@@ -238,7 +238,7 @@ static XMPPReconnect *xmppReconnect;
         if (array && [array count] !=0) {
             fromID = [array objectAtIndex:1];
         }
-    }
+    }*/
  	if ([message isMessageWithBody])
 	{
 		
@@ -248,6 +248,7 @@ static XMPPReconnect *xmppReconnect;
         NSDictionary *json = [decoder objectWithData:jsonData];
         NSString *type = [json objectForKey:@"type"];
         NSString *chatId = [json objectForKey:@"id"];
+        NSString *fromID = [json objectForKey:@"from"];
         if ([type isEqualToString:@"ack"]){
             ACKMessageDB *ack = [[ACKMessageDB alloc]init];
             [ack deleteDB:chatId];
