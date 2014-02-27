@@ -16,11 +16,13 @@
 #import "TwitterFollowing.h"
 #import "ImageCache.h"
 
-@interface LoginViewController ()
+@interface LoginViewController ()<UIActionSheetDelegate>
 {
     TwitterChatViewController * twitterVC;
     BOOL requestSucceed;
     BOOL requestFailed;
+    NSMutableDictionary * loginTwitter;
+    NSMutableSet *twitter;
 }
 @end
 
@@ -41,6 +43,8 @@
 {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
+    twitter= [[NSMutableSet alloc]init];
+    loginTwitter = [[NSMutableDictionary alloc]init];
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
     
@@ -136,9 +140,9 @@
         [HUD removeFromSuperview];
         HUD = nil;
     }];
-    
+
   
-   
+   [self fetchAccounts];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -164,6 +168,8 @@
             NSMutableDictionary *metadata = [[NSMutableDictionary alloc]init];
             [metadata setObject:userId forKey:@"userid"];
             [metadata setObject:[acc username] forKey:@"username"];
+            [loginTwitter setObject:metadata forKey:userId];
+            [twitter addObject:userId];
             NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
             NSString * username= [userDefaults objectForKey:@"username"];
             if (username!=nil && ![username isEqualToString:@""]) {
@@ -211,8 +217,22 @@
             }
             
             [self fetchFellowerAndFollowing:userId];
-            break;
         }
+      /*  if ([twitterAccounts count]>1) {
+            
+            UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                          initWithTitle:nil
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:nil];
+            for (id userid in twitter) {
+                [actionSheet addButtonWithTitle:userid];
+            }
+            [actionSheet addButtonWithTitle:@"取消"];
+            actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+            [actionSheet showInView:self.view];
+        }*/
     }
 }
 
@@ -356,6 +376,19 @@
         
     }
     
+}
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == 0) {
+//        NSLog(@"%d",buttonIndex);
+//    }else if (buttonIndex == 1){
+//        NSLog(@"%d",buttonIndex);
+//
+//    }else if (buttonIndex == 2){
+//        NSLog(@"%d",buttonIndex);
+//
+//    }
+
+
 }
 
 @end
