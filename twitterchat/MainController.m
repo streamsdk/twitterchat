@@ -38,6 +38,8 @@
 #define TABLEVIEWTAG	300
 #define BIG_IMG_WIDTH  300.0
 #define BIG_IMG_HEIGHT 340.0
+#define INVITBUTTON_TAG 10000
+#define LABLE_TAG		30000
 
 @interface MainController () <UIScrollViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PlayerDelegate,reloadTableDeleage>
 {
@@ -176,19 +178,30 @@
 //        NSData * data = [NSData dataWithContentsOfFile:path];
 //        [backgroundView setImage:[UIImage imageWithData:data]];
 //    }
-    
-  /*  STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
-    
-    [sq addLimitId:[imageCache getFriendID]];
-    NSMutableArray *array = [sq find];
-    if (array==nil || [array count]==0) {
+    UIButton * invite = (UIButton *)[self.view viewWithTag:INVITBUTTON_TAG];
+    UILabel * label = (UILabel *)[self.view viewWithTag:LABLE_TAG];
+    NSMutableSet * alluserId = [imageCache getAllUserId];
+    if (![alluserId containsObject:[imageCache getFriendID]]) {
+        STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
         
-        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-        label.text =[NSString stringWithFormat:@"%@ no sign up", [imageCache getFriendID]];
-        label.textColor = [UIColor grayColor];
-        label.font = [UIFont fontWithName:@"Arial" size:22.0f];
-        bubbleTableView.tableHeaderView=label;
-    }*/
+        [sq addLimitId:[imageCache getFriendID]];
+        NSMutableArray *array = [sq find];
+       
+        if (array==nil || [array count]==0) {
+            invite.hidden  = NO;
+            label.hidden = NO;
+          
+        }else{
+            invite.hidden  = YES;
+            label.hidden = YES;
+            [imageCache saveAllUserId:[imageCache getFriendID]];
+        }
+
+    }else{
+        invite.hidden  = YES;
+        label.hidden = YES;
+    }
+    
     [bubbleTableView reloadData];
     [self dismissKeyBoard];
     [self scrollBubbleViewToBottomAnimated:YES];
@@ -231,6 +244,9 @@
     }
    
 }
+-(void)invite {
+    NSLog(@"");
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -240,7 +256,6 @@
     isClearData = NO;
     
     createUI = [[CreateUI alloc]init];
-    
     self.voice = [[Voice alloc] init];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(SetBackground)];
 
@@ -260,6 +275,34 @@
     bubbleTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     [backView addSubview:bubbleTableView];
     
+    NSString * text =@"Please Keep message clean and positive. Inappropriate content can be reported.";
+    UIFont *font = [UIFont systemFontOfSize:20];;
+    CGSize size = [(text ? text : @"") boundingRectWithSize:CGSizeMake(305, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(12, 100, size.width, size.height)];
+    label.text = text;
+    label.textColor = [UIColor grayColor];
+    label.backgroundColor = [UIColor lightGrayColor];
+    label.layer.cornerRadius = 6;
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    [self.view addSubview:label];
+    label.hidden = YES;
+    label.tag = LABLE_TAG;
+
+    UIButton *inviteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [inviteButton setFrame:CGRectMake(10, 64, self.view.frame.size.width-20, 34)];
+    [inviteButton setTitle:@"INVITATION" forState:UIControlStateNormal];
+    inviteButton.titleLabel.font = [UIFont systemFontOfSize:18.0f];
+    [[inviteButton layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
+    [[inviteButton layer] setBorderWidth:1];
+    [[inviteButton layer] setCornerRadius:4];
+    [inviteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [inviteButton addTarget:self action:@selector(invite) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:inviteButton];
+    inviteButton .tag = INVITBUTTON_TAG;
+    inviteButton.hidden = YES;
+    
+
     toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-40, self.view.frame.size.width, 40)];
     toolBar.tag = TOOLBARTAG;
     toolBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;

@@ -55,10 +55,8 @@
     requestFailed = NO;
 //    [self fetchFellowerAndFollowing:@"@robguy16"];
 //
-   /*   ImageCache * imagechache= [ImageCache sharedObject];
+    ImageCache * imagechache= [ImageCache sharedObject];
     [imagechache saveUserID:@"1344650912"];
-    TwitterChatViewController * vc = [TwitterChatViewController alloc];
-    [vc setLoading:YES];
      NSMutableArray *followerArray = [[NSMutableArray alloc]init];
     TwitterFollower * follower = [[TwitterFollower alloc]init];
     [follower setName:@"Stream SDK"];
@@ -87,7 +85,7 @@
     [followerArray addObject:follower2];
     [imagechache addTwittersFollower:followerArray];
 
-  NSMutableArray *followingArray = [[NSMutableArray alloc]init];
+/*  NSMutableArray *followingArray = [[NSMutableArray alloc]init];
     
     TwitterFollower * following = [[TwitterFollower alloc]init];
     [following setName:@"edward yang"];
@@ -125,23 +123,23 @@
     [self.view addSubview:loginButton];
 }
 -(void)loginUser{
-    __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
-    HUD.labelText = @"loading friends...";
-    [self.view addSubview:HUD];
-    [HUD showAnimated:YES whileExecutingBlock:^{
-         [self fetchAccounts];
-         while (!requestSucceed) {
-             NSLog(@"");
-         }
-    }completionBlock:^{
-        if (!requestFailed) {
-            [self.navigationController pushViewController:twitterVC animated:YES];
-        }
-        [HUD removeFromSuperview];
-        HUD = nil;
-    }];
+//    __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
+//    HUD.labelText = @"loading friends...";
+//    [self.view addSubview:HUD];
+//    [HUD showAnimated:YES whileExecutingBlock:^{
+//         [self fetchAccounts];
+//         while (!requestSucceed) {
+//             NSLog(@"");
+//         }
+//    }completionBlock:^{
+//        if (!requestFailed) {
+//            [self.navigationController pushViewController:twitterVC animated:YES];
+//        }
+//        [HUD removeFromSuperview];
+//        HUD = nil;
+//    }];
 
-  
+   [self.navigationController pushViewController:twitterVC animated:YES];
    //[self fetchAccounts];
 }
 - (void)didReceiveMemoryWarning
@@ -213,11 +211,13 @@
                     }
                     
                 }
-
+               
             }
             
             //[self fetchFellowerAndFollowing:userId];
             [self getAllFollowing:userId withCursorId:@"-1"];
+            break;
+
         }
       /*  if ([twitterAccounts count]>1) {
             
@@ -294,8 +294,9 @@
                             if (![cur isEqualToString:@"0"]){
                                 [self getAllFollowing:userName withCursorId:cur];
                             }
+                            [imagechache addTwittersFollower:followingArray];
                             
-                            
+                            requestSucceed = YES;
                             //                                [requestCompletionDelegate requestCompletion];
                         }
                         else {
@@ -369,7 +370,7 @@
                                     NSLog(@"follower profile url: %@", profileUrl);
                                 }
                                 
-                                [imagechache addTwittersFollower:followerArray];
+//                                [imagechache addTwittersFollower:followerArray];
                                 requestSucceed = YES;
         
                             }

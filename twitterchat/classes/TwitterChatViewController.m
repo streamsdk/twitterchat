@@ -431,13 +431,14 @@
     sectionHeadsKeys=[[NSMutableArray alloc]init];
     if (segmented.selectedSegmentIndex == 0) {
        
-        followerArray = [imageCache getTwittersFollower];
+       followerArray = [imageCache getTwittersFollower];
         sortedArrForArrays = [self getChineseStringArr:followerArray];
         [self.tableView reloadData];
     }else{
-        
-        followerArray = [imageCache getTwittersFollowing];
-        sortedArrForArrays = [self getChineseStringArr:followerArray];
+        followerArray = [[NSMutableArray alloc]init];
+        sortedArrForArrays = [[NSMutableArray alloc]init];
+//        followerArray = [imageCache getTwittersFollowing];
+//        sortedArrForArrays = [self getChineseStringArr:followerArray];
         [self.tableView reloadData];    }
 }
 - (void)didReceiveMemoryWarning

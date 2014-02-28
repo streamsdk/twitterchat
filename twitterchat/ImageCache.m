@@ -20,6 +20,7 @@ static NSMutableDictionary *_jsonData;
 static NSString * _videoPath;
 static NSDate * _date;
 static NSString * _userId;
+static NSMutableSet *allUserId;
 
 @implementation ImageCache
 
@@ -37,6 +38,7 @@ static NSString * _userId;
         _colors = [[NSMutableArray alloc]init];
         _messagesDict = [[NSMutableDictionary alloc]init];
          _jsonData = [[NSMutableDictionary alloc] init];
+        allUserId = [[NSMutableSet alloc]init];
     });
     
     return sharedInstance;
@@ -149,6 +151,15 @@ static NSString * _userId;
 
 -(NSString *)getUserID{
     return _userId;
+}
+
+-(void)saveAllUserId:(NSString *)userId{
+    
+    [allUserId addObject:userId];
+}
+
+-(NSMutableSet* )getAllUserId{
+    return allUserId;
 }
 
 @end

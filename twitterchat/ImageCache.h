@@ -60,4 +60,8 @@
 
 -(NSString *)getUserID;
 
+-(void)saveAllUserId:(NSString *)userId;
+
+-(NSMutableSet* )getAllUserId;
+
 @end
