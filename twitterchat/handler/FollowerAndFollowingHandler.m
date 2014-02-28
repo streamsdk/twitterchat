@@ -18,6 +18,85 @@
     ImageCache * imagechache= [ImageCache sharedObject];
     if (!_accountStore)
         _accountStore = [[ACAccountStore alloc] init];
+
+    ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+    
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+    
+    [self.accountStore requestAccessToAccountsWithType:twitterAccountType options:NULL completion:^(BOOL granted, NSError *error) {
+        if (granted) {
+            
+            NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
+            NSURL *followerUrl = [NSURL URLWithString:@"https://api.twitter.com/1.1/followers/list.json"];
+//            NSDictionary *params = @{@"user_id" : userName};
+            NSMutableDictionary *followerparams = [[NSMutableDictionary alloc] init];
+            [followerparams setObject:userName forKey:@"user_id"];
+            [followerparams setObject:cursor forKey:@"cursor"];
+            SLRequest *followerRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:followerUrl parameters:followerparams];
+            [followerRequest setAccount:[twitterAccounts lastObject]];
+            
+            [followerRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+                
+                if (responseData) {
+                    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
+                        
+                        NSError *jsonError;
+                        NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
+                        if (timelineData) {
+                            //NSLog(@"Timeline Response: %@\n", timelineData);
+                            NSMutableArray *followerArray = [[NSMutableArray alloc]init];
+                            
+                            
+                            NSArray *users = [timelineData objectForKey:@"users"];
+                            for (NSDictionary *user in users){
+                                NSString *name = [user objectForKey:@"name"];
+                                NSString *screenName = [user objectForKey:@"screen_name"];
+                                NSString *userId = [user objectForKey:@"id"];
+                                NSString *profileUrl = [user objectForKey:@"profile_image_url"];
+                                TwitterFollower * follower = [[TwitterFollower alloc]init];
+                                [follower setName:name];
+                                [follower setScreenName:screenName];
+                                [follower setUserid:userId];
+                                [follower setProfileUrl:profileUrl];
+                                [followerArray addObject:follower];
+                                
+                                NSLog(@"follower name: %@", name);
+                                NSLog(@"follower screen name: %@", screenName);
+                                NSLog(@"follower user id: %@", userId);
+                                NSLog(@"follower profile url: %@", profileUrl);
+                            }
+                            //                            if (![cur isEqualToString:@"0"]){
+                            //                                [self getAllFollowing:userName withCursorId:cur];
+                            //                            }
+                            [imagechache addTwittersFollower:followerArray];
+                            
+                            
+                        }
+                        else {
+                            // Our JSON deserialization went awry
+                            NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
+                            
+                            [alertView  show];
+                        }
+                    }
+                    else {
+                        // The server did not respond ... were we rate-limited?
+                        NSLog(@"The response status code is %d", urlResponse.statusCode);
+                        
+                    }
+                }
+            }];
+            
+        }
+    }];
+    
+}
+
+-(void)getAllFollowing:(NSString *)userName withCursorId:(NSString *)cursor{
+    
+    ImageCache * imagechache= [ImageCache sharedObject];
+    if (!_accountStore)
+        _accountStore = [[ACAccountStore alloc] init];
     
     ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
@@ -37,7 +116,7 @@
                         
                         NSError *jsonError;
                         NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-//                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
+                        //                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
                         
                         if (timelineData) {
                             //NSLog(@"Timeline Response: %@\n", timelineData);
@@ -66,7 +145,7 @@
                             //                            if (![cur isEqualToString:@"0"]){
                             //                                [self getAllFollowing:userName withCursorId:cur];
                             //                            }
-                            [imagechache addTwittersFollower:followingArray];
+                            [imagechache addTwittersFollowing:followingArray];
                             
                         }
                         else {
@@ -82,12 +161,7 @@
             }];
         }
     }];
-    
-}
 
--(void)getAllFollowing:(NSString *)userName withCursorId:(NSString *)cursor{
-    
-  
     
 
 }

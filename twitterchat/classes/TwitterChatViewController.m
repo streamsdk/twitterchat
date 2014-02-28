@@ -87,6 +87,8 @@
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
         [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
+        [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
+          followerArray = [imagecache getTwittersFollower];
         while ([followerArray count]==0) {
             followerArray = [imagecache getTwittersFollower];
             sortedArrForArrays = [self getChineseStringArr:followerArray];
