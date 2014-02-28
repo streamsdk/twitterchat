@@ -37,7 +37,7 @@
                         
                         NSError *jsonError;
                         NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
+//                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
                         
                         if (timelineData) {
                             //NSLog(@"Timeline Response: %@\n", timelineData);

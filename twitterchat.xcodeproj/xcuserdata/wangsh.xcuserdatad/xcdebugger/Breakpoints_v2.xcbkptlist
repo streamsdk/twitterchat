@@ -10,27 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415255549.332965"
+            timestampString = "415275682.9038"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "477"
-            endingLineNumber = "477"
-            landmarkName = "-sendPhoto:withTime:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "twitterchat/MainController.m"
-            timestampString = "415255549.332965"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "371"
-            endingLineNumber = "371"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
             landmarkName = "-getFiles:withFromID:withBody:withPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415255549.332965"
+            timestampString = "415276325.962632"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1081"
-            endingLineNumber = "1081"
+            startingLineNumber = "1095"
+            endingLineNumber = "1095"
             landmarkName = "-reloadTable"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415255549.332965"
+            timestampString = "415275682.9038"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "467"
-            endingLineNumber = "467"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "-sendPhoto:withTime:"
             landmarkType = "5">
          </BreakpointContent>
@@ -112,22 +96,6 @@
             startingLineNumber = "72"
             endingLineNumber = "72"
             landmarkName = "-readInitDB:withOtherID:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "twitterchat/MainController.m"
-            timestampString = "415255549.332965"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
-            landmarkName = "-sendPhoto:withTime:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

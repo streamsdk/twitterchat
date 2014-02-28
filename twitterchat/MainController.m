@@ -106,12 +106,13 @@
     messageText.returnKeyType = UIReturnKeySend;
     messageText.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
-    faceButton = [createUI setButtonFrame:CGRectMake(0 ,5,30, 30) withTitle:@"nil"];
-    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
-    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
+//    faceButton = [createUI setButtonFrame:CGRectMake(0 ,5,30, 30) withTitle:@"nil"];
+//    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
+//    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
 
     [toolBar addSubview:messageText];
-    
+    [toolBar addSubview:recordOrKeyboardButton];
+    [toolBar addSubview:iconButton];
     
 }
 -(NSData *)getProfileAvatar{
@@ -190,24 +191,15 @@
         if (array==nil || [array count]==0) {
             invite.hidden  = NO;
             label.hidden = NO;
-            [iconButton removeFromSuperview];
-            [recordOrKeyboardButton removeFromSuperview];
-            [toolBar addSubview:faceButton];
             [backview setFrame:CGRectMake(0, 120, self.view.frame.size.width, self.view.frame.size.height-120-40)];
         }else{
             invite.hidden  = YES;
             label.hidden = YES;
-            [faceButton removeFromSuperview];
-            [toolBar addSubview:iconButton];
-            [toolBar addSubview:recordOrKeyboardButton];
             [imageCache saveAllUserId:[imageCache getFriendID]];
             [backview setFrame:self.view.frame];
         }
 
     }else{
-        [faceButton removeFromSuperview];
-        [toolBar addSubview:iconButton];
-        [toolBar addSubview:recordOrKeyboardButton];
         invite.hidden  = YES;
         label.hidden = YES;
         [backview setFrame:self.view.frame];
@@ -512,6 +504,7 @@
 
 -(void) recordStart
 {
+    
     [self.voice startRecordWithPath];
 }
 -(void) recordEnd
@@ -540,7 +533,13 @@
 }
 // KeyboardTorecordClicked
 -(void) KeyboardTorecordClicked {
-    
+    ImageCache * imagecache = [ImageCache sharedObject];
+    NSMutableSet * alluserId = [imagecache getAllUserId];
+    if (![alluserId containsObject:[imagecache getFriendID]]){
+        UIAlertView * alertview = [[UIAlertView alloc]initWithTitle:@"" message:@"The other is not registered, you can't send photo." delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+        [alertview show];
+        return;
+    }
     [self dismissKeyBoard];
     [scrollView removeFromSuperview];
     [recordOrKeyboardButton removeFromSuperview];
@@ -1041,13 +1040,28 @@
 }
 
 -(void)  selectedIconView:(NSInteger) buttonTag{
+    ImageCache * imagecache = [ImageCache sharedObject];
+    NSMutableSet * alluserId = [imagecache getAllUserId];
     
     if(buttonTag == 0){
-        [self addPhoto];
+        if ([alluserId containsObject:[imagecache getFriendID]]){
+            
+            [self addPhoto];
+        } else{
+            UIAlertView * alertview = [[UIAlertView alloc]initWithTitle:@"" message:@"The other is not registered, you can't send photo." delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+            [alertview show];
+        }
         [self scrollBubbleViewToBottomAnimated:YES];
     }
     if (buttonTag == 1) {
-        [self takePhoto];
+        if ([alluserId containsObject:[imagecache getFriendID]]){
+            
+            [self takePhoto];
+        } else{
+            UIAlertView * alertview = [[UIAlertView alloc]initWithTitle:@"" message:@"The other is not registered, you can't send photo." delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+            [alertview show];
+        }
+        
         [self scrollBubbleViewToBottomAnimated:YES];
     }
     if (buttonTag == 2) {
