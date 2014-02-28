@@ -40,7 +40,7 @@
 #define BIG_IMG_HEIGHT 340.0
 #define INVITBUTTON_TAG 10000
 #define LABLE_TAG		30000
-
+#define BACKVIEW_TAG	40000
 @interface MainController () <UIScrollViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,PlayerDelegate,reloadTableDeleage>
 {
     NSMutableArray *bubbleData;
@@ -105,14 +105,13 @@
     messageText.delegate = self;
     messageText.returnKeyType = UIReturnKeySend;
     messageText.autocapitalizationType = UITextAutocapitalizationTypeNone;
-//    faceButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:@"nil"];
-//    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
-//    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    faceButton = [createUI setButtonFrame:CGRectMake(0 ,5,30, 30) withTitle:@"nil"];
+    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
+    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
 
-    [toolBar addSubview:recordOrKeyboardButton];
-    [toolBar addSubview:iconButton];
     [toolBar addSubview:messageText];
-//    [toolBar addSubview:faceButton];
+    
     
 }
 -(NSData *)getProfileAvatar{
@@ -178,8 +177,9 @@
 //        NSData * data = [NSData dataWithContentsOfFile:path];
 //        [backgroundView setImage:[UIImage imageWithData:data]];
 //    }
-    UIButton * invite = (UIButton *)[self.view viewWithTag:INVITBUTTON_TAG];
-    UILabel * label = (UILabel *)[self.view viewWithTag:LABLE_TAG];
+    UIButton * invite = (UIButton *)[backgroundView viewWithTag:INVITBUTTON_TAG];
+    UILabel * label = (UILabel *)[backgroundView viewWithTag:LABLE_TAG];
+    UIImageView * backview = (UIImageView *)[backgroundView viewWithTag:BACKVIEW_TAG];
     NSMutableSet * alluserId = [imageCache getAllUserId];
     if (![alluserId containsObject:[imageCache getFriendID]]) {
         STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
@@ -190,16 +190,27 @@
         if (array==nil || [array count]==0) {
             invite.hidden  = NO;
             label.hidden = NO;
-          
+            [iconButton removeFromSuperview];
+            [recordOrKeyboardButton removeFromSuperview];
+            [toolBar addSubview:faceButton];
+            [backview setFrame:CGRectMake(0, 120, self.view.frame.size.width, self.view.frame.size.height-120-40)];
         }else{
             invite.hidden  = YES;
             label.hidden = YES;
+            [faceButton removeFromSuperview];
+            [toolBar addSubview:iconButton];
+            [toolBar addSubview:recordOrKeyboardButton];
             [imageCache saveAllUserId:[imageCache getFriendID]];
+            [backview setFrame:self.view.frame];
         }
 
     }else{
+        [faceButton removeFromSuperview];
+        [toolBar addSubview:iconButton];
+        [toolBar addSubview:recordOrKeyboardButton];
         invite.hidden  = YES;
         label.hidden = YES;
+        [backview setFrame:self.view.frame];
     }
     
     [bubbleTableView reloadData];
@@ -263,14 +274,15 @@
     backgroundView.userInteractionEnabled = YES;
     [self.view addSubview:backgroundView];
     
-    UIImageView * backView = [[UIImageView alloc]initWithFrame:self.view.frame];
+    UIImageView * backView = [[UIImageView alloc]init];
+    backView.tag = BACKVIEW_TAG;
     backView.userInteractionEnabled = YES;
     UITapGestureRecognizer *singleTouch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard:)];
     [backView addGestureRecognizer:singleTouch];
     [backView setBackgroundColor:[UIColor clearColor]];
     [backgroundView addSubview:backView];
     //bubbleTableView
-    bubbleTableView = [[UIBubbleTableView alloc]initWithFrame:CGRectMake(0, 44, self.view.frame.size.width, self.view.frame.size.height-44-40)];
+    bubbleTableView = [[UIBubbleTableView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
     bubbleTableView .bubbleDataSource = self;
     bubbleTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     [backView addSubview:bubbleTableView];
@@ -278,27 +290,28 @@
     NSString * text =@"Please Keep message clean and positive. Inappropriate content can be reported.";
     UIFont *font = [UIFont systemFontOfSize:20];;
     CGSize size = [(text ? text : @"") boundingRectWithSize:CGSizeMake(305, 9999) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(12, 100, size.width, size.height)];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(13, 100, size.width, size.height)];
     label.text = text;
     label.textColor = [UIColor grayColor];
     label.backgroundColor = [UIColor lightGrayColor];
     label.layer.cornerRadius = 6;
     label.numberOfLines = 0;
     label.lineBreakMode = NSLineBreakByWordWrapping;
-    [self.view addSubview:label];
+    [backgroundView addSubview:label];
     label.hidden = YES;
     label.tag = LABLE_TAG;
 
     UIButton *inviteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [inviteButton setFrame:CGRectMake(10, 64, self.view.frame.size.width-20, 34)];
+    [inviteButton setFrame:CGRectMake(13, 64, self.view.frame.size.width-28, 35)];
     [inviteButton setTitle:@"INVITATION" forState:UIControlStateNormal];
     inviteButton.titleLabel.font = [UIFont systemFontOfSize:18.0f];
     [[inviteButton layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
     [[inviteButton layer] setBorderWidth:1];
     [[inviteButton layer] setCornerRadius:4];
+    [inviteButton setBackgroundColor:[UIColor lightGrayColor]];
     [inviteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [inviteButton addTarget:self action:@selector(invite) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:inviteButton];
+    [backgroundView addSubview:inviteButton];
     inviteButton .tag = INVITBUTTON_TAG;
     inviteButton.hidden = YES;
     
@@ -306,7 +319,7 @@
     toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-40, self.view.frame.size.width, 40)];
     toolBar.tag = TOOLBARTAG;
     toolBar.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin |UIViewAutoresizingFlexibleTopMargin |UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
-    [backView addSubview:toolBar];
+    [backgroundView addSubview:toolBar];
     [toolBar setTintColor:[UIColor blackColor]];
     [self initWithToolBar];
     
