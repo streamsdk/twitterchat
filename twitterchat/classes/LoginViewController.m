@@ -19,8 +19,6 @@
 @interface LoginViewController ()<UIActionSheetDelegate>
 {
     TwitterChatViewController * twitterVC;
-    BOOL requestSucceed;
-    BOOL requestFailed;
     NSMutableDictionary * loginTwitter;
     NSMutableSet *twitter;
 }
@@ -28,7 +26,6 @@
 
 @implementation LoginViewController
 @synthesize accountStore = _accountStore;
-@synthesize requestCompletionDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,13 +46,10 @@
         _accountStore = [[ACAccountStore alloc] init];
     
     twitterVC = [[TwitterChatViewController alloc]init];
-    [self setRequestCompletionDelegate:twitterVC];
     
-    requestSucceed = NO;
-    requestFailed = NO;
 //    [self fetchFellowerAndFollowing:@"@robguy16"];
 //
-    ImageCache * imagechache= [ImageCache sharedObject];
+  /*  ImageCache * imagechache= [ImageCache sharedObject];
     [imagechache saveUserID:@"1344650912"];
      NSMutableArray *followerArray = [[NSMutableArray alloc]init];
     TwitterFollower * follower = [[TwitterFollower alloc]init];
@@ -85,7 +79,7 @@
     [followerArray addObject:follower2];
     [imagechache addTwittersFollower:followerArray];
 
-/*  NSMutableArray *followingArray = [[NSMutableArray alloc]init];
+   NSMutableArray *followingArray = [[NSMutableArray alloc]init];
     
     TwitterFollower * following = [[TwitterFollower alloc]init];
     [following setName:@"edward yang"];
@@ -112,15 +106,24 @@
     [imagechache addTwittersFollowing:followingArray];*/
     
 
-	// Do any additional setup after loading the view.
-    UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [loginButton setFrame:CGRectMake(20, self.view.frame.size.height-100, self.view.frame.size.width-40, 60)];
-    [loginButton setTitle:@"LOG IN" forState:UIControlStateNormal];
-    loginButton.titleLabel.font = [UIFont systemFontOfSize:20.0f];
-    [loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [loginButton setBackgroundColor:[UIColor redColor]];
-    [loginButton addTarget:self action:@selector(loginUser) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:loginButton];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString * username= [userDefaults objectForKey:@"username"];
+    if (username!=nil && ![username isEqualToString:@""]) {
+        ImageCache * imagechache= [ImageCache sharedObject];
+        [imagechache saveUserID:username];
+        [self.navigationController pushViewController:twitterVC animated:YES];
+    }else{
+        UIButton *loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [loginButton setFrame:CGRectMake(20, self.view.frame.size.height-100, self.view.frame.size.width-40, 60)];
+        [loginButton setTitle:@"LOG IN" forState:UIControlStateNormal];
+        loginButton.titleLabel.font = [UIFont systemFontOfSize:20.0f];
+        [loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [loginButton setBackgroundColor:[UIColor redColor]];
+        [loginButton addTarget:self action:@selector(loginUser) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:loginButton];
+    }
+
+   
 }
 -(void)loginUser{
 //    __block MBProgressHUD *HUD = [[MBProgressHUD alloc]init];
@@ -128,19 +131,14 @@
 //    [self.view addSubview:HUD];
 //    [HUD showAnimated:YES whileExecutingBlock:^{
 //         [self fetchAccounts];
-//         while (!requestSucceed) {
-//             NSLog(@"");
-//         }
+    
 //    }completionBlock:^{
-//        if (!requestFailed) {
-//            [self.navigationController pushViewController:twitterVC animated:YES];
-//        }
-//        [HUD removeFromSuperview];
+//         [HUD removeFromSuperview];
 //        HUD = nil;
 //    }];
 
-   [self.navigationController pushViewController:twitterVC animated:YES];
-   //[self fetchAccounts];
+//   [self.navigationController pushViewController:twitterVC animated:YES];
+    [self fetchAccounts];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -149,77 +147,26 @@
 }
 - (void)fetchAccounts{
     
-    ImageCache * imagecache = [ImageCache sharedObject];
     if ([self userHasAccessToTwitter]) {
         
         ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
         
         NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
         
+        NSString *userid = nil;
         for (ACAccount *acc in twitterAccounts){
             
             NSLog(@"account name: %@", [acc username]);
             id  tData = [acc valueForKey:@"properties"];
             NSString *userId = [tData valueForKey:@"user_id"];
-            [imagecache saveUserID:userId];
-            STreamUser * user = [[STreamUser alloc]init];
             NSMutableDictionary *metadata = [[NSMutableDictionary alloc]init];
             [metadata setObject:userId forKey:@"userid"];
             [metadata setObject:[acc username] forKey:@"username"];
             [loginTwitter setObject:metadata forKey:userId];
             [twitter addObject:userId];
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            NSString * username= [userDefaults objectForKey:@"username"];
-            if (username!=nil && ![username isEqualToString:@""]) {
-                [user logIn:username withPassword:@"password"];
-            }else{
-                [user signUp:userId withPassword:@"password" withMetadata:metadata];
-                NSLog(@"%@",[user errorMessage]);
-                if ([[user errorMessage] isEqualToString:@""]) {
-                    
-                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                    [userDefaults setObject:userId forKey:@"username"];
-                    
-                    STreamObject * history = [[STreamObject alloc]init];
-                    [history setObjectId:[userId stringByAppendingString:@"messaginghistory"]];
-                    [history createNewObject:^(BOOL succeed, NSString *objectId) {
-                        if (succeed)
-                            NSLog(@"succeed");
-                        else
-                            NSLog(@"failed");
-                    }];
-                    STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
-                    STreamObject *so = [[STreamObject alloc] init] ;
-                    
-                    [so setObjectId:userId];
-                    
-                    [so addStaff:[acc username] withObject:@"username"];
-                    [sto addStreamObject:so];
-                    [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
-                        
-                        if (succeed)
-                            NSLog(@"succeed");
-                        else
-                            NSLog(@"failed");
-                    }];
-                    
-                }else{
-                    [user logIn:userId withPassword:@"password"];
-                    if ([[user errorMessage] isEqualToString:@""]) {
-                        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                        [userDefaults setObject:userId forKey:@"username"];
-                    }
-                    
-                }
-               
-            }
-            
-            //[self fetchFellowerAndFollowing:userId];
-            [self getAllFollowing:userId withCursorId:@"-1"];
-            break;
-
+            userid = userId;
         }
-      /*  if ([twitterAccounts count]>1) {
+        if ([twitterAccounts count]>1) {
             
             UIActionSheet *actionSheet = [[UIActionSheet alloc]
                                           initWithTitle:nil
@@ -227,13 +174,20 @@
                                           cancelButtonTitle:nil
                                           destructiveButtonTitle:nil
                                           otherButtonTitles:nil];
-            for (id userid in twitter) {
-                [actionSheet addButtonWithTitle:userid];
+            NSArray * array = [twitter allObjects];
+            for (int i = 0; i < [array count]; i++) {
+                NSString * userid = [array objectAtIndex:i];
+                 [actionSheet addButtonWithTitle:userid];
             }
+            
             [actionSheet addButtonWithTitle:@"取消"];
             actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
             [actionSheet showInView:self.view];
-        }*/
+            
+        }else{
+            [self loginUserAndSignUpUser:userid];
+        }
+        
     }
 }
 
@@ -246,76 +200,7 @@
 
 -(void)getAllFollowing:(NSString *)userName withCursorId:(NSString *)cursor{
     
-    ImageCache * imagechache= [ImageCache sharedObject];
-    ACAccountType *twitterAccountType = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-    NSArray *twitterAccounts = [self.accountStore accountsWithAccountType:twitterAccountType];
-    NSURL *followingUrl = [NSURL URLWithString:@"https://api.twitter.com/1.1/friends/list.json"];
-    //NSDictionary *followingparams = @{@"user_id" : userName, @"cursor" : cursor};
-    NSMutableDictionary *followingparams = [[NSMutableDictionary alloc] init];
-    [followingparams setObject:userName forKey:@"user_id"];
-    [followingparams setObject:cursor forKey:@"cursor"];
-    SLRequest *followingRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter requestMethod:SLRequestMethodGET URL:followingUrl parameters:followingparams];
-    [followingRequest setAccount:[twitterAccounts lastObject]];
-    [self.accountStore requestAccessToAccountsWithType:twitterAccountType options:NULL completion:^(BOOL granted, NSError *error) {
-        if (granted) {
-            [followingRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
-                
-                if (responseData) {
-                    if (urlResponse.statusCode >= 200 && urlResponse.statusCode < 300) {
-                        
-                        NSError *jsonError;
-                        NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
-                        
-                        if (timelineData) {
-                            //NSLog(@"Timeline Response: %@\n", timelineData);
-                            NSMutableArray *followingArray = [[NSMutableArray alloc]init];
-                            
-                            
-                            NSArray *users = [timelineData objectForKey:@"users"];
-                            for (NSDictionary *user in users){
-                                NSString *name = [user objectForKey:@"name"];
-                                NSString *screenName = [user objectForKey:@"screen_name"];
-                                NSString *userId = [user objectForKey:@"id"];
-                                NSString *profileUrl = [user objectForKey:@"profile_image_url"];
-                                TwitterFollower * following = [[TwitterFollower alloc]init];
-                                [following setName:name];
-                                [following setScreenName:screenName];
-                                [following setUserid:userId];
-                                [following setProfileUrl:profileUrl];
-                                
-                                [followingArray addObject:following];
-                                
-                                NSLog(@"following name: %@", name);
-                                NSLog(@"following screen name: %@", screenName);
-                                NSLog(@"following user id: %@", userId);
-                                NSLog(@"following profile url: %@", profileUrl);
-                            }
-                            if (![cur isEqualToString:@"0"]){
-                                [self getAllFollowing:userName withCursorId:cur];
-                            }
-                            [imagechache addTwittersFollower:followingArray];
-                            
-                            requestSucceed = YES;
-                            //                                [requestCompletionDelegate requestCompletion];
-                        }
-                        else {
-                            // Our JSON deserialization went awry
-                            NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-                            //                                [requestCompletionDelegate requestFailed];
-                        }
-                    }
-                    else {
-                        // The server did not respond ... were we rate-limited?
-                        NSLog(@"The response status code is %d", urlResponse.statusCode);
-                        //                            [requestCompletionDelegate requestFailed];
-                    }
-                }
-            }];
-        }
-    }];
-    
-   
+      
     
 }
 
@@ -370,24 +255,21 @@
                                     NSLog(@"follower profile url: %@", profileUrl);
                                 }
                                 
-//                                [imagechache addTwittersFollower:followerArray];
-                                requestSucceed = YES;
+                                [imagechache addTwittersFollower:followerArray];
+
         
                             }
                             else {
                                 // Our JSON deserialization went awry
                                 NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-//                                [requestCompletionDelegate requestFailed];
-                                requestFailed = YES;
-                                requestSucceed = YES;
+
                                 [alertView  show];
                             }
                         }
                         else {
                             // The server did not respond ... were we rate-limited?
                             NSLog(@"The response status code is %d", urlResponse.statusCode);
-//                            [requestCompletionDelegate requestFailed];
-                            [alertView  show];
+
                         }
                     }
                  }];
@@ -402,18 +284,92 @@
     }
     
 }
+-(void) loginUserAndSignUpUser:(NSString *)userId{
+    
+    ImageCache * imagecache = [ImageCache sharedObject];
+    [imagecache saveUserID:userId];
+    NSMutableDictionary * metadata = [loginTwitter objectForKey:userId];
+    STreamUser * user = [[STreamUser alloc]init];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString * username= [userDefaults objectForKey:@"username"];
+    __block NSString * error;
+    
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"user or password error" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+    __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    HUD.labelText = @"log you in, Please wait...";
+    [self.view addSubview:HUD];
+    [HUD showAnimated:YES whileExecutingBlock:^{
+        if (username!=nil && ![username isEqualToString:@""]) {
+            [user logIn:username withPassword:@"password"];
+        }else{
+            [user signUp:userId withPassword:@"password" withMetadata:metadata];
+            NSLog(@"%@",[user errorMessage]);
+            if ([[user errorMessage] isEqualToString:@""]) {
+                
+                NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                [userDefaults setObject:userId forKey:@"username"];
+                
+                STreamObject * history = [[STreamObject alloc]init];
+                [history setObjectId:[userId stringByAppendingString:@"messaginghistory"]];
+                [history createNewObject:^(BOOL succeed, NSString *objectId) {
+                    if (succeed)
+                        NSLog(@"succeed");
+                    else
+                        NSLog(@"failed");
+                }];
+                STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
+                STreamObject *so = [[STreamObject alloc] init] ;
+                
+                [so setObjectId:userId];
+                
+                [so addStaff:[metadata objectForKey:@"username"] withObject:@"username"];
+                [sto addStreamObject:so];
+                [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
+                    
+                    if (succeed)
+                        NSLog(@"succeed");
+                    else
+                        NSLog(@"failed");
+                }];
+                
+            }else{
+                [user logIn:userId withPassword:@"password"];
+                if ([[user errorMessage] isEqualToString:@""]) {
+                    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+                    [userDefaults setObject:userId forKey:@"username"];
+                }
+                
+            }
+            
+        }
+
+    }completionBlock:^{
+        if ([error length] == 0) {
+           [self.navigationController pushViewController:twitterVC animated:YES];
+        }else{
+            [alertView show];
+        }
+        
+        [HUD removeFromSuperview];
+        HUD = nil;
+    }];
+    
+
+   
+    
+              //[self fetchFellowerAndFollowing:userId];
+//           [self getAllFollowing:userId withCursorId:@"-1"];
+ 
+
+}
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-//    if (buttonIndex == 0) {
-//        NSLog(@"%d",buttonIndex);
-//    }else if (buttonIndex == 1){
-//        NSLog(@"%d",buttonIndex);
-//
-//    }else if (buttonIndex == 2){
-//        NSLog(@"%d",buttonIndex);
-//
-//    }
 
-
+    if (buttonIndex != [twitter count]) {
+         NSArray * array = [twitter allObjects];
+        NSString * userid = [array objectAtIndex:buttonIndex];
+        [self loginUserAndSignUpUser:userid];
+        NSLog(@"%@",userid);
+    }
 }
 
 @end

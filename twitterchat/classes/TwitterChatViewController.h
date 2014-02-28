@@ -9,9 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "GetAllMessagesProtocol.h"
 #import "UploadProtocol.h"
-#import "LoginViewController.h"
 
-@interface TwitterChatViewController : UITableViewController <RequestCompletionDelegate>
+@interface TwitterChatViewController : UITableViewController
 @property (nonatomic, retain) NSMutableArray *sortedArrForArrays;
 @property (nonatomic, retain) NSMutableArray *sectionHeadsKeys;
 @property (nonatomic,strong) UISegmentedControl *segmentedControl;

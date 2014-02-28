@@ -11,19 +11,12 @@
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
-@protocol  RequestCompletionDelegate <NSObject>
 
--(void)requestCompletion;
-
--(void)requestFailed;
-
-@end
 
 @interface LoginViewController : UIViewController
 
 @property (nonatomic) ACAccountStore *accountStore;
 
-@property (nonatomic,assign) id <RequestCompletionDelegate>requestCompletionDelegate;
 
 @end
 

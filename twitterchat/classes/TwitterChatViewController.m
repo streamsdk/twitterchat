@@ -21,11 +21,13 @@
 #import "TalkDB.h"
 #import "DownloadDB.h"
 #import "UploadDB.h"
-
+#import "FollowerAndFollowingHandler.h"
 @interface TwitterChatViewController ()<STreamXMPPProtocol>
 {
     NSMutableArray * followerArray;
     MainController *mainVC;
+    FollowerAndFollowingHandler *followerAndFollowingHandler;
+    
 }
 @end
 
@@ -46,23 +48,6 @@
     return self;
 }
 
--(void) requestCompletion{
-    if (segmentedControl.selectedSegmentIndex == 0) {
-        ImageCache * imageCache =[ImageCache sharedObject];
-        followerArray = [imageCache getTwittersFollower];
-    }else  if (segmentedControl.selectedSegmentIndex == 1) {
-        ImageCache * imageCache =[ImageCache sharedObject];
-        followerArray = [imageCache getTwittersFollowing];
-    }
-    sectionHeadsKeys=[[NSMutableArray alloc]init];
-    sortedArrForArrays = [self getChineseStringArr:followerArray];
-    [self.tableView reloadData];
-}
--(void) requestFailed{
-
-    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"request Failed" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
-    [alertView  show];
-}
 -(void)settingClicked{
     NSLog(@"");
 }
@@ -87,13 +72,34 @@
 
     sectionHeadsKeys=[[NSMutableArray alloc]init];
     
-    ImageCache * imageCache =[ImageCache sharedObject];
-    followerArray = [imageCache getTwittersFollower];
+//    ImageCache * imageCache =[ImageCache sharedObject];
+//    followerArray = [imageCache getTwittersFollower];
+//    
+//    sortedArrForArrays = [self getChineseStringArr:followerArray];
+//    [self.tableView reloadData];
     
-    sortedArrForArrays = [self getChineseStringArr:followerArray];
-    [self.tableView reloadData];
-
-   
+    followerAndFollowingHandler = [[FollowerAndFollowingHandler alloc]init];
+    
+        ImageCache * imagecache  = [ImageCache sharedObject];
+    
+    __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    HUD.labelText = @"loadingting ...";
+    [self.view addSubview:HUD];
+    [HUD showAnimated:YES whileExecutingBlock:^{
+        [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
+        while ([followerArray count]==0) {
+            followerArray = [imagecache getTwittersFollower];
+            sortedArrForArrays = [self getChineseStringArr:followerArray];
+        }
+       
+    }completionBlock:^{
+        
+        [HUD removeFromSuperview];
+        HUD = nil;
+        [self.tableView reloadData];
+    }];
+    
+    
     __block MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
     hud.labelText = @"connecting ...";
     [self.view addSubview:hud];
@@ -104,7 +110,7 @@
         [hud removeFromSuperview];
         hud = nil;
     }];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appHasBackInForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -428,17 +434,15 @@
 
 -(void) segmentAction:(UISegmentedControl *)segmented{
     ImageCache * imageCache =[ImageCache sharedObject];
-    sectionHeadsKeys=[[NSMutableArray alloc]init];
+     sectionHeadsKeys=[[NSMutableArray alloc]init];
     if (segmented.selectedSegmentIndex == 0) {
-       
-       followerArray = [imageCache getTwittersFollower];
+        followerArray = [imageCache getTwittersFollower];
         sortedArrForArrays = [self getChineseStringArr:followerArray];
         [self.tableView reloadData];
     }else{
-        followerArray = [[NSMutableArray alloc]init];
-        sortedArrForArrays = [[NSMutableArray alloc]init];
-//        followerArray = [imageCache getTwittersFollowing];
-//        sortedArrForArrays = [self getChineseStringArr:followerArray];
+        followerArray = [imageCache getTwittersFollowing];
+        sortedArrForArrays = [self getChineseStringArr:followerArray];
+
         [self.tableView reloadData];    }
 }
 - (void)didReceiveMemoryWarning
@@ -452,6 +456,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     return  [[sortedArrForArrays objectAtIndex:section] count];
+//    return [followerArray count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -499,6 +504,7 @@
         [cell addSubview:countButton];
 
     }
+    cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
     NSArray *arr = [sortedArrForArrays objectAtIndex:indexPath.section];
      ChineseString *str = (ChineseString *) [arr objectAtIndex:indexPath.row];
     ImageCache * imageCache = [ImageCache sharedObject];
@@ -519,6 +525,7 @@
         }
 
     }
+    
     NSInteger count = [imageCache getMessagesCount:str.string];
     
     if (count!= 0) {
@@ -527,8 +534,20 @@
         [countButton setTitle:title forState:UIControlStateNormal];
     }
 
+    
+    /*if (segmentedControl.selectedSegmentIndex == 0) {
+        TwitterFollower * f =[followerArray objectAtIndex:indexPath.row];
+        [self loadFollowerProfileId:f withCell:cell];
+        cell.textLabel.text = f.name;
+        
+    }else if (segmentedControl.selectedSegmentIndex == 1) {
+        TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
+         [self loadFollowingProfileId:f withCell:cell];
+        cell.textLabel.text = f.name;
+    }*/
     cell.textLabel.text = str.string;
     cell.textLabel.font = [UIFont fontWithName:@"Arial" size:18.0f];
+    
     
     return cell;
 }
@@ -571,7 +590,7 @@
 }
 
 -(void)setImage:(UIImage *)icon withCell:(UITableViewCell *)cell{
-    CGSize itemSize = CGSizeMake(50, 50);
+    CGSize itemSize = CGSizeMake(40, 40);
     UIGraphicsBeginImageContextWithOptions(itemSize, NO,0.0);
     CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
     [icon drawInRect:imageRect];

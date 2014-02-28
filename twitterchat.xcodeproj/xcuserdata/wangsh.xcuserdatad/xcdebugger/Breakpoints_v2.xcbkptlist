@@ -138,28 +138,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/classes/LoginViewController.m"
-            timestampString = "415250157.934188"
+            timestampString = "415273875.692789"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "363"
-            endingLineNumber = "363"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
             landmarkName = "-fetchFellowerAndFollowing:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "twitterchat/classes/TwitterChatViewController.m"
-            timestampString = "415248746.215624"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "431"
-            endingLineNumber = "431"
-            landmarkName = "-segmentAction:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -169,6 +169,7 @@
 		0EE10E9318BA1764006E3BE1 /* Voice.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EE10E8718BA1764006E3BE1 /* Voice.m */; };
 		0EE10E9418BA1764006E3BE1 /* VoiceHud.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EE10E8918BA1764006E3BE1 /* VoiceHud.m */; };
 		0EE10E9518BA1764006E3BE1 /* wave70x117@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0EE10E8A18BA1764006E3BE1 /* wave70x117@2x.png */; };
+		0EF56EAE18C0871A00E42380 /* FollowerAndFollowingHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF56EAD18C0871A00E42380 /* FollowerAndFollowingHandler.m */; };
 		0EF5983C18B86D3500F2DFC2 /* TwitterChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5983B18B86D3500F2DFC2 /* TwitterChatViewController.m */; };
 		0EF5984518B8714D00F2DFC2 /* TwitterFollower.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984418B8714D00F2DFC2 /* TwitterFollower.m */; };
 		0EF5984818B8716400F2DFC2 /* TwitterFollowing.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EF5984718B8716400F2DFC2 /* TwitterFollowing.m */; };
@@ -578,6 +579,8 @@
 		0EE10E8818BA1764006E3BE1 /* VoiceHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoiceHud.h; sourceTree = "<group>"; };
 		0EE10E8918BA1764006E3BE1 /* VoiceHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoiceHud.m; sourceTree = "<group>"; };
 		0EE10E8A18BA1764006E3BE1 /* wave70x117@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "wave70x117@2x.png"; path = "../wave70x117@2x.png"; sourceTree = "<group>"; };
+		0EF56EAC18C0871A00E42380 /* FollowerAndFollowingHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowerAndFollowingHandler.h; sourceTree = "<group>"; };
+		0EF56EAD18C0871A00E42380 /* FollowerAndFollowingHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowerAndFollowingHandler.m; sourceTree = "<group>"; };
 		0EF5983A18B86D3500F2DFC2 /* TwitterChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterChatViewController.h; path = classes/TwitterChatViewController.h; sourceTree = "<group>"; };
 		0EF5983B18B86D3500F2DFC2 /* TwitterChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TwitterChatViewController.m; path = classes/TwitterChatViewController.m; sourceTree = "<group>"; };
 		0EF5984318B8714D00F2DFC2 /* TwitterFollower.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TwitterFollower.h; path = classes/TwitterFollower.h; sourceTree = "<group>"; };
@@ -1773,6 +1776,8 @@
 				0EFE57F318BC3C570083D94E /* Progress.m */,
 				0EFE57EA18BC3C570083D94E /* FilesUpload.h */,
 				0EFE57EB18BC3C570083D94E /* FilesUpload.m */,
+				0EF56EAC18C0871A00E42380 /* FollowerAndFollowingHandler.h */,
+				0EF56EAD18C0871A00E42380 /* FollowerAndFollowingHandler.m */,
 			);
 			path = handler;
 			sourceTree = "<group>";
@@ -2025,6 +2030,7 @@
 				038248A118A78E5C006AE205 /* XMPPRoster.xcdatamodel in Sources */,
 				038248DC18A78E5C006AE205 /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
 				0EFE57D318BC3AB60083D94E /* EmojiTransport.m in Sources */,
+				0EF56EAE18C0871A00E42380 /* FollowerAndFollowingHandler.m in Sources */,
 				0382495918A78E80006AE205 /* DDXMLNode.m in Sources */,
 				038248EB18A78E5C006AE205 /* XMPPMessage+XEP_0224.m in Sources */,
 				038248A018A78E5C006AE205 /* XMPPResourceCoreDataStorageObject.m in Sources */,
