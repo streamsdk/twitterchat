@@ -42,6 +42,9 @@
                         
                         NSError *jsonError;
                         NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
+                        
+                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
+                        [imagechache saveFollowerCoursor:cur];
                         if (timelineData) {
                             //NSLog(@"Timeline Response: %@\n", timelineData);
                             NSMutableArray *followerArray = [[NSMutableArray alloc]init];
@@ -60,17 +63,16 @@
                                 [follower setProfileUrl:profileUrl];
                                 [followerArray addObject:follower];
                                 
+                                [imagechache addTwittersFollower:follower];
                                 NSLog(@"follower name: %@", name);
                                 NSLog(@"follower screen name: %@", screenName);
                                 NSLog(@"follower user id: %@", userId);
                                 NSLog(@"follower profile url: %@", profileUrl);
                             }
-                            //                            if (![cur isEqualToString:@"0"]){
-                            //                                [self getAllFollowing:userName withCursorId:cur];
-                            //                            }
-                            [imagechache addTwittersFollower:followerArray];
-                            
-                            
+//                            [imagechache addTwittersFollower:followerArray];
+//                            if (![cur isEqualToString:@"0"]){
+//                                [self getAllFollowing:userName withCursorId:cur];
+//                            }
                         }
                         else {
                             // Our JSON deserialization went awry
@@ -116,8 +118,8 @@
                         
                         NSError *jsonError;
                         NSDictionary *timelineData = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&jsonError];
-                        //                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
-                        
+                        NSString *cur = [timelineData objectForKey:@"next_cursor_str"];
+                        [imagechache saveFollowingCoursor:cur];
                         if (timelineData) {
                             //NSLog(@"Timeline Response: %@\n", timelineData);
                             NSMutableArray *followingArray = [[NSMutableArray alloc]init];
@@ -136,16 +138,17 @@
                                 [following setProfileUrl:profileUrl];
                                 
                                 [followingArray addObject:following];
-                                
+                                [imagechache addTwittersFollowing:following];
                                 NSLog(@"following name: %@", name);
                                 NSLog(@"following screen name: %@", screenName);
                                 NSLog(@"following user id: %@", userId);
                                 NSLog(@"following profile url: %@", profileUrl);
                             }
-                            //                            if (![cur isEqualToString:@"0"]){
-                            //                                [self getAllFollowing:userName withCursorId:cur];
-                            //                            }
-                            [imagechache addTwittersFollowing:followingArray];
+//                             [imagechache addTwittersFollowing:followingArray];
+//                            if (![cur isEqualToString:@"0"]){
+//                                [self getAllFollowing:userName withCursorId:cur];
+//                            }
+                           
                             
                         }
                         else {

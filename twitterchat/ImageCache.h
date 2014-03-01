@@ -8,15 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "FilesUpload.h"
+#import "TwitterFollowing.h"
+#import "TwitterFollower.h"
+
 @interface ImageCache : NSObject
 
 +(ImageCache *)sharedObject;
 
--(void)addTwittersFollower:(NSMutableArray *)follower;
+-(void)addTwittersFollower:(TwitterFollower *)follower;
 
 -(NSMutableArray *)getTwittersFollower;
 
--(void)addTwittersFollowing:(NSMutableArray *)following;
+-(void)addTwittersFollowing:(TwitterFollowing *)following;
 
 -(NSMutableArray *)getTwittersFollowing;
 
@@ -64,4 +67,11 @@
 
 -(NSMutableSet* )getAllUserId;
 
+-(void)saveFollowerCoursor:(NSString *)cursor;
+
+-(NSString *)getFollowerCoursor;
+
+-(void)saveFollowingCoursor:(NSString *)cursor;
+
+-(NSString *)getFollowingCoursor;
 @end

@@ -22,11 +22,14 @@
 #import "DownloadDB.h"
 #import "UploadDB.h"
 #import "FollowerAndFollowingHandler.h"
+#import "SearchViewController.h"
+
 @interface TwitterChatViewController ()<STreamXMPPProtocol>
 {
     NSMutableArray * followerArray;
     MainController *mainVC;
     FollowerAndFollowingHandler *followerAndFollowingHandler;
+    NSInteger selectIndex;
     
 }
 @end
@@ -39,8 +42,7 @@
 @synthesize uploadProtocol;
 @synthesize countButton;
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style{
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -51,6 +53,13 @@
 -(void)settingClicked{
     NSLog(@"");
 }
+-(void) searchBarUser{
+    SearchViewController * searchView = [[SearchViewController alloc]init];
+    searchView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self  presentViewController:searchView animated:YES completion:NULL];
+
+    NSLog(@"search");
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,14 +68,23 @@
     
     mainVC = [[MainController alloc]init];
     
-     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings2.png"] style:UIBarButtonItemStyleDone target:self action:@selector(settingClicked)];
+    _reloading= NO;
+    self.tableView.showsVerticalScrollIndicator = NO;
+    UIBarButtonItem * setItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings2.png"] style:UIBarButtonItemStyleDone target:self action:@selector(settingClicked)];
+    
+    UIBarButtonItem *searchBarItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemSearch target:self action:@selector(searchBarUser)];
+    
+    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:setItem,searchBarItem, nil];
+//     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"settings2.png"] style:UIBarButtonItemStyleDone target:self action:@selector(settingClicked)];
     UISegmentedControl *segmentedTemp = [[UISegmentedControl alloc]initWithFrame: CGRectMake(80.0, 3.0, 160.0, 38.0)];
     segmentedControl = segmentedTemp;
     [segmentedControl insertSegmentWithTitle:@"follower" atIndex:0 animated:YES];
     [segmentedControl insertSegmentWithTitle:@"following" atIndex:1 animated:YES];
+//    [segmentedControl insertSegmentWithTitle:@"22" atIndex:3 animated:YES];
     segmentedControl.momentary = YES;
     segmentedControl.multipleTouchEnabled=NO;
     segmentedControl.selectedSegmentIndex= 0;
+    selectIndex= 0;
     [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];
     [ self.navigationController.navigationBar.topItem setTitleView:segmentedControl];
 
@@ -78,9 +96,10 @@
 //    sortedArrForArrays = [self getChineseStringArr:followerArray];
 //    [self.tableView reloadData];
     
+    
     followerAndFollowingHandler = [[FollowerAndFollowingHandler alloc]init];
     
-        ImageCache * imagecache  = [ImageCache sharedObject];
+     ImageCache * imagecache  = [ImageCache sharedObject];
     
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
     HUD.labelText = @"loadingting ...";
@@ -91,11 +110,11 @@
           followerArray = [imagecache getTwittersFollower];
         while ([followerArray count]==0) {
             followerArray = [imagecache getTwittersFollower];
-            sortedArrForArrays = [self getChineseStringArr:followerArray];
         }
        
     }completionBlock:^{
-        
+        followerArray = [imagecache getTwittersFollower];
+        sortedArrForArrays = [self getChineseStringArr:followerArray];
         [HUD removeFromSuperview];
         HUD = nil;
         [self.tableView reloadData];
@@ -117,6 +136,7 @@
                                              selector:@selector(appHasBackInForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
+    
 }
 - (void)appHasBackInForeground{
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -166,7 +186,6 @@
         }
     }
 }
-
 - (void)startUpload{
     
     UploadDB * uploadDB = [[UploadDB alloc]init];
@@ -292,12 +311,12 @@
     [downloadDB insertDownloadDB:[imageCache getUserID] fileID:fileId withBody:body withFrom:fromID];
     
     STreamFile *sf = [[STreamFile alloc] init];
-    NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
+    /*NSData *jsonData = [body dataUsingEncoding:NSUTF8StringEncoding];
     JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions:JKParseOptionNone];
     NSMutableDictionary *json = [decoder objectWithData:jsonData];
     NSString *type = [json objectForKey:@"type"];
     
-    /*if ([type isEqualToString:@"video"]) {
+    if ([type isEqualToString:@"video"]) {
         
         
       NSString *tid= [json objectForKey:@"tid"];
@@ -440,12 +459,12 @@
     if (segmented.selectedSegmentIndex == 0) {
         followerArray = [imageCache getTwittersFollower];
         sortedArrForArrays = [self getChineseStringArr:followerArray];
-        [self.tableView reloadData];
     }else{
         followerArray = [imageCache getTwittersFollowing];
         sortedArrForArrays = [self getChineseStringArr:followerArray];
-
-        [self.tableView reloadData];    }
+    }
+    selectIndex = segmented.selectedSegmentIndex;
+    [self.tableView reloadData];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -607,9 +626,16 @@
 - (NSMutableArray *)getChineseStringArr:(NSMutableArray *)arrToSort {
     NSMutableArray *chineseStringsArray = [[NSMutableArray alloc]init];
     for(int i = 0; i < [arrToSort count]; i++) {
+       
         ChineseString *chineseString=[[ChineseString alloc]init];
-        TwitterFollower * f = [arrToSort objectAtIndex:i];
-        chineseString.string=[NSString stringWithString:f.screenName];
+        if (selectIndex == 0) {
+            TwitterFollower * f = [arrToSort objectAtIndex:i];
+            chineseString.string=[NSString stringWithString:f.screenName];
+        }else if (selectIndex == 1) {
+            TwitterFollowing * f = [arrToSort objectAtIndex:i];
+            chineseString.string=[NSString stringWithString:f.screenName];
+        }
+        
         
         if(chineseString.string==nil){
             chineseString.string=@"";
@@ -639,9 +665,9 @@
     NSMutableArray *arrayForArrays = [[NSMutableArray alloc]init];
     BOOL checkValueAtIndex= NO;  //flag to check
     NSMutableArray *TempArrForGrouping = [[NSMutableArray alloc]init];
-    for(int index = 0; index < [chineseStringsArray count]; index++)
+    for(int i = 0; i < [chineseStringsArray count]; i++)
     {
-        ChineseString *chineseStr = (ChineseString *)[chineseStringsArray objectAtIndex:index];
+        ChineseString *chineseStr = (ChineseString *)[chineseStringsArray objectAtIndex:i];
         NSMutableString *strchar= [NSMutableString stringWithString:chineseStr.pinYin];
         NSString *sr= [strchar substringToIndex:1];
         //        NSLog(@"%@",sr);        //sr containing here the first character of each string
@@ -653,7 +679,7 @@
         }
         if([sectionHeadsKeys containsObject:[sr uppercaseString]])
         {
-            [TempArrForGrouping addObject:[chineseStringsArray objectAtIndex:index]];
+            [TempArrForGrouping addObject:[chineseStringsArray objectAtIndex:i]];
             if(checkValueAtIndex == NO)
             {
                 [arrayForArrays addObject:TempArrForGrouping];
@@ -687,6 +713,105 @@
         
     }
     [self.navigationController pushViewController:mainVC animated:NO];
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+
+    // 下拉到最底部时显示更多数据
+    if(!_reloading && scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height)))
+    {
+        [self createTableFooter];
+        [self loadDataBegin];
+    }
+}
+
+// 开始加载数据
+- (void) loadDataBegin
+{
+    if (_reloading == NO)
+    {
+        _reloading = YES;
+        UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 0.0f, 20.0f, 20.0f)];
+        [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        [tableFooterActivityIndicator startAnimating];
+        [self.tableView.tableFooterView addSubview:tableFooterActivityIndicator];
+        activityIndicator = tableFooterActivityIndicator;
+        [self loadDataing];
+    }
+}
+
+// 加载数据中
+- (void) loadDataing
+{
+//    NSInteger index = segmentedControl.selectedSegmentIndex;
+    NSLog(@"index = %d",selectIndex);
+    ImageCache * imagecache = [ImageCache sharedObject];
+    if (selectIndex == 0) {
+        if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
+            [followerAndFollowingHandler getAllFollower: [imagecache getUserID] withCursorId:[imagecache getFollowerCoursor]];
+            NSMutableArray * array = [[NSMutableArray alloc]init];
+            array = [imagecache getTwittersFollower];
+            followerArray =array;
+            sectionHeadsKeys = [[NSMutableArray alloc]init];
+            sortedArrForArrays = [self getChineseStringArr:followerArray];
+            
+        }
+    }
+    if (selectIndex == 1) {
+       if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
+            [followerAndFollowingHandler getAllFollowing:[imagecache getUserID] withCursorId:[imagecache getFollowingCoursor]];
+            NSMutableArray * array = [[NSMutableArray alloc]init];
+            array = [imagecache getTwittersFollowing];
+           
+            followerArray =array;
+            sectionHeadsKeys = [[NSMutableArray alloc]init];
+            sortedArrForArrays = [self getChineseStringArr:followerArray];
+        }
+    }
+    [self.tableView reloadData];
+    [self loadDataEnd];
+}
+
+// 加载数据完毕
+- (void) loadDataEnd
+{
+    _reloading = NO;
+    [self createTableFooter];
+}
+
+// 创建表格底部
+- (void) createTableFooter
+{
+    self.tableView.tableFooterView = nil;
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(100.0f, 0.0f, self.tableView.frame.size.width-200, 40.0f)];
+    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableFooterView.frame.size.width, 40.0f)];
+//    [loadMoreText setCenter:tableFooterView.center];
+    loadMoreText.textAlignment = NSTextAlignmentCenter;
+    [loadMoreText setText:@""];
+    [tableFooterView addSubview:loadMoreText];
+    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
+     [loadMoreText setText:@"上拉显示更多数据"];
+  /*  if (selectIndex== 0) {
+        if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
+            [loadMoreText setText:@"上拉显示更多数据"];
+        }else{
+            [loadMoreText setText:@"没有更多数据"];
+        }
+    }else if(selectIndex == 1){
+        if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
+            [loadMoreText setText:@"上拉显示更多数据"];
+        }else{
+            [loadMoreText setText:@"没有更多数据"];
+        }
+    }*/
+    if (activityIndicator)
+        [activityIndicator stopAnimating];
+    [tableFooterView addSubview:loadMoreText];
+    
+    self.tableView.tableFooterView = tableFooterView;
 }
 
 @end

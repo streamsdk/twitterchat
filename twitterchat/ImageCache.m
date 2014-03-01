@@ -21,6 +21,8 @@ static NSString * _videoPath;
 static NSDate * _date;
 static NSString * _userId;
 static NSMutableSet *allUserId;
+static NSString * followerCursor;
+static NSString *followingCursor;
 
 @implementation ImageCache
 
@@ -45,16 +47,16 @@ static NSMutableSet *allUserId;
 
 }
 
--(void)addTwittersFollower:(NSMutableArray *)follower{
-    _followerArray = follower;
+-(void)addTwittersFollower:(TwitterFollower *)follower{
+    [_followerArray addObject:follower];
 }
 
 -(NSMutableArray *)getTwittersFollower{
     return _followerArray;
 }
 
--(void)addTwittersFollowing:(NSMutableArray *)following{
-    _followingArray = following;
+-(void)addTwittersFollowing:(TwitterFollowing *)following{
+    [_followingArray addObject:following];
     
 }
 
@@ -161,5 +163,19 @@ static NSMutableSet *allUserId;
 -(NSMutableSet* )getAllUserId{
     return allUserId;
 }
+-(void)saveFollowerCoursor:(NSString *)cursor{
+    followerCursor = cursor;
+}
 
+-(NSString *)getFollowerCoursor{
+    return followerCursor;
+    
+}
+-(void)saveFollowingCoursor:(NSString *)cursor{
+    followingCursor = cursor;
+}
+
+-(NSString *)getFollowingCoursor{
+    return followingCursor;
+}
 @end
