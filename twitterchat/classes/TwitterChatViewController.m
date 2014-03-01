@@ -11,8 +11,6 @@
 #import "TwitterFollower.h"
 #import "TwitterFollowing.h"
 #import "MBProgressHUD.h"
-#import "ChineseString.h"
-#import "pinyin.h"
 #import "MainController.h"
 #import "MBProgressHUD.h"
 #import "STreamXMPP.h"
@@ -35,8 +33,6 @@
 @end
 
 @implementation TwitterChatViewController
-@synthesize sectionHeadsKeys;
-@synthesize sortedArrForArrays;
 @synthesize segmentedControl;
 @synthesize messagesProtocol;
 @synthesize uploadProtocol;
@@ -87,15 +83,6 @@
     selectIndex= 0;
     [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];
     [ self.navigationController.navigationBar.topItem setTitleView:segmentedControl];
-
-    sectionHeadsKeys=[[NSMutableArray alloc]init];
-    
-//    ImageCache * imageCache =[ImageCache sharedObject];
-//    followerArray = [imageCache getTwittersFollower];
-//    
-//    sortedArrForArrays = [self getChineseStringArr:followerArray];
-//    [self.tableView reloadData];
-    
     
     followerAndFollowingHandler = [[FollowerAndFollowingHandler alloc]init];
     
@@ -114,7 +101,6 @@
        
     }completionBlock:^{
         followerArray = [imagecache getTwittersFollower];
-        sortedArrForArrays = [self getChineseStringArr:followerArray];
         [HUD removeFromSuperview];
         HUD = nil;
         [self.tableView reloadData];
@@ -455,13 +441,10 @@
 
 -(void) segmentAction:(UISegmentedControl *)segmented{
     ImageCache * imageCache =[ImageCache sharedObject];
-     sectionHeadsKeys=[[NSMutableArray alloc]init];
     if (segmented.selectedSegmentIndex == 0) {
         followerArray = [imageCache getTwittersFollower];
-        sortedArrForArrays = [self getChineseStringArr:followerArray];
     }else{
         followerArray = [imageCache getTwittersFollowing];
-        sortedArrForArrays = [self getChineseStringArr:followerArray];
     }
     selectIndex = segmented.selectedSegmentIndex;
     [self.tableView reloadData];
@@ -475,43 +458,12 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return  [[sortedArrForArrays objectAtIndex:section] count];
-//    return [followerArray count];
+    return [followerArray count];
 }
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    return [sortedArrForArrays count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return [sectionHeadsKeys objectAtIndex:section];
-}
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-    if (sectionTitle == nil) {
-        return  nil;
-    }
-    
-    UILabel * label = [[UILabel alloc] init];
-    label.frame = CGRectMake(10, 0, 320, 24);
-    label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
-    label.font=[UIFont fontWithName:@"Arial" size:19.0f];
-    label.text = sectionTitle;
-    
-    UIView * sectionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 24)] ;
-    [sectionView setBackgroundColor:[UIColor blackColor]];
-    [sectionView addSubview:label];
-    return sectionView;
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -526,47 +478,24 @@
 
     }
     cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
-    NSArray *arr = [sortedArrForArrays objectAtIndex:indexPath.section];
-     ChineseString *str = (ChineseString *) [arr objectAtIndex:indexPath.row];
-    ImageCache * imageCache = [ImageCache sharedObject];
-    if (segmentedControl.selectedSegmentIndex == 0) {
-        for (TwitterFollower *f in followerArray) {
-            if ([f.screenName isEqualToString:str.string]) {
-                cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
-                [self loadFollowerProfileId:f withCell:cell];
-            }
-        }
-
-    }else{
-        for (TwitterFollowing *f in followerArray) {
-            if ([f.screenName isEqualToString:str.string]) {
-                cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
-                [self loadFollowingProfileId:f withCell:cell];
-            }
-        }
-
+    ImageCache * imagecache = [ImageCache sharedObject];
+    NSInteger count = 0;
+    if (selectIndex == 0) {
+        TwitterFollower * f =[followerArray objectAtIndex:indexPath.row];
+        [self loadFollowerProfileId:f withCell:cell];
+        cell.textLabel.text = f.name;
+        [imagecache getMessagesCount:f.userid];
+    }else if (selectIndex == 1) {
+        TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
+         [self loadFollowingProfileId:f withCell:cell];
+        cell.textLabel.text = f.name;
+        [imagecache getMessagesCount:f.userid];
     }
-    
-    NSInteger count = [imageCache getMessagesCount:str.string];
-    
     if (count!= 0) {
         NSString * title =[NSString stringWithFormat:@"%d",count];
         [countButton setBackgroundImage:[UIImage imageNamed:@"message_count.png"] forState:UIControlStateNormal];
         [countButton setTitle:title forState:UIControlStateNormal];
     }
-
-    
-    /*if (segmentedControl.selectedSegmentIndex == 0) {
-        TwitterFollower * f =[followerArray objectAtIndex:indexPath.row];
-        [self loadFollowerProfileId:f withCell:cell];
-        cell.textLabel.text = f.name;
-        
-    }else if (segmentedControl.selectedSegmentIndex == 1) {
-        TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
-         [self loadFollowingProfileId:f withCell:cell];
-        cell.textLabel.text = f.name;
-    }*/
-    cell.textLabel.text = str.string;
     cell.textLabel.font = [UIFont fontWithName:@"Arial" size:18.0f];
     
     
@@ -623,94 +552,17 @@
     return 60.0f;
 }
 
-- (NSMutableArray *)getChineseStringArr:(NSMutableArray *)arrToSort {
-    NSMutableArray *chineseStringsArray = [[NSMutableArray alloc]init];
-    for(int i = 0; i < [arrToSort count]; i++) {
-       
-        ChineseString *chineseString=[[ChineseString alloc]init];
-        if (selectIndex == 0) {
-            TwitterFollower * f = [arrToSort objectAtIndex:i];
-            chineseString.string=[NSString stringWithString:f.screenName];
-        }else if (selectIndex == 1) {
-            TwitterFollowing * f = [arrToSort objectAtIndex:i];
-            chineseString.string=[NSString stringWithString:f.screenName];
-        }
-        
-        
-        if(chineseString.string==nil){
-            chineseString.string=@"";
-        }
-        
-        if(![chineseString.string isEqualToString:@""]){
-            //join the pinYin
-            NSString *pinYinResult = [NSString string];
-            for(int j = 0;j < chineseString.string.length; j++) {
-                NSString *singlePinyinLetter = [[NSString stringWithFormat:@"%c",
-                                                 pinyinFirstLetter([chineseString.string characterAtIndex:j])]uppercaseString];
-                
-                pinYinResult = [pinYinResult stringByAppendingString:singlePinyinLetter];
-            }
-            chineseString.pinYin = pinYinResult;
-        } else {
-            chineseString.pinYin = @"";
-        }
-        [chineseStringsArray addObject:chineseString];
-    }
-    
-    //sort the ChineseStringArr by pinYin
-    NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"pinYin" ascending:YES]];
-    [chineseStringsArray sortUsingDescriptors:sortDescriptors];
-    
-    
-    NSMutableArray *arrayForArrays = [[NSMutableArray alloc]init];
-    BOOL checkValueAtIndex= NO;  //flag to check
-    NSMutableArray *TempArrForGrouping = [[NSMutableArray alloc]init];
-    for(int i = 0; i < [chineseStringsArray count]; i++)
-    {
-        ChineseString *chineseStr = (ChineseString *)[chineseStringsArray objectAtIndex:i];
-        NSMutableString *strchar= [NSMutableString stringWithString:chineseStr.pinYin];
-        NSString *sr= [strchar substringToIndex:1];
-        //        NSLog(@"%@",sr);        //sr containing here the first character of each string
-        if(![sectionHeadsKeys containsObject:[sr uppercaseString]])//here I'm checking whether the character already in the selection header keys or not
-        {
-            [sectionHeadsKeys addObject:[sr uppercaseString]];
-            TempArrForGrouping = [[NSMutableArray alloc] initWithObjects:nil];
-            checkValueAtIndex = NO;
-        }
-        if([sectionHeadsKeys containsObject:[sr uppercaseString]])
-        {
-            [TempArrForGrouping addObject:[chineseStringsArray objectAtIndex:i]];
-            if(checkValueAtIndex == NO)
-            {
-                [arrayForArrays addObject:TempArrForGrouping];
-                checkValueAtIndex = YES;
-            }
-        }
-    }
-    return arrayForArrays;
-}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     ImageCache *imageCache = [ImageCache sharedObject];
-    NSMutableArray * keys = [sortedArrForArrays objectAtIndex:indexPath.section];
-    ChineseString * userStr = [keys objectAtIndex:indexPath.row];
-    NSString *userName = [userStr string];
-    
-    if (segmentedControl.selectedSegmentIndex == 0) {
-        for (TwitterFollower *f in followerArray) {
-            if ([f.screenName isEqualToString:userName]) {
-                f.userid = [NSString stringWithFormat:@"%@",f.userid];
-                [imageCache setFriendID:f.userid];
-            }
-        }
-        
-    }else{
-        for (TwitterFollowing *f in followerArray) {
-            if ([f.screenName isEqualToString:userName]) {
-                f.userid = [NSString stringWithFormat:@"%@",f.userid];
-                 [imageCache setFriendID:f.userid];
-            }
-        }
-        
+    if (selectIndex == 0) {
+        TwitterFollower * f = [[TwitterFollower alloc]init];
+        f.userid = [NSString stringWithFormat:@"%@",f.userid];
+        [imageCache setFriendID:f.userid];
+    }
+    if (selectIndex == 1) {
+        TwitterFollowing * f =[[TwitterFollowing alloc]init];
+        f.userid = [NSString stringWithFormat:@"%@",f.userid];
+        [imageCache setFriendID:f.userid];
     }
     [self.navigationController pushViewController:mainVC animated:NO];
 }
@@ -755,8 +607,8 @@
             NSMutableArray * array = [[NSMutableArray alloc]init];
             array = [imagecache getTwittersFollower];
             followerArray =array;
-            sectionHeadsKeys = [[NSMutableArray alloc]init];
-            sortedArrForArrays = [self getChineseStringArr:followerArray];
+//            sectionHeadsKeys = [[NSMutableArray alloc]init];
+//            sortedArrForArrays = [self getChineseStringArr:followerArray];
             
         }
     }
@@ -767,8 +619,8 @@
             array = [imagecache getTwittersFollowing];
            
             followerArray =array;
-            sectionHeadsKeys = [[NSMutableArray alloc]init];
-            sortedArrForArrays = [self getChineseStringArr:followerArray];
+//            sectionHeadsKeys = [[NSMutableArray alloc]init];
+//            sortedArrForArrays = [self getChineseStringArr:followerArray];
         }
     }
     [self.tableView reloadData];

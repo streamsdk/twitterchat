@@ -17,8 +17,6 @@
     UIActivityIndicatorView *activityIndicator;
 	BOOL _reloading;
 }
-@property (nonatomic, retain) NSMutableArray *sortedArrForArrays;
-@property (nonatomic, retain) NSMutableArray *sectionHeadsKeys;
 @property (nonatomic,strong) UISegmentedControl *segmentedControl;
 @property (assign,nonatomic) id<GetAllMessagesProtocol> messagesProtocol;
 @property (assign,nonatomic) id<UploadProtocol> uploadProtocol;
