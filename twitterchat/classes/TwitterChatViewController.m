@@ -28,7 +28,7 @@
     MainController *mainVC;
     FollowerAndFollowingHandler *followerAndFollowingHandler;
     NSInteger selectIndex;
-    
+    UIView *tableFooterView;
 }
 @end
 
@@ -62,6 +62,8 @@
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
     
+    tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 40.0f)];
+    [tableFooterView setBackgroundColor:[UIColor lightGrayColor]];
     mainVC = [[MainController alloc]init];
     
     _reloading= NO;
@@ -586,10 +588,12 @@
     if (_reloading == NO)
     {
         _reloading = YES;
-        UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 0.0f, 20.0f, 20.0f)];
-        [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        
+        UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(20.0f, 0.0f, 20.0f, 20.0f)];
+        [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [tableFooterView addSubview:tableFooterActivityIndicator];
         [tableFooterActivityIndicator startAnimating];
-        [self.tableView.tableFooterView addSubview:tableFooterActivityIndicator];
+//        [self.tableView.tableFooterView addSubview:tableFooterView];
         activityIndicator = tableFooterActivityIndicator;
         [self loadDataing];
     }
@@ -638,8 +642,8 @@
 - (void) createTableFooter
 {
     self.tableView.tableFooterView = nil;
-    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(100.0f, 0.0f, self.tableView.frame.size.width-200, 40.0f)];
-    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableFooterView.frame.size.width, 40.0f)];
+//    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(100.0f, 0.0f, self.tableView.frame.size.width-200, 40.0f)];
+    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(100.0f, 0.0f, tableFooterView.frame.size.width-200, 40.0f)];
 //    [loadMoreText setCenter:tableFooterView.center];
     loadMoreText.textAlignment = NSTextAlignmentCenter;
     [loadMoreText setText:@""];
