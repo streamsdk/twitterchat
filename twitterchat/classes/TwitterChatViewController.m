@@ -94,8 +94,9 @@
     HUD.labelText = @"loadingting ...";
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
+         [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
         [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
-        [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
+       
           followerArray = [imagecache getTwittersFollower];
         while ([followerArray count]==0) {
             followerArray = [imagecache getTwittersFollower];
@@ -442,6 +443,7 @@
 }
 
 -(void) segmentAction:(UISegmentedControl *)segmented{
+    self.tableView.tableFooterView = nil;
     ImageCache * imageCache =[ImageCache sharedObject];
     if (segmented.selectedSegmentIndex == 0) {
         followerArray = [imageCache getTwittersFollower];
@@ -465,7 +467,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -591,8 +593,28 @@
     if (_reloading == NO)
     {
         _reloading = YES;
-        [self createTableFooter];
-        [activityIndicator startAnimating];
+        ImageCache * imagecache = [ImageCache sharedObject];
+        if (selectIndex == 0) {
+            if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                [tableFooterView addSubview:tableFooterActivityIndicator];
+                activityIndicator = tableFooterActivityIndicator;
+                [activityIndicator startAnimating];
+                self.tableView.tableFooterView = tableFooterView;
+            
+            }
+        }
+        if (selectIndex == 1) {
+            if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+                [tableFooterView addSubview:tableFooterActivityIndicator];
+                activityIndicator = tableFooterActivityIndicator;
+                [activityIndicator startAnimating];
+                self.tableView.tableFooterView = tableFooterView;
+            }
+        }
         [self loadDataing];
     }
 }
@@ -628,23 +650,24 @@
 - (void) loadDataEnd
 {
     _reloading = NO;
-    [self createTableFooter];
+//    [self createTableFooter];
     [activityIndicator stopAnimating];
 }
 
 // 创建表格底部
 - (void) createTableFooter
 {
-    ImageCache * imagecache =[ImageCache sharedObject];
-    self.tableView.tableFooterView = nil;
-    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(100.0f, 0.0f, tableFooterView.frame.size.width-200, 40.0f)];
+//    ImageCache * imagecache =[ImageCache sharedObject];
+    
 
-    loadMoreText.textAlignment = NSTextAlignmentCenter;
-    [loadMoreText setText:@""];
-    [tableFooterView addSubview:loadMoreText];
-    [loadMoreText setBackgroundColor:[UIColor clearColor]];
-    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
-    [loadMoreText setText:@"上拉显示更多数据"];
+//    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(100.0f, 0.0f, tableFooterView.frame.size.width-200, 40.0f)];
+//
+//    loadMoreText.textAlignment = NSTextAlignmentCenter;
+//    [loadMoreText setText:@""];
+//    [tableFooterView addSubview:loadMoreText];
+//    [loadMoreText setBackgroundColor:[UIColor clearColor]];
+//    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
+//    [loadMoreText setText:@"上拉显示更多数据"];
     /*if (selectIndex== 0) {
         if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
             [loadMoreText setText:@"上拉显示更多数据"];
@@ -658,15 +681,7 @@
             [loadMoreText setText:@"没有更多数据"];
         }
     }*/
-    UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
-    [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    if (!activityIndicator) {
-        [tableFooterView addSubview:tableFooterActivityIndicator];
-        activityIndicator = tableFooterActivityIndicator;
     }
-   
-    self.tableView.tableFooterView = tableFooterView;
-}
 -(UIImage *)imageWithImage:(UIImage *)_image scaledToSize:(CGSize)size {
     if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
         UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
