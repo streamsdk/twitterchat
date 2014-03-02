@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415457499.599048"
+            timestampString = "415458751.398424"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1088"
-            endingLineNumber = "1088"
+            startingLineNumber = "1094"
+            endingLineNumber = "1094"
             landmarkName = "-reloadTable"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415457499.599048"
+            timestampString = "415458659.139812"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "447"
-            endingLineNumber = "447"
+            startingLineNumber = "446"
+            endingLineNumber = "446"
             landmarkName = "-sendPhoto:withTime:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415457499.599048"
+            timestampString = "415458751.398424"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1041"
-            endingLineNumber = "1041"
+            startingLineNumber = "1047"
+            endingLineNumber = "1047"
             landmarkName = "-selectedIconView:"
             landmarkType = "5">
          </BreakpointContent>

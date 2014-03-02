@@ -192,7 +192,6 @@
         label.hidden = YES;
         [backview setFrame:self.view.frame];
     }
-    
     [bubbleTableView reloadData];
     [self dismissKeyBoard];
     [self scrollBubbleViewToBottomAnimated:YES];
@@ -674,10 +673,17 @@
 
 -(void) autoMovekeyBoard: (float) h{
     
+    ImageCache * imagecache = [ImageCache sharedObject];
+    NSMutableSet * alluserId = [imagecache getAllUserId];
     UIToolbar *toolbar = (UIToolbar *)[self.view viewWithTag:TOOLBARTAG];
     toolbar.frame = CGRectMake(0.0f, (float)(self.view.frame.size.height-h-40.0), self.view.frame.size.width, 40.0f);
     UIBubbleTableView *tableView = (UIBubbleTableView *)[self.view viewWithTag:TABLEVIEWTAG];
-    tableView.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width,(float)(self.view.frame.size.height-h-40.0));
+    if ([alluserId containsObject:[imagecache getFriendID]]) {
+        tableView.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width,(float)(self.view.frame.size.height-h-40.0));
+    }else{
+        tableView.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width,(float)(self.view.frame.size.height-h-150.0));
+    }
+   
     [self scrollBubbleViewToBottomAnimated:YES];
 }
 -(void)inputKeyboardWillShow:(NSNotification *)notification{
