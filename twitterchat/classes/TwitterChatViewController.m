@@ -597,23 +597,23 @@
         ImageCache * imagecache = [ImageCache sharedObject];
         if (selectIndex == 0) {
             if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
-                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
-                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                [tableFooterView addSubview:tableFooterActivityIndicator];
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(15.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
-                self.tableView.tableFooterView = tableFooterView;
+                self.tableView.tableFooterView = activityIndicator;
             
             }
         }
         if (selectIndex == 1) {
             if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
-                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
-                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                [tableFooterView addSubview:tableFooterActivityIndicator];
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(15.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
-                self.tableView.tableFooterView = tableFooterView;
+                self.tableView.tableFooterView = activityIndicator;
             }
         }
         [self loadDataing];
@@ -624,26 +624,30 @@
 - (void) loadDataing
 {
     NSLog(@"index = %d",selectIndex);
+     NSMutableArray * array = [[NSMutableArray alloc]init];
+    array = followerArray;
     ImageCache * imagecache = [ImageCache sharedObject];
     if (selectIndex == 0) {
         if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
             [followerAndFollowingHandler getAllFollower: [imagecache getUserID] withCursorId:[imagecache getFollowerCoursor]];
-            NSMutableArray * array = [[NSMutableArray alloc]init];
-            array = [imagecache getTwittersFollower];
-            followerArray =array;
+//            NSMutableArray * array = [[NSMutableArray alloc]init];
+            followerArray = [imagecache getTwittersFollower];
+//            followerArray =array;
             
         }
     }
     if (selectIndex == 1) {
        if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
             [followerAndFollowingHandler getAllFollowing:[imagecache getUserID] withCursorId:[imagecache getFollowingCoursor]];
-            NSMutableArray * array = [[NSMutableArray alloc]init];
-            array = [imagecache getTwittersFollowing];
            
-            followerArray =array;
+            followerArray = [imagecache getTwittersFollowing];
+//            followerArray =array;
+           
         }
     }
-    [self.tableView reloadData];
+    NSIndexPath *te=[NSIndexPath indexPathForRow:[array count]-1 inSection:0];//刷新第一个section的第二行
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:te,nil] withRowAnimation:UITableViewRowAnimationMiddle];
+//    [self.tableView reloadData];
     [self loadDataEnd];
 }
 
