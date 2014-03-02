@@ -78,7 +78,7 @@
     segmentedControl = segmentedTemp;
     [segmentedControl insertSegmentWithTitle:@"follower" atIndex:0 animated:YES];
     [segmentedControl insertSegmentWithTitle:@"following" atIndex:1 animated:YES];
-//    [segmentedControl insertSegmentWithTitle:@"22" atIndex:3 animated:YES];
+    [segmentedControl insertSegmentWithTitle:@"Recent" atIndex:2 animated:YES];
     segmentedControl.momentary = YES;
     segmentedControl.multipleTouchEnabled=NO;
     segmentedControl.selectedSegmentIndex= 0;
@@ -447,8 +447,10 @@
     ImageCache * imageCache =[ImageCache sharedObject];
     if (segmented.selectedSegmentIndex == 0) {
         followerArray = [imageCache getTwittersFollower];
-    }else{
+    }else if (segmented.selectedSegmentIndex == 1){
         followerArray = [imageCache getTwittersFollowing];
+    }else{
+        followerArray = [[NSMutableArray alloc]init];
     }
     selectIndex = segmented.selectedSegmentIndex;
     [self.tableView reloadData];
@@ -481,26 +483,26 @@
         [cell addSubview:countButton];
 
     }
-    cell.imageView.image = [UIImage imageNamed:@"noavatar.png"];
+    [self setImage:[UIImage imageNamed:@"noavatar.png"] withCell:cell];
     ImageCache * imagecache = [ImageCache sharedObject];
     NSInteger count = 0;
     if (selectIndex == 0) {
         TwitterFollower * f =[followerArray objectAtIndex:indexPath.row];
         [self loadFollowerProfileId:f withCell:cell];
         cell.textLabel.text = f.name;
-        [imagecache getMessagesCount:f.userid];
+        count =[imagecache getMessagesCount:f.userid];
     }else if (selectIndex == 1) {
         TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
          [self loadFollowingProfileId:f withCell:cell];
         cell.textLabel.text = f.name;
-        [imagecache getMessagesCount:f.userid];
+       count = [imagecache getMessagesCount:f.userid];
     }
     if (count!= 0) {
         NSString * title =[NSString stringWithFormat:@"%d",count];
         [countButton setBackgroundImage:[UIImage imageNamed:@"message_count.png"] forState:UIControlStateNormal];
         [countButton setTitle:title forState:UIControlStateNormal];
     }
-    cell.textLabel.font = [UIFont fontWithName:@"Arial" size:15.0f];
+    cell.textLabel.font = [UIFont fontWithName:@"Arial" size:16.0f];
     
     
     return cell;
@@ -544,19 +546,16 @@
 }
 
 -(void)setImage:(UIImage *)icon withCell:(UITableViewCell *)cell{
-    UIImage *image = [self imageWithImage:icon
-                         scaledToMaxWidth:40
-                                maxHeight:40];
-    CGSize itemSize = CGSizeMake(40, 40);
+    CGSize itemSize = CGSizeMake(45, 45);
     UIGraphicsBeginImageContextWithOptions(itemSize, NO,0.0);
     CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-    [image drawInRect:imageRect];
+    [icon drawInRect:imageRect];
     
     cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50.0f;
+    return 60.0f;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -565,11 +564,13 @@
         TwitterFollower * f = [followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
+        [imageCache removeFriendID:f.userid];
     }
     if (selectIndex == 1) {
         TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
+        [imageCache removeFriendID:f.userid];
     }
     [self.navigationController pushViewController:mainVC animated:NO];
 }
@@ -681,31 +682,5 @@
             [loadMoreText setText:@"没有更多数据"];
         }
     }*/
-    }
--(UIImage *)imageWithImage:(UIImage *)_image scaledToSize:(CGSize)size {
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-        UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
-    } else {
-        UIGraphicsBeginImageContext(size);
-    }
-    [_image drawInRect:CGRectMake(0, 0, size.width, size.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return newImage;
 }
-
--(UIImage *)imageWithImage:(UIImage *)_image scaledToMaxWidth:(CGFloat)width maxHeight:(CGFloat)height {
-    CGFloat oldWidth = _image.size.width;
-    CGFloat oldHeight = _image.size.height;
-    
-    CGFloat scaleFactor = (oldWidth > oldHeight) ? width / oldWidth : height / oldHeight;
-    
-    CGFloat newHeight = oldHeight * scaleFactor;
-    CGFloat newWidth = oldWidth * scaleFactor;
-    CGSize newSize = CGSizeMake(newWidth, newHeight);
-    
-    return [self imageWithImage:_image scaledToSize:newSize];
-}
-
 @end
