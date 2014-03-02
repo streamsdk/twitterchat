@@ -553,7 +553,7 @@
     [recordButton addTarget:self action:@selector(recordEnd) forControlEvents:UIControlEventTouchUpInside];
     [recordButton addTarget:self action:@selector(recordCancel) forControlEvents:UIControlEventTouchUpOutside];
     
-    [toolBar addSubview:faceButton];
+    [toolBar addSubview:keyBoardButton];
     [toolBar addSubview:recordButton];
 }
 

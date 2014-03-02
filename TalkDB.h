@@ -12,7 +12,11 @@
 
 
 @interface TalkDB : NSObject
-
+{
+    BOOL isFollwer ;
+    BOOL isFollwing ;
+    NSMutableSet * recentset;
+}
 -(void) initDB;
 
 -(void)insertDBUserID:(NSString *)userID fromID:(NSString *)fromID withContent:(NSString *)content withTime:(NSString *)time withIsMine: (int)isMine;
