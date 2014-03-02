@@ -579,12 +579,10 @@
 #pragma mark Data Source Loading / Reloading Methods
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-
     // 下拉到最底部时显示更多数据
     if(!_reloading && scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height)))
     {
         [self loadDataBegin];
-        
     }
 }
 
@@ -596,24 +594,24 @@
         _reloading = YES;
         ImageCache * imagecache = [ImageCache sharedObject];
         if (selectIndex == 0) {
-            if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
-                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
-                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                [tableFooterView addSubview:tableFooterActivityIndicator];
+//            if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
-                self.tableView.tableFooterView = tableFooterView;
+                self.tableView.tableFooterView = activityIndicator;
             
-            }
+//            }
         }
         if (selectIndex == 1) {
             if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
-                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
-                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-                [tableFooterView addSubview:tableFooterActivityIndicator];
+                UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 20.0f, 20.0f)];
+                [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
-                self.tableView.tableFooterView = tableFooterView;
+                self.tableView.tableFooterView = activityIndicator;
             }
         }
         [self loadDataing];
@@ -643,16 +641,21 @@
             followerArray =array;
         }
     }
-    [self.tableView reloadData];
-    [self loadDataEnd];
+    
+     [self performSelector:@selector(loadDataEnd) withObject:nil afterDelay:2.0];
 }
 
 // 加载数据完毕
 - (void) loadDataEnd
 {
     _reloading = NO;
-//    [self createTableFooter];
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDuration:0.3];
+    self.tableView.contentInset = UIEdgeInsetsZero;
+    [UIView commitAnimations];
     [activityIndicator stopAnimating];
+    [self.tableView reloadData];
 }
 
 // 创建表格底部
