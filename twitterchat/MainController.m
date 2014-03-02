@@ -183,22 +183,10 @@
     UIImageView * backview = (UIImageView *)[backgroundView viewWithTag:BACKVIEW_TAG];
     NSMutableSet * alluserId = [imageCache getAllUserId];
     if (![alluserId containsObject:[imageCache getFriendID]]) {
-        STreamQuery *sq = [[STreamQuery alloc] initWithCategory:@"alluser"];
-        
-        [sq addLimitId:[imageCache getFriendID]];
-        NSMutableArray *array = [sq find];
+        invite.hidden  = NO;
+        label.hidden = NO;
+        [backview setFrame:CGRectMake(0, 120, self.view.frame.size.width, self.view.frame.size.height-120-40)];
        
-        if (array==nil || [array count]==0) {
-            invite.hidden  = NO;
-            label.hidden = NO;
-            [backview setFrame:CGRectMake(0, 120, self.view.frame.size.width, self.view.frame.size.height-120-40)];
-        }else{
-            invite.hidden  = YES;
-            label.hidden = YES;
-            [imageCache saveAllUserId:[imageCache getFriendID]];
-            [backview setFrame:self.view.frame];
-        }
-
     }else{
         invite.hidden  = YES;
         label.hidden = YES;
@@ -658,11 +646,17 @@
 #pragma mark 隐藏键盘
 
 -(void)dismissKeyBoard{
-    
+    ImageCache * imagecache = [ImageCache sharedObject];
+    NSMutableSet * alluserId = [imagecache getAllUserId];
     //键盘显示的时候，toolbar需要还原到正常位置，并显示表情
     [UIView animateWithDuration:Time animations:^{
         toolBar.frame = CGRectMake(0, self.view.frame.size.height-toolBar.frame.size.height,  self.view.bounds.size.width,toolBar.frame.size.height);
-        bubbleTableView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-toolBarHeight);
+        if ([alluserId containsObject:[imagecache getFriendID]]) {
+             bubbleTableView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-64-toolBarHeight);
+        }else{
+            bubbleTableView.frame = CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height-184-toolBarHeight);
+        }
+       
     }];
     
     [UIView animateWithDuration:Time animations:^{

@@ -22,6 +22,7 @@
 #import "FollowerAndFollowingHandler.h"
 #import "SearchViewController.h"
 #import "RecentChat.h"
+#import <arcstreamsdk/STreamCategoryObject.h>
 
 @interface TwitterChatViewController ()<STreamXMPPProtocol,FollowerDelegate>
 {
@@ -99,6 +100,17 @@
     HUD.labelText = @"loadingting ...";
     [self.view addSubview:HUD];
     [HUD showAnimated:YES whileExecutingBlock:^{
+        STreamCategoryObject *sco = [[STreamCategoryObject alloc] initWithCategory:@"alluser"];
+        [sco load:^(BOOL succeed, NSString *error) {
+            if (succeed){
+                NSMutableArray *sos = [sco streamObjects];
+                for (STreamObject * so in sos) {
+                    [imagecache saveAllUserId:[so objectId]];
+                }
+                
+            }
+
+        }];
          [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
         [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
         followerArray = [imagecache getTwittersFollower];

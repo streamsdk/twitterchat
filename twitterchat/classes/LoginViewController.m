@@ -216,6 +216,7 @@
     STreamUser * user = [[STreamUser alloc]init];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString * username= [userDefaults objectForKey:@"username"];
+    
     __block NSString * error;
     
     UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"user or password error" delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
@@ -225,9 +226,12 @@
     [HUD showAnimated:YES whileExecutingBlock:^{
         if (username!=nil && ![username isEqualToString:@""]) {
             [user logIn:username withPassword:@"password"];
+            error = [user errorMessage];
+            
         }else{
             [user signUp:userId withPassword:@"password" withMetadata:metadata];
             NSLog(@"%@",[user errorMessage]);
+            error = [user errorMessage];
             if ([[user errorMessage] isEqualToString:@""]) {
                 
                 NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -242,22 +246,20 @@
                         NSLog(@"failed");
                 }];
                 STreamCategoryObject * sto = [[STreamCategoryObject alloc]initWithCategory:@"alluser"];
+            
                 STreamObject *so = [[STreamObject alloc] init] ;
                 
                 [so setObjectId:userId];
                 
                 [so addStaff:[metadata objectForKey:@"username"] withObject:@"username"];
                 [sto addStreamObject:so];
-                [sto createNewCategoryObject:^(BOOL succeed, NSString *response){
-                    
-                    if (succeed)
-                        NSLog(@"succeed");
-                    else
-                        NSLog(@"failed");
-                }];
+                NSMutableArray * updateArray = [[NSMutableArray alloc]init];
+                [updateArray addObject:so];
+                [sto updateStreamCategoryObjectsInBackground:updateArray];
                 
             }else{
                 [user logIn:userId withPassword:@"password"];
+                error = [user errorMessage];
                 if ([[user errorMessage] isEqualToString:@""]) {
                     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
                     [userDefaults setObject:userId forKey:@"username"];
@@ -268,7 +270,7 @@
         }
 
     }completionBlock:^{
-        if ([error length] == 0) {
+        if ([error isEqualToString:@""]) {
            [self.navigationController pushViewController:twitterVC animated:YES];
         }else{
             [alertView show];
@@ -278,10 +280,7 @@
         HUD = nil;
     }];
     
-
-   
-    
-              //[self fetchFellowerAndFollowing:userId];
+    //[self fetchFellowerAndFollowing:userId];
 //           [self getAllFollowing:userId withCursorId:@"-1"];
  
 

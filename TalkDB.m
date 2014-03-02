@@ -332,7 +332,6 @@
                 recent.profilePath = f.profilePath;
                 recent.profileUrl = f.profileUrl;
                [recentset addObject:recent];
-                continue;
             }
         }
     }

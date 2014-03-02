@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415451161.202482"
+            timestampString = "415457499.599048"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1094"
-            endingLineNumber = "1094"
+            startingLineNumber = "1088"
+            endingLineNumber = "1088"
             landmarkName = "-reloadTable"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415451161.202482"
+            timestampString = "415457499.599048"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
+            startingLineNumber = "447"
+            endingLineNumber = "447"
             landmarkName = "-sendPhoto:withTime:"
             landmarkType = "5">
          </BreakpointContent>
@@ -73,13 +73,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "twitterchat/classes/TwitterChatViewController.m"
-            timestampString = "415451954.574881"
+            filePath = "twitterchat/MainController.m"
+            timestampString = "415457499.599048"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
-            landmarkName = "-didReceiveMessage:withFrom:"
+            startingLineNumber = "1041"
+            endingLineNumber = "1041"
+            landmarkName = "-selectedIconView:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,13 +89,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "twitterchat/MainController.m"
-            timestampString = "415452290.869904"
+            filePath = "twitterchat/classes/LoginViewController.m"
+            timestampString = "415457327.250016"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1047"
-            endingLineNumber = "1047"
-            landmarkName = "-selectedIconView:"
+            startingLineNumber = "232"
+            endingLineNumber = "232"
+            landmarkName = "-loginUserAndSignUpUser:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "twitterchat/classes/LoginViewController.m"
+            timestampString = "415457327.250016"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
+            landmarkName = "-loginUserAndSignUpUser:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
