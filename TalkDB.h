@@ -13,8 +13,6 @@
 
 @interface TalkDB : NSObject
 {
-    BOOL isFollwer ;
-    BOOL isFollwing ;
     NSMutableSet * recentset;
 }
 -(void) initDB;

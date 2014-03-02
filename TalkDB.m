@@ -307,21 +307,18 @@
 
     recentset = [[NSMutableSet alloc]init];
 
-   
     for (int i = 0; i < [array count]; i++) {
-        if (!isFollwer) {
-            [self readFollowing:[array objectAtIndex:i]];
+        if([self readFollowing:[array objectAtIndex:i]]){
+            continue;
         }
-        if (!isFollwing) {
-            [self readFollower:[array objectAtIndex:i]];
-        }
-        
+         [self readFollower:[array objectAtIndex:i]];
+    
     }
     NSArray * recentArray = [recentset allObjects];
     [imagecache addRecentChat:recentArray];
     
 }
--(void)readFollower:(NSString *)fromID {
+-(BOOL)readFollower:(NSString *)fromID {
     ImageCache *imagecache= [ImageCache sharedObject];
     NSMutableArray * follower = [imagecache getTwittersFollower];
     for (TwitterFollower * f in follower) {
@@ -334,13 +331,13 @@
             recent.profilePath = f.profilePath;
             recent.profileUrl = f.profileUrl;
             [recentset addObject:recent];
-            isFollwer= YES;
+            return YES;
         }
     }
-
+    return NO;
   
 }
--(void)readFollowing:(NSString *)fromID  {
+-(BOOL)readFollowing:(NSString *)fromID  {
     ImageCache *imagecache= [ImageCache sharedObject];
     NSMutableArray * following = [imagecache getTwittersFollowing];
     for (TwitterFollowing * f in following) {
@@ -353,10 +350,10 @@
             recent.profilePath = f.profilePath;
             recent.profileUrl = f.profileUrl;
             [recentset addObject:recent];
-            isFollwing = YES;
+            return YES;
         }
     }
-
+    return NO;
 }
 -(NSString*)getCacheDirectory
 {

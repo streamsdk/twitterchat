@@ -121,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "twitterchat/MainController.m"
-            timestampString = "415460278.671702"
+            filePath = "TalkDB.m"
+            timestampString = "415461682.829043"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
-            landmarkName = "-KeyboardTorecordClicked"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
+            landmarkName = "-readFollower:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
