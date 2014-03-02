@@ -14,6 +14,7 @@
 #import <arcstreamsdk/STreamSession.h>
 #import <CFNetwork/CFNetwork.h>
 #import "ACKMessageDB.h"
+#import "ImageCache.h"
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
@@ -104,10 +105,43 @@ static XMPPReconnect *xmppReconnect;
 
 - (void)disconnect
 {
+    ImageCache * imagecache = [ImageCache sharedObject];
+    [imagecache removeAllFileUpload];
+    
+    ACKMessageDB * ack = [[ACKMessageDB alloc]init];
+    NSMutableArray * ackArray = [ack  readDb];
+    [ack deleteDB];
+    if (ackArray!=nil && [ackArray count]!=0) {
+        for (NSMutableString * str in ackArray) {
+            long long milliseconds = (long long)([[NSDate date] timeIntervalSince1970] * 1000.0);
+            NSString * key = [NSString stringWithFormat:@"%lld",milliseconds];
+            NSArray * array = [str componentsSeparatedByString:@"~∞§"];
+            NSMutableString *idd = [[NSMutableString alloc]init];
+            [idd appendString:[array objectAtIndex:0]];
+            [idd appendString:@"messaginghistory"];
+            STreamObject *so = [[STreamObject alloc]init];
+            [so setObjectId:idd];
+            NSString *history = [NSString stringWithFormat:@"message.body.%@",[array objectAtIndex:1]];
+            NSString *escapeHistory = [self JSONString:history];
+            [so addStaff:key withObject:escapeHistory];
+            [so update];
+        }
+    }
+
 	[self goOffline];
     [xmppStream disconnect];
 }
-
+-(NSString *)JSONString:(NSString *)aString {
+    NSMutableString *s = [NSMutableString stringWithString:aString];
+    [s replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"/" withString:@"\\/" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"\n" withString:@"\\n" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"\b" withString:@"\\b" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"\f" withString:@"\\f" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"\r" withString:@"\\r" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    [s replaceOccurrencesOfString:@"\t" withString:@"\\t" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [s length])];
+    return [NSString stringWithString:s];
+}
 - (BOOL)connected{
     BOOL isConnected = [xmppStream isAuthenticated];
     return isConnected;

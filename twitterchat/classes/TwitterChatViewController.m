@@ -498,7 +498,7 @@
         [countButton setBackgroundImage:[UIImage imageNamed:@"message_count.png"] forState:UIControlStateNormal];
         [countButton setTitle:title forState:UIControlStateNormal];
     }
-    cell.textLabel.font = [UIFont fontWithName:@"Arial" size:18.0f];
+    cell.textLabel.font = [UIFont fontWithName:@"Arial" size:15.0f];
     
     
     return cell;
@@ -542,16 +542,19 @@
 }
 
 -(void)setImage:(UIImage *)icon withCell:(UITableViewCell *)cell{
+    UIImage *image = [self imageWithImage:icon
+                         scaledToMaxWidth:40
+                                maxHeight:40];
     CGSize itemSize = CGSizeMake(40, 40);
     UIGraphicsBeginImageContextWithOptions(itemSize, NO,0.0);
     CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-    [icon drawInRect:imageRect];
+    [image drawInRect:imageRect];
     
     cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 60.0f;
+    return 50.0f;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -577,8 +580,8 @@
     // 下拉到最底部时显示更多数据
     if(!_reloading && scrollView.contentOffset.y > ((scrollView.contentSize.height - scrollView.frame.size.height)))
     {
-        [self createTableFooter];
         [self loadDataBegin];
+        
     }
 }
 
@@ -588,13 +591,8 @@
     if (_reloading == NO)
     {
         _reloading = YES;
-        
-        UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(20.0f, 0.0f, 20.0f, 20.0f)];
-        [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        [tableFooterView addSubview:tableFooterActivityIndicator];
-        [tableFooterActivityIndicator startAnimating];
-//        [self.tableView.tableFooterView addSubview:tableFooterView];
-        activityIndicator = tableFooterActivityIndicator;
+        [self createTableFooter];
+        [activityIndicator startAnimating];
         [self loadDataing];
     }
 }
@@ -602,7 +600,6 @@
 // 加载数据中
 - (void) loadDataing
 {
-//    NSInteger index = segmentedControl.selectedSegmentIndex;
     NSLog(@"index = %d",selectIndex);
     ImageCache * imagecache = [ImageCache sharedObject];
     if (selectIndex == 0) {
@@ -611,8 +608,6 @@
             NSMutableArray * array = [[NSMutableArray alloc]init];
             array = [imagecache getTwittersFollower];
             followerArray =array;
-//            sectionHeadsKeys = [[NSMutableArray alloc]init];
-//            sortedArrForArrays = [self getChineseStringArr:followerArray];
             
         }
     }
@@ -623,8 +618,6 @@
             array = [imagecache getTwittersFollowing];
            
             followerArray =array;
-//            sectionHeadsKeys = [[NSMutableArray alloc]init];
-//            sortedArrForArrays = [self getChineseStringArr:followerArray];
         }
     }
     [self.tableView reloadData];
@@ -636,21 +629,23 @@
 {
     _reloading = NO;
     [self createTableFooter];
+    [activityIndicator stopAnimating];
 }
 
 // 创建表格底部
 - (void) createTableFooter
 {
+    ImageCache * imagecache =[ImageCache sharedObject];
     self.tableView.tableFooterView = nil;
-//    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(100.0f, 0.0f, self.tableView.frame.size.width-200, 40.0f)];
     UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(100.0f, 0.0f, tableFooterView.frame.size.width-200, 40.0f)];
-//    [loadMoreText setCenter:tableFooterView.center];
+
     loadMoreText.textAlignment = NSTextAlignmentCenter;
     [loadMoreText setText:@""];
     [tableFooterView addSubview:loadMoreText];
+    [loadMoreText setBackgroundColor:[UIColor clearColor]];
     [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
-     [loadMoreText setText:@"上拉显示更多数据"];
-  /*  if (selectIndex== 0) {
+    [loadMoreText setText:@"上拉显示更多数据"];
+    /*if (selectIndex== 0) {
         if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
             [loadMoreText setText:@"上拉显示更多数据"];
         }else{
@@ -663,11 +658,39 @@
             [loadMoreText setText:@"没有更多数据"];
         }
     }*/
-    if (activityIndicator)
-        [activityIndicator stopAnimating];
-    [tableFooterView addSubview:loadMoreText];
-    
+    UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(75.0f, 10.0f, 20.0f, 20.0f)];
+    [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    if (!activityIndicator) {
+        [tableFooterView addSubview:tableFooterActivityIndicator];
+        activityIndicator = tableFooterActivityIndicator;
+    }
+   
     self.tableView.tableFooterView = tableFooterView;
+}
+-(UIImage *)imageWithImage:(UIImage *)_image scaledToSize:(CGSize)size {
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        UIGraphicsBeginImageContextWithOptions(size, NO, [[UIScreen mainScreen] scale]);
+    } else {
+        UIGraphicsBeginImageContext(size);
+    }
+    [_image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+-(UIImage *)imageWithImage:(UIImage *)_image scaledToMaxWidth:(CGFloat)width maxHeight:(CGFloat)height {
+    CGFloat oldWidth = _image.size.width;
+    CGFloat oldHeight = _image.size.height;
+    
+    CGFloat scaleFactor = (oldWidth > oldHeight) ? width / oldWidth : height / oldHeight;
+    
+    CGFloat newHeight = oldHeight * scaleFactor;
+    CGFloat newWidth = oldWidth * scaleFactor;
+    CGSize newSize = CGSizeMake(newWidth, newHeight);
+    
+    return [self imageWithImage:_image scaledToSize:newSize];
 }
 
 @end

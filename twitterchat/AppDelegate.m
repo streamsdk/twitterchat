@@ -14,6 +14,7 @@
 #import "ACKMessageDB.h"
 #import "DownloadDB.h"
 #import "UploadDB.h"
+#import "STreamXMPP.h"
 
 @implementation AppDelegate
 
@@ -57,11 +58,24 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-  }
+    /*NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:@"username"];
+    [userDefaults removeObjectForKey:@"password"];*/
+    STreamXMPP *xmpp = [STreamXMPP sharedObject];
+    [xmpp disconnect];
+}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    NSUserDefaults * userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *username = [userDefaults objectForKey:@"username"];
+    if (!username) {
+        LoginViewController * login = [[LoginViewController alloc]init];
+        UINavigationController * nav = [[UINavigationController alloc]initWithRootViewController:login];
+        [self.window setRootViewController:nav];
     }
+
+}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {

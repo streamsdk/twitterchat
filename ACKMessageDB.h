@@ -17,4 +17,8 @@
 
 -(void) deleteDB:(NSString *) id;
 
+-(NSMutableArray *)readDb;
+
+-(void) deleteDB;
+
 @end
