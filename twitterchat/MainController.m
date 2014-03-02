@@ -93,9 +93,9 @@
     keyboardIsShow=NO;
     isFace = NO;
     isVideoFromGallery = NO;
-    recordOrKeyboardButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:(@"nil")];
-    [recordOrKeyboardButton setImage:[UIImage imageNamed:@"microphonefat.png"] forState:UIControlStateNormal];
-    [recordOrKeyboardButton addTarget:self action:@selector(KeyboardTorecordClicked) forControlEvents:UIControlEventTouchUpInside];
+//    recordOrKeyboardButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33, 3,30, 34) withTitle:(@"nil")];
+//    [recordOrKeyboardButton setImage:[UIImage imageNamed:@"microphonefat.png"] forState:UIControlStateNormal];
+//    [recordOrKeyboardButton addTarget:self action:@selector(KeyboardTorecordClicked) forControlEvents:UIControlEventTouchUpInside];
    
     iconButton = [createUI setButtonFrame:CGRectMake(0, 5, 30, 30) withTitle:@"nil"];
     [iconButton setImage:[UIImage imageNamed:@"plus256.png"] forState:UIControlStateNormal];
@@ -106,12 +106,12 @@
     messageText.returnKeyType = UIReturnKeySend;
     messageText.autocapitalizationType = UITextAutocapitalizationTypeNone;
     
-//    faceButton = [createUI setButtonFrame:CGRectMake(0 ,5,30, 30) withTitle:@"nil"];
-//    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
-//    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
+    faceButton = [createUI setButtonFrame:CGRectMake(toolBar.frame.size.width-33,3,30, 30) withTitle:@"nil"];
+    [faceButton setImage:[UIImage imageNamed:@"face512.png"] forState:UIControlStateNormal];
+    [faceButton addTarget:self action:@selector(faceClicked) forControlEvents:UIControlEventTouchUpInside];
 
     [toolBar addSubview:messageText];
-    [toolBar addSubview:recordOrKeyboardButton];
+    [toolBar addSubview:faceButton];
     [toolBar addSubview:iconButton];
     
 }
@@ -536,7 +536,7 @@
     ImageCache * imagecache = [ImageCache sharedObject];
     NSMutableSet * alluserId = [imagecache getAllUserId];
     if (![alluserId containsObject:[imagecache getFriendID]]){
-        UIAlertView * alertview = [[UIAlertView alloc]initWithTitle:@"" message:@"The other is not registered, you can't send photo." delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+        UIAlertView * alertview = [[UIAlertView alloc]initWithTitle:@"" message:@"The other is not registered, you can't send audio." delegate:nil cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
         [alertview show];
         return;
     }
@@ -566,7 +566,7 @@
     [recordButton addTarget:self action:@selector(recordEnd) forControlEvents:UIControlEventTouchUpInside];
     [recordButton addTarget:self action:@selector(recordCancel) forControlEvents:UIControlEventTouchUpOutside];
     
-    [toolBar addSubview:keyBoardButton];
+    [toolBar addSubview:faceButton];
     [toolBar addSubview:recordButton];
 }
 
@@ -1065,8 +1065,7 @@
         [self scrollBubbleViewToBottomAnimated:YES];
     }
     if (buttonTag == 2) {
-        keyboardIsShow = YES;
-        [self faceClicked];
+        [self KeyboardTorecordClicked];
         [self scrollBubbleViewToBottomAnimated:YES];
     }
         

@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "twitterchat/MainController.m"
-            timestampString = "415276325.962632"
+            timestampString = "415426378.041616"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1095"
-            endingLineNumber = "1095"
+            startingLineNumber = "1094"
+            endingLineNumber = "1094"
             landmarkName = "-reloadTable"
             landmarkType = "5">
          </BreakpointContent>

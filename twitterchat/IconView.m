@@ -14,7 +14,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        icon = [[NSArray alloc]initWithObjects: @"photog150.png",@"camera_icon150.png",@"face512.png",nil];
+        icon = [[NSArray alloc]initWithObjects: @"photog150.png",@"camera_icon150.png",@"microphonefat.png",nil];
     }
     return self;
 }
@@ -22,7 +22,7 @@
 -(void)loadIconView:(int)page size:(CGSize)size
 {
 	//row number
-    NSArray * array = [[NSArray alloc]initWithObjects:@"Choose a Photo",@"Camera",@"Emoji", nil];
+    NSArray * array = [[NSArray alloc]initWithObjects:@"Choose a Photo",@"Camera",@"Audio", nil];
 	for (int i=0; i<1; i++) {
 		//column numer
 		for (int y=0; y<3; y++) {

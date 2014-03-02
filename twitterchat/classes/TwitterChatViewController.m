@@ -560,12 +560,12 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     ImageCache *imageCache = [ImageCache sharedObject];
     if (selectIndex == 0) {
-        TwitterFollower * f = [[TwitterFollower alloc]init];
+        TwitterFollower * f = [followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
     }
     if (selectIndex == 1) {
-        TwitterFollowing * f =[[TwitterFollowing alloc]init];
+        TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
     }
