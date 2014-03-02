@@ -23,7 +23,7 @@
 
 -(NSMutableArray *)getTwittersFollowing;
 
--(void)addRecentChat:(NSMutableArray *)recent;
+-(void)addRecentChat:(NSArray *)recent;
 
 -(NSMutableArray *)getRecentChat;
 

@@ -12,7 +12,7 @@ static NSMutableDictionary *_userMetaData;
 
 static NSMutableArray * _followerArray;
 static NSMutableArray * _followingArray;
-static NSMutableArray * _recentArray;
+static NSArray * _recentArray;
 static NSString *_friendID;
 static NSMutableArray *_fileUpload;
 static NSMutableArray *_colors;
@@ -42,7 +42,7 @@ static NSString *followingCursor;
         _messagesDict = [[NSMutableDictionary alloc]init];
          _jsonData = [[NSMutableDictionary alloc] init];
         allUserId = [[NSMutableSet alloc]init];
-        _recentArray = [[NSMutableArray alloc]init];
+        _recentArray = [[NSArray alloc]init];
     });
     
     return sharedInstance;
@@ -67,11 +67,11 @@ static NSString *followingCursor;
     return _followingArray;
 }
 
--(void)addRecentChat:(NSMutableArray *)recent{
+-(void)addRecentChat:(NSArray *)recent{
     _recentArray = recent;
 }
 
--(NSMutableArray *)getRecentChat{
+-(NSArray *)getRecentChat{
     return _recentArray;
 }
 -(void) setFriendID:(NSString *)friendID{

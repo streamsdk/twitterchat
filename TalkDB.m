@@ -306,7 +306,7 @@
     ImageCache *imagecache= [ImageCache sharedObject];
     NSMutableArray * follower = [imagecache getTwittersFollower];
     NSMutableArray * following = [imagecache getTwittersFollowing];
-    NSMutableArray * recentArray = [[NSMutableArray alloc]init];
+    NSMutableSet * recentset = [[NSMutableSet alloc]init];
     
     for (int i = 0; i < [array count]; i++) {
         NSString * fromID = [array objectAtIndex:i];
@@ -319,8 +319,7 @@
                 recent.screenName = f.screenName;
                 recent.profilePath = f.profilePath;
                 recent.profileUrl = f.profileUrl;
-                [recentArray addObject:recent];
-                continue;
+                [recentset addObject:recent];
             }
         }
         for (TwitterFollowing * f in following) {
@@ -332,10 +331,12 @@
                 recent.screenName = f.screenName;
                 recent.profilePath = f.profilePath;
                 recent.profileUrl = f.profileUrl;
-               [recentArray addObject:recent];
+               [recentset addObject:recent];
+                continue;
             }
         }
     }
+    NSArray * recentArray = [recentset allObjects];
     [imagecache addRecentChat:recentArray];
     
 }

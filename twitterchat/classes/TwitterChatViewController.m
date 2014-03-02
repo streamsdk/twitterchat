@@ -451,6 +451,11 @@
         followerArray = [imageCache getTwittersFollower];
     }else if (segmented.selectedSegmentIndex == 1){
         followerArray = [imageCache getTwittersFollowing];
+        if ([followerArray count]==0) {
+            [followerAndFollowingHandler getAllFollowing: [imageCache getUserID] withCursorId:@"-1"];
+            followerArray = [imageCache getTwittersFollowing];
+
+        }
     }else if (segmented.selectedSegmentIndex == 2){
         TalkDB * talkDb = [[TalkDB alloc]init];
         [talkDb readInTalkDB:[imageCache getUserID]];
