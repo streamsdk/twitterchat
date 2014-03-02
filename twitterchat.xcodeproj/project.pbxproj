@@ -153,6 +153,7 @@
 		039FA47C1879D9C400E9F255 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 039FA47A1879D9C400E9F255 /* InfoPlist.strings */; };
 		039FA47E1879D9C400E9F255 /* twitterchatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 039FA47D1879D9C400E9F255 /* twitterchatTests.m */; };
 		039FA4881879DAB900E9F255 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039FA4871879DAB900E9F255 /* Social.framework */; };
+		0E173F1418C33C7700B9CA1C /* RecentChat.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E173F1318C33C7700B9CA1C /* RecentChat.m */; };
 		0E23E6C518C1E13B00B7F9DE /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E23E6C418C1E13B00B7F9DE /* SearchViewController.m */; };
 		0E41CC6118BD976500D000DD /* DownloadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5D18BD976500D000DD /* DownloadDB.m */; };
 		0E41CC6218BD976500D000DD /* UploadDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E41CC5F18BD976500D000DD /* UploadDB.m */; };
@@ -550,6 +551,8 @@
 		039FA47B1879D9C400E9F255 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		039FA47D1879D9C400E9F255 /* twitterchatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = twitterchatTests.m; sourceTree = "<group>"; };
 		039FA4871879DAB900E9F255 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		0E173F1218C33C7700B9CA1C /* RecentChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecentChat.h; path = twitterchat/classes/RecentChat.h; sourceTree = SOURCE_ROOT; };
+		0E173F1318C33C7700B9CA1C /* RecentChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecentChat.m; path = twitterchat/classes/RecentChat.m; sourceTree = SOURCE_ROOT; };
 		0E23E6C318C1E13B00B7F9DE /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchViewController.h; path = search/SearchViewController.h; sourceTree = "<group>"; };
 		0E23E6C418C1E13B00B7F9DE /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SearchViewController.m; path = search/SearchViewController.m; sourceTree = "<group>"; };
 		0E41CC5B18BD859800D000DD /* GetAllMessagesProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GetAllMessagesProtocol.h; sourceTree = "<group>"; };
@@ -1585,6 +1588,8 @@
 				0EF5984418B8714D00F2DFC2 /* TwitterFollower.m */,
 				0EF5984618B8716400F2DFC2 /* TwitterFollowing.h */,
 				0EF5984718B8716400F2DFC2 /* TwitterFollowing.m */,
+				0E173F1218C33C7700B9CA1C /* RecentChat.h */,
+				0E173F1318C33C7700B9CA1C /* RecentChat.m */,
 			);
 			name = twittermodel;
 			path = imagecontroller;
@@ -2068,6 +2073,7 @@
 				038248BC18A78E5C006AE205 /* XMPPRoom.m in Sources */,
 				038248D818A78E5C006AE205 /* XMPPCapsResourceCoreDataStorageObject.m in Sources */,
 				038248B118A78E5C006AE205 /* XMPPRoomMessageCoreDataStorageObject.m in Sources */,
+				0E173F1418C33C7700B9CA1C /* RecentChat.m in Sources */,
 				038248A818A78E5C006AE205 /* XMPPSystemInputActivityMonitor.m in Sources */,
 				039FA45F1879D9C400E9F255 /* main.m in Sources */,
 				0EB18D2F18B717EA008D76B6 /* LoginViewController.m in Sources */,

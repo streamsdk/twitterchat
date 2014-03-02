@@ -10,7 +10,9 @@
 #import "ImageCache.h"
 #import <arcstreamsdk/JSONKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-
+#import "TwitterFollower.h"
+#import "TwitterFollowing.h"
+#import "RecentChat.h"
 @implementation TalkDB
 
 -(NSString *) dataFilePath {
@@ -273,9 +275,76 @@
     sqlite3_finalize(statement);
     sqlite3_close(database);
 }
+
+-(void) readInTalkDB:(NSString *)userID{
+    NSArray * array = [[NSArray alloc]init];
+    NSMutableSet * fromSet = [[NSMutableSet alloc]init];
+    sqlite3 *database;
+    
+    if (sqlite3_open([[self dataFilePath] UTF8String], &database) != SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Failed to open database");
+    }
+    
+    NSString *sqlQuery =[NSString stringWithFormat:@"SELECT FROMID FROM FILEID WHERE USERID='%@'",userID];
+    sqlite3_stmt * statement;
+    if (sqlite3_prepare_v2(database, [sqlQuery UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        while (sqlite3_step(statement) == SQLITE_ROW) {
+            char *_fromId= (char*)sqlite3_column_text(statement,0);
+            NSString *fId = [[NSString alloc]initWithUTF8String:_fromId];
+            [fromSet addObject:fId];
+        }
+    }
+//    sqlite3_step(statement);
+//    sqlite3_finalize(statement);
+//    sqlite3_close(database);
+    array = [fromSet allObjects];
+    [self readRecent:array];
+   
+}
+-(void)readRecent:(NSArray *)array {
+    ImageCache *imagecache= [ImageCache sharedObject];
+    NSMutableArray * follower = [imagecache getTwittersFollower];
+    NSMutableArray * following = [imagecache getTwittersFollowing];
+    NSMutableArray * recentArray = [[NSMutableArray alloc]init];
+    
+    for (int i = 0; i < [array count]; i++) {
+        NSString * fromID = [array objectAtIndex:i];
+        for (TwitterFollower * f in follower) {
+            f.userid = [NSString stringWithFormat:@"%@",f.userid];
+            if ([f.userid isEqualToString:fromID]) {
+                RecentChat * recent = [[RecentChat alloc]init];
+                recent.userid= f.userid;
+                recent.name = f.name;
+                recent.screenName = f.screenName;
+                recent.profilePath = f.profilePath;
+                recent.profileUrl = f.profileUrl;
+                [recentArray addObject:recent];
+                continue;
+            }
+        }
+        for (TwitterFollowing * f in following) {
+             f.userid = [NSString stringWithFormat:@"%@",f.userid];
+            if ([f.userid isEqualToString:fromID]) {
+                RecentChat * recent = [[RecentChat alloc]init];
+                recent.userid= f.userid;
+                recent.name = f.name;
+                recent.screenName = f.screenName;
+                recent.profilePath = f.profilePath;
+                recent.profileUrl = f.profileUrl;
+               [recentArray addObject:recent];
+            }
+        }
+    }
+    [imagecache addRecentChat:recentArray];
+    
+}
 -(NSString*)getCacheDirectory
 {
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)objectAtIndex:0] stringByAppendingPathComponent:@"userName.text"];
 }
+
+
+
 
 @end

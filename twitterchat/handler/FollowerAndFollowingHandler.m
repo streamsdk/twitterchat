@@ -13,6 +13,7 @@
 
 @implementation FollowerAndFollowingHandler
 @synthesize accountStore = _accountStore;
+@synthesize follwerDelegate = _follwerDelegate;
 
 -(void)getAllFollower:(NSString *)userName withCursorId:(NSString *)cursor{
     ImageCache * imagechache= [ImageCache sharedObject];
@@ -69,6 +70,8 @@
                                 NSLog(@"follower user id: %@", userId);
                                 NSLog(@"follower profile url: %@", profileUrl);
                             }
+                            [_follwerDelegate followerLoadComplete];
+                            
 //                            [imagechache addTwittersFollower:followerArray];
 //                            if (![cur isEqualToString:@"0"]){
 //                                [self getAllFollowing:userName withCursorId:cur];
@@ -84,6 +87,7 @@
                     else {
                         // The server did not respond ... were we rate-limited?
                         NSLog(@"The response status code is %d", urlResponse.statusCode);
+                        [_follwerDelegate followerLoadFailed];
                         
                     }
                 }

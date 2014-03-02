@@ -23,6 +23,10 @@
 
 -(NSMutableArray *)getTwittersFollowing;
 
+-(void)addRecentChat:(NSMutableArray *)recent;
+
+-(NSMutableArray *)getRecentChat;
+
 -(NSString *)getPath;
 
 -(void) setFriendID:(NSString *)friendID;

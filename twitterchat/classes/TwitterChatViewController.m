@@ -21,8 +21,9 @@
 #import "UploadDB.h"
 #import "FollowerAndFollowingHandler.h"
 #import "SearchViewController.h"
+#import "RecentChat.h"
 
-@interface TwitterChatViewController ()<STreamXMPPProtocol>
+@interface TwitterChatViewController ()<STreamXMPPProtocol,FollowerDelegate>
 {
     NSMutableArray * followerArray;
     MainController *mainVC;
@@ -45,7 +46,14 @@
     }
     return self;
 }
-
+-(void) followerLoadFailed{
+   
+}
+-(void) followerLoadComplete {
+//    ImageCache *imagecache = [ImageCache sharedObject];
+//    followerArray = [imagecache getTwittersFollower];
+//    [self.tableView reloadData];
+}
 -(void)settingClicked{
     NSLog(@"");
 }
@@ -61,9 +69,6 @@
     [super viewDidLoad];
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
-    
-    tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 40.0f)];
-    [tableFooterView setBackgroundColor:[UIColor lightGrayColor]];
     mainVC = [[MainController alloc]init];
     
     _reloading= NO;
@@ -87,7 +92,7 @@
     [ self.navigationController.navigationBar.topItem setTitleView:segmentedControl];
     
     followerAndFollowingHandler = [[FollowerAndFollowingHandler alloc]init];
-    
+
      ImageCache * imagecache  = [ImageCache sharedObject];
     
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -96,14 +101,11 @@
     [HUD showAnimated:YES whileExecutingBlock:^{
          [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
         [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
-       
-          followerArray = [imagecache getTwittersFollower];
+        followerArray = [imagecache getTwittersFollower];
         while ([followerArray count]==0) {
             followerArray = [imagecache getTwittersFollower];
         }
-       
     }completionBlock:^{
-        followerArray = [imagecache getTwittersFollower];
         [HUD removeFromSuperview];
         HUD = nil;
         [self.tableView reloadData];
@@ -449,8 +451,10 @@
         followerArray = [imageCache getTwittersFollower];
     }else if (segmented.selectedSegmentIndex == 1){
         followerArray = [imageCache getTwittersFollowing];
-    }else{
-        followerArray = [[NSMutableArray alloc]init];
+    }else if (segmented.selectedSegmentIndex == 2){
+        TalkDB * talkDb = [[TalkDB alloc]init];
+        [talkDb readInTalkDB:[imageCache getUserID]];
+        followerArray = [imageCache getRecentChat];
     }
     selectIndex = segmented.selectedSegmentIndex;
     [self.tableView reloadData];
@@ -496,6 +500,11 @@
          [self loadFollowingProfileId:f withCell:cell];
         cell.textLabel.text = f.name;
        count = [imagecache getMessagesCount:f.userid];
+    }else if (selectIndex == 2) {
+        RecentChat * recent =[followerArray objectAtIndex:indexPath.row];
+        [self loadRecentProfileId:recent withCell:cell];
+        cell.textLabel.text = recent.name;
+        count = [imagecache getMessagesCount:recent.userid];
     }
     if (count!= 0) {
         NSString * title =[NSString stringWithFormat:@"%d",count];
@@ -544,6 +553,24 @@
     
     
 }
+-(void)loadRecentProfileId:(RecentChat *)recent withCell:(UITableViewCell *)cell{
+    ImageCache *imagechache = [ImageCache sharedObject];
+    NSURL *url = [NSURL URLWithString:recent.profileUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               if (!error ){
+                                   NSString *profilePath = [[imagechache getPath] stringByAppendingString:@".png"];
+                                   [recent setProfilePath:profilePath];
+                                   UIImage *_image = [UIImage imageWithData:data];
+                                   [self setImage:_image withCell:cell];
+                                   
+                               }
+                           }];
+    
+    
+}
 
 -(void)setImage:(UIImage *)icon withCell:(UITableViewCell *)cell{
     CGSize itemSize = CGSizeMake(45, 45);
@@ -572,6 +599,12 @@
         [imageCache setFriendID:f.userid];
         [imageCache removeFriendID:f.userid];
     }
+    if (selectIndex == 2) {
+        RecentChat * recent =[followerArray objectAtIndex:indexPath.row];
+        recent.userid = [NSString stringWithFormat:@"%@",recent.userid];
+        [imageCache setFriendID:recent.userid];
+        [imageCache removeFriendID:recent.userid];
+    }
     [self.navigationController pushViewController:mainVC animated:NO];
 }
 
@@ -594,21 +627,19 @@
         _reloading = YES;
         ImageCache * imagecache = [ImageCache sharedObject];
         if (selectIndex == 0) {
-//            if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
+            if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
                 UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 20.0f, 20.0f)];
                 [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
-//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
                 self.tableView.tableFooterView = activityIndicator;
             
-//            }
+            }
         }
         if (selectIndex == 1) {
             if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
                 UIActivityIndicatorView *tableFooterActivityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 20.0f, 20.0f)];
                 [tableFooterActivityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
-//                [tableFooterView addSubview:tableFooterActivityIndicator];
                 activityIndicator = tableFooterActivityIndicator;
                 [activityIndicator startAnimating];
                 self.tableView.tableFooterView = activityIndicator;
@@ -652,38 +683,10 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDuration:0.3];
-    self.tableView.contentInset = UIEdgeInsetsZero;
+//    self.tableView.contentInset = UIEdgeInsetsZero;
     [UIView commitAnimations];
     [activityIndicator stopAnimating];
     [self.tableView reloadData];
 }
 
-// 创建表格底部
-- (void) createTableFooter
-{
-//    ImageCache * imagecache =[ImageCache sharedObject];
-    
-
-//    UILabel *loadMoreText = [[UILabel alloc] initWithFrame:CGRectMake(100.0f, 0.0f, tableFooterView.frame.size.width-200, 40.0f)];
-//
-//    loadMoreText.textAlignment = NSTextAlignmentCenter;
-//    [loadMoreText setText:@""];
-//    [tableFooterView addSubview:loadMoreText];
-//    [loadMoreText setBackgroundColor:[UIColor clearColor]];
-//    [loadMoreText setFont:[UIFont fontWithName:@"Helvetica Neue" size:14]];
-//    [loadMoreText setText:@"上拉显示更多数据"];
-    /*if (selectIndex== 0) {
-        if (![[imagecache getFollowerCoursor]isEqualToString:@"0"]) {
-            [loadMoreText setText:@"上拉显示更多数据"];
-        }else{
-            [loadMoreText setText:@"没有更多数据"];
-        }
-    }else if(selectIndex == 1){
-        if (![[imagecache getFollowingCoursor]isEqualToString:@"0"]) {
-            [loadMoreText setText:@"上拉显示更多数据"];
-        }else{
-            [loadMoreText setText:@"没有更多数据"];
-        }
-    }*/
-}
 @end

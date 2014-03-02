@@ -12,7 +12,19 @@
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
-@interface FollowerAndFollowingHandler : NSObject
+
+@protocol FollowerDelegate <NSObject>
+
+-(void)followerLoadComplete;
+
+-(void)followerLoadFailed;
+
+
+@end
+
+@interface FollowerAndFollowingHandler : NSObject{
+    
+}
 
 @property (nonatomic) ACAccountStore *accountStore;
 
@@ -20,4 +32,7 @@
 
 -(void)getAllFollowing:(NSString *)userName withCursorId:(NSString *)cursor;
 
+@property (nonatomic,assign) id <FollowerDelegate> follwerDelegate;
+
 @end
+
