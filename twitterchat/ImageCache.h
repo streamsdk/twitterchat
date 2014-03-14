@@ -33,6 +33,10 @@
 
 -(NSString *) getFriendID;
 
+-(void) saveFriendID:(NSString *)friendID withFriendName:(NSString *)friendName;
+
+-(NSString *) getFriendName :(NSString *) friendId;
+
 -(void) addFileUpload:(FilesUpload *)file;
 
 -(NSMutableArray *)getFileUpload;

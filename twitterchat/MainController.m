@@ -143,8 +143,8 @@
      [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     ImageCache * imageCache =  [ImageCache sharedObject];
     NSString *sendToID = [imageCache getFriendID];
-    
-    self.title = [NSString stringWithFormat:@"chat to %@",sendToID];
+    NSString * sendToName = [imageCache getFriendName:sendToID];
+    self.title = [NSString stringWithFormat:@"chat to %@",sendToName];
   
     bubbleData = [[NSMutableArray alloc]init];
     TalkDB * talk =[[TalkDB alloc]init];

@@ -61,7 +61,7 @@
 -(void) searchBarUser{
     SearchViewController * searchView = [[SearchViewController alloc]init];
     searchView.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self  presentViewController:searchView animated:YES completion:NULL];
+    [self  presentViewController:searchView animated:NO completion:NULL];
 
     NSLog(@"search");
 }
@@ -603,18 +603,21 @@
         TwitterFollower * f = [followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
+        [imageCache saveFriendID:f.userid withFriendName:f.name];
         [imageCache removeFriendID:f.userid];
     }
     if (selectIndex == 1) {
         TwitterFollowing * f =[followerArray objectAtIndex:indexPath.row];
         f.userid = [NSString stringWithFormat:@"%@",f.userid];
         [imageCache setFriendID:f.userid];
+        [imageCache saveFriendID:f.userid withFriendName:f.name];
         [imageCache removeFriendID:f.userid];
     }
     if (selectIndex == 2) {
         RecentChat * recent =[followerArray objectAtIndex:indexPath.row];
         recent.userid = [NSString stringWithFormat:@"%@",recent.userid];
         [imageCache setFriendID:recent.userid];
+        [imageCache saveFriendID:recent.userid withFriendName:recent.name];
         [imageCache removeFriendID:recent.userid];
     }
     [self.navigationController pushViewController:mainVC animated:NO];

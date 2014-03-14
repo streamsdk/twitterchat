@@ -24,7 +24,7 @@ static NSString * _userId;
 static NSMutableSet *allUserId;
 static NSString * followerCursor;
 static NSString *followingCursor;
-
+static NSMutableDictionary * friendIdDict;
 @implementation ImageCache
 
 
@@ -43,6 +43,7 @@ static NSString *followingCursor;
          _jsonData = [[NSMutableDictionary alloc] init];
         allUserId = [[NSMutableSet alloc]init];
         _recentArray = [[NSArray alloc]init];
+        friendIdDict = [[NSMutableDictionary alloc]init];
     });
     
     return sharedInstance;
@@ -80,6 +81,13 @@ static NSString *followingCursor;
 
 -(NSString *) getFriendID{
     return _friendID;
+}
+-(void) saveFriendID:(NSString *)friendID withFriendName:(NSString *)friendName{
+    [friendIdDict setObject:friendName forKey:friendID];
+}
+
+-(NSString *) getFriendName :(NSString *) friendId{
+    return [ friendIdDict objectForKey:friendId];
 }
 -(NSString *)getPath {
     NSDateFormatter* formater = [[NSDateFormatter alloc] init];

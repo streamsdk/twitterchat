@@ -177,8 +177,9 @@
             NSArray * array = [twitter allObjects];
             for (int i = 0; i < [array count]; i++) {
                 NSString * userid = [array objectAtIndex:i];
-//                NSString * name = [[loginTwitter objectForKey:userid] ];
-                 [actionSheet addButtonWithTitle:userid];
+                NSMutableDictionary * metaData = [loginTwitter objectForKey:userid];
+                NSString * username = [metaData objectForKey:@"username"];
+                 [actionSheet addButtonWithTitle:username];
             }
             
             [actionSheet addButtonWithTitle:@"取消"];
