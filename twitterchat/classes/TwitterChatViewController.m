@@ -55,6 +55,23 @@
 //    followerArray = [imagecache getTwittersFollower];
 //    [self.tableView reloadData];
 }
+-(void) loadComplete {
+    __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    HUD.labelText = @"loading ...";
+    [self.view addSubview:HUD];
+    [HUD showAnimated:YES whileExecutingBlock:^{
+        ImageCache *imagecache = [ImageCache sharedObject];
+        followerArray = [imagecache getTwittersFollower];
+    }completionBlock:^{
+        [self.tableView reloadData];
+        [HUD removeFromSuperview];
+        HUD = nil;
+    }];
+}
+-(void) LoadFailed {
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:@"Loading Error..." delegate:self cancelButtonTitle:@"YES" otherButtonTitles:nil, nil];
+    [alertView show];
+}
 -(void)settingClicked{
     NSLog(@"");
 }
@@ -92,10 +109,16 @@
     [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];
     [ self.navigationController.navigationBar.topItem setTitleView:segmentedControl];
     
+    [[NSNotificationCenter defaultCenter]  addObserver:self selector:@selector(loadComplete) name:@"followerLoadComplete" object:nil];
+    [[NSNotificationCenter defaultCenter]  addObserver:self selector:@selector(LoadFailed) name:@"followerLoadFailed" object:nil];
+
+
     followerAndFollowingHandler = [[FollowerAndFollowingHandler alloc]init];
 
      ImageCache * imagecache  = [ImageCache sharedObject];
     
+    [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
+    [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
     HUD.labelText = @"loadingting ...";
     [self.view addSubview:HUD];
@@ -111,16 +134,15 @@
             }
 
         }];
-         [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
-        [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
-        followerArray = [imagecache getTwittersFollower];
-        while ([followerArray count]==0) {
-            followerArray = [imagecache getTwittersFollower];
-        }
+//         [followerAndFollowingHandler getAllFollowing: [imagecache getUserID] withCursorId:@"-1"];
+//        [followerAndFollowingHandler  getAllFollower:[imagecache getUserID] withCursorId:@"-1"];
+//        followerArray = [imagecache getTwittersFollower];
+//        while ([followerArray count]==0) {
+//            followerArray = [imagecache getTwittersFollower];
+//        }
     }completionBlock:^{
         [HUD removeFromSuperview];
         HUD = nil;
-        [self.tableView reloadData];
     }];
     
     
@@ -130,7 +152,6 @@
     [hud showAnimated:YES whileExecutingBlock:^{
         [self connect];
     }completionBlock:^{
-        [self.tableView reloadData];
         [hud removeFromSuperview];
         hud = nil;
     }];
@@ -139,7 +160,6 @@
                                              selector:@selector(appHasBackInForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-    
 }
 - (void)appHasBackInForeground{
     __block MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];

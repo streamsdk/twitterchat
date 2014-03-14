@@ -70,7 +70,9 @@
                                 NSLog(@"follower user id: %@", userId);
                                 NSLog(@"follower profile url: %@", profileUrl);
                             }
-                            [_follwerDelegate followerLoadComplete];
+
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"followerLoadComplete" object:nil];
+//                            [_follwerDelegate followerLoadComplete];
                             
 //                            [imagechache addTwittersFollower:followerArray];
 //                            if (![cur isEqualToString:@"0"]){
@@ -80,15 +82,12 @@
                         else {
                             // Our JSON deserialization went awry
                             NSLog(@"JSON Error: %@", [jsonError localizedDescription]);
-                            
-                            [alertView  show];
                         }
                     }
                     else {
                         // The server did not respond ... were we rate-limited?
                         NSLog(@"The response status code is %d", urlResponse.statusCode);
-                        [_follwerDelegate followerLoadFailed];
-                        
+                       [[NSNotificationCenter defaultCenter] postNotificationName:@"followerLoadFailed" object:nil];
                     }
                 }
             }];
